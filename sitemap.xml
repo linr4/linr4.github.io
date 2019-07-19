@@ -3,12 +3,44 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://linr4.github.io/categories/</loc>
+    <loc>https://linr4.github.io/posts/</loc>
+    <lastmod>2019-07-19T01:01:23+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://linr4.github.io/</loc>
+    <lastmod>2019-07-19T01:01:23+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://linr4.github.io/posts/my-first-post/</loc>
+    <lastmod>2019-07-19T01:01:23+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://linr4.github.io/posts/ten-tips-to-master-js/</loc>
+    <lastmod>2019-05-05T07:50:57+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://linr4.github.io/posts/ten-tips-on-learning-js/</loc>
+    <lastmod>2019-05-05T07:49:17+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://linr4.github.io/posts/it-operations/</loc>
+    <lastmod>2019-05-05T07:46:30+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://linr4.github.io/posts/lbcc-remember-for-test/</loc>
+    <lastmod>2019-05-04T07:53:04+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://linr4.github.io/categories/</loc>
     <priority>0</priority>
   </url>
   

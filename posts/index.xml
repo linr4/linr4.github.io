@@ -1,13 +1,13 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Raymond</title>
-    <link>https://linr4.github.io/</link>
-    <description>Recent content on Raymond</description>
+    <title>Posts - Raymond</title>
+    <link>https://linr4.github.io/posts/</link>
+    <description>Recent content in Posts on Raymond</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <lastBuildDate>Fri, 19 Jul 2019 01:01:23 +0800</lastBuildDate>
     
-        <atom:link href="https://linr4.github.io/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="https://linr4.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Recovered my blog using Hugo</title>
