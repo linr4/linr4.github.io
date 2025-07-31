@@ -26,35 +26,38 @@
         
         .container {
             text-align: center;
-            width: 90%;
-            max-width: 400px;
-            padding: 20px;
+            width: 85%;
+            max-width: 350px;
+            padding: 15px;
             position: relative;
             z-index: 1;
         }
         
         h1 {
             color: #5a3921;
-            margin-bottom: 20px;
-            font-size: clamp(1.8rem, 6vw, 2.5rem);
+            margin-bottom: 15px;
+            font-size: clamp(1.6rem, 5vw, 2.2rem);
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
         }
         
         .nav-button {
             display: block;
             width: 100%;
-            padding: clamp(12px, 4vw, 15px);
-            margin: clamp(10px, 3vw, 15px) 0;
+            padding: 10px;
+            margin: 10px 0;
             background-color: #8b4513;
             color: #f8e8c8;
             text-decoration: none;
             border-radius: 5px;
-            font-size: clamp(1rem, 4vw, 1.2rem);
+            font-size: clamp(0.9rem, 3.5vw, 1.1rem);
             font-weight: 500;
             transition: all 0.3s;
             border: 2px solid #5a3921;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             font-family: 'ChineseFont', 'SimSun', '宋体', serif;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         
         .nav-button:hover {
@@ -65,8 +68,8 @@
         
         .corner-decoration {
             position: absolute;
-            width: clamp(80px, 25vw, 120px);
-            height: clamp(80px, 25vw, 120px);
+            width: clamp(70px, 20vw, 100px);
+            height: clamp(70px, 20vw, 100px);
             background-size: contain;
             background-repeat: no-repeat;
             opacity: 0.7;
@@ -99,10 +102,17 @@
 
         @media (max-width: 480px) {
             .container {
-                padding: 15px;
+                width: 80%;
+                padding: 10px;
             }
             h1 {
-                margin-bottom: 15px;
+                margin-bottom: 10px;
+                font-size: 1.8rem;
+            }
+            .nav-button {
+                padding: 8px;
+                margin: 8px 0;
+                font-size: 0.95rem;
             }
         }
     </style>
