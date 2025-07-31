@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>十二辟卦与地支匹配</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f5f5f5;
+            margin: 0;
+        }
+        .card-container {
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+        }
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .question {
+            font-size: 28px;
+            margin: 20px 0;
+            min-height: 42px;
+        }
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .option {
+            background-color: #e9f5ff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .option:hover {
+            background-color: #d0e8ff;
+        }
+        .feedback {
+            font-size: 20px;
+            margin: 15px 0;
+            min-height: 30px;
+        }
+        .correct {
+            color: green;
+        }
+        .incorrect {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="card-container">
+        <div class="card">
+            <h1>十二辟卦与地支匹配</h1>
+            <div class="question" id="question"></div>
+            <div class="options" id="options"></div>
+            <div class="feedback" id="feedback"></div>
+        </div>
+    </div>
+
+    <script>
+        // 定义十二辟卦和十二地支（按顺序）
+        const baGua = ['地雷復', '地泽臨', '地天泰', '雷天大壯', '泽天夬', '乾为天', '天风姤', '天山遯', '天地否', '风地觀', '山地剝', '坤为地'];
+        const diZhi = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
+        
+        // 创建对应关系映射（使用全称）
+        const baGuaToDiZhi = {
+            '地雷復': '子',
+            '地泽臨': '丑',
+            '地天泰': '寅',
+            '雷天大壯': '卯',
+            '泽天夬': '辰',
+            '乾为天': '巳',
+            '天风姤': '午',
+            '天山遯': '未',
+            '天地否': '申',
+            '风地觀': '酉',
+            '山地剝': '戌',
+            '坤为地': '亥'
+        };
+        
+        const diZhiToBaGua = {
+            '子': '地雷復',
+            '丑': '地泽臨',
+            '寅': '地天泰',
+            '卯': '雷天大壯',
+            '辰': '泽天夬',
+            '巳': '乾为天',
+            '午': '天风姤',
+            '未': '天山遯',
+            '申': '天地否',
+            '酉': '风地觀',
+            '戌': '山地剝',
+            '亥': '坤为地'
+        };
+        
+        // 获取DOM元素
+        const questionElement = document.getElementById('question');
+        const optionsElement = document.getElementById('options');
+        const feedbackElement = document.getElementById('feedback');
+        
+        // 当前显示的是卦还是地支
+        let currentIsBaGua = true;
+        // 记录上一次的问题
+        let lastQuestion = null;
+        // 记录最近10次出现的问题
+        let recentQuestions = [];
+        
+        // 开始游戏
+        showNextQuestion();
+        
+        // 使用crypto生成安全的随机数
+        function secureRandom(max) {
+            const array = new Uint32Array(1);
+            window.crypto.getRandomValues(array);
+            return array[0] % max;
+        }
+        
+        // 显示下一个问题
+        function showNextQuestion() {
+            // 清除反馈
+            feedbackElement.textContent = '';
+            feedbackElement.className = 'feedback';
+            
+            // 随机选择卦或地支
+            currentIsBaGua = secureRandom(2) === 0;
+            
+            let currentQuestion;
+            let attempts = 0;
+            const maxAttempts = 100; // 防止无限循环
+            
+            do {
+                if (currentIsBaGua) {
+                    // 随机选择一个卦
+                    const randomIndex = secureRandom(baGua.length);
+                    currentQuestion = baGua[randomIndex];
+                } else {
+                    // 随机选择一个地支
+                    const randomIndex = secureRandom(diZhi.length);
+                    currentQuestion = diZhi[randomIndex];
+                }
+                attempts++;
+            } while (
+                (recentQuestions.includes(currentQuestion) || currentQuestion === lastQuestion) 
+                && attempts < maxAttempts
+            );
+            
+            // 更新最近问题记录
+            recentQuestions.push(currentQuestion);
+            if (recentQuestions.length > 10) {
+                recentQuestions.shift();
+            }
+            
+            lastQuestion = currentQuestion;
+            
+            if (currentIsBaGua) {
+                questionElement.textContent = `卦: ${currentQuestion}，对应的地支是？`;
+            } else {
+                questionElement.textContent = `地支: ${currentQuestion}，对应的卦是？`;
+            }
+            
+            // 生成选项
+            generateOptions(currentQuestion, currentIsBaGua);
+        }
+        
+        // 生成选项（按顺序排列）
+        function generateOptions(currentQuestion, isBaGuaQuestion) {
+            // 清空选项区域
+            optionsElement.innerHTML = '';
+            
+            // 确定正确答案
+            let correctAnswer;
+            if (isBaGuaQuestion) {
+                // 当前是卦，找对应的地支
+                correctAnswer = baGuaToDiZhi[currentQuestion];
+            } else {
+                // 当前是地支，找对应的卦
+                correctAnswer = diZhiToBaGua[currentQuestion];
+            }
+            
+            // 创建选项数组（按顺序）
+            let options = isBaGuaQuestion ? [...diZhi] : [...baGua];
+            
+            // 创建选项按钮（按顺序）
+            options.forEach(option => {
+                const button = document.createElement('button');
+                button.className = 'option';
+                button.textContent = option;
+                
+                button.addEventListener('click', () => {
+                    checkAnswer(option, correctAnswer, isBaGuaQuestion);
+                });
+                
+                optionsElement.appendChild(button);
+            });
+        }
+        
+        // 检查答案
+        function checkAnswer(selectedAnswer, correctAnswer, isBaGuaQuestion) {
+            if (selectedAnswer === correctAnswer) {
+                feedbackElement.textContent = '正确！';
+                feedbackElement.className = 'feedback correct';
+            } else {
+                feedbackElement.textContent = `错误！正确答案是: ${correctAnswer}`;
+                feedbackElement.className = 'feedback incorrect';
+            }
+            
+            // 延迟后显示下一题
+            setTimeout(showNextQuestion, 1500);
+        }
+    </script>
+</body>
+</html>
