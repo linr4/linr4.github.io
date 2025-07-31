@@ -336,15 +336,15 @@
                 correctCount++;
             }
             
-            document.getElementById('stats').textContent = `已答题: ${totalQuestions}/10 | 正确: ${correctCount}`;
+            document.getElementById('stats').textContent = `已答题: ${totalQuestions}/100 | 正确: ${correctCount}`;
             
             setTimeout(() => {
-                if (totalQuestions < 10) {
+                if (totalQuestions < 101) {
                     showNextQuestion();
                 } else {
                     document.getElementById('question').textContent = '测试完成！';
                     document.getElementById('options').innerHTML = '';
-                    document.getElementById('feedback').textContent = `最终成绩: ${correctCount}/10`;
+                    document.getElementById('feedback').textContent = `最终成绩: ${correctCount}/100`;
                 }
             }, 1500);
         }
