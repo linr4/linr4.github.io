@@ -46,6 +46,13 @@
         #toggle-btn:hover {
             background-color: #0b7dda;
         }
+        .hint-text {
+            text-align: left;
+            font-size: 12px;
+            color: #666;
+            margin-top: 10px;
+            line-height: 1.4;
+        }
         table {
             border-collapse: collapse;
             width: 100%;
@@ -84,6 +91,9 @@
             .name {
                 font-size: 16px;
             }
+            .hint-text {
+                font-size: 11px;
+            }
             table {
                 font-size: 12px;
             }
@@ -97,14 +107,18 @@
     </style>
 </head>
 <body>
-    <h1>六十四卦定位练习</h1>
+    <h3>六十四卦定位练习</h3>
     
     <div class="flashcard" id="flashcard">
         <div class="symbol" id="symbol"></div>
         <div class="name" id="name"></div>
-        <p>这个卦应该在哪个宫位？</p>
+        <p>这个卦应该在哪一个宫位？</p>
         <button id="next-btn">下一个</button>
         <button id="toggle-btn">显示所有卦</button>
+        <div class="hint-text">
+            世应诀：天同二世天变五，地同四世地变初，本宫六世三世异，人同游魂人变归。<br>
+            寻宫诀：一二三六外卦宫，四五游魂内变更，归魂内卦是本宫。
+        </div>
     </div>
 
     <div id="bagua-table"></div>
