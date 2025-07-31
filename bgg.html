@@ -116,7 +116,7 @@
     <div class="flashcard" id="flashcard">
         <div class="symbol" id="symbol"></div>
         <div class="name" id="name"></div>
-        <p>这个卦应该在哪一个宫位？</p>
+        <p>这个卦应该在哪个宫位？</p>
         <button id="next-btn">下一个</button>
         <button id="toggle-btn">显示所有卦</button>
         <div class="hint-text">
@@ -319,9 +319,7 @@
             // 检查是否正确
             if (guaIndex === currentIndex) {
                 cell.classList.add('highlight');
-                setTimeout(() => {
-                    showRandomGua();
-                }, 1000);
+                // 移除自动跳转逻辑
             } else {
                 cell.style.backgroundColor = '#ffcdd2';
             }
