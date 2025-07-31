@@ -7,7 +7,7 @@
     <style>
         @font-face {
             font-family: 'ChineseFont';
-            src: url('//cdn.jsdelivr.net/gh/googlefonts/noto-cjk@main/Sans/OTF/Chinese-Simplified/NotoSansCJKsc-Regular.otf');
+            src: local('SimSun'), local('宋体');
         }
         
         body {
@@ -26,7 +26,7 @@
         
         .container {
             text-align: center;
-            width: 100%;
+            width: 90%;
             max-width: 400px;
             padding: 20px;
             position: relative;
@@ -35,21 +35,21 @@
         
         h1 {
             color: #5a3921;
-            margin-bottom: 30px;
-            font-size: 2.5rem;
+            margin-bottom: 20px;
+            font-size: clamp(1.8rem, 6vw, 2.5rem);
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
         }
         
         .nav-button {
             display: block;
             width: 100%;
-            padding: 15px;
-            margin: 15px 0;
+            padding: clamp(12px, 4vw, 15px);
+            margin: clamp(10px, 3vw, 15px) 0;
             background-color: #8b4513;
             color: #f8e8c8;
             text-decoration: none;
             border-radius: 5px;
-            font-size: 1.2rem;
+            font-size: clamp(1rem, 4vw, 1.2rem);
             font-weight: 500;
             transition: all 0.3s;
             border: 2px solid #5a3921;
@@ -65,8 +65,8 @@
         
         .corner-decoration {
             position: absolute;
-            width: 120px;
-            height: 120px;
+            width: clamp(80px, 25vw, 120px);
+            height: clamp(80px, 25vw, 120px);
             background-size: contain;
             background-repeat: no-repeat;
             opacity: 0.7;
@@ -95,6 +95,15 @@
             bottom: 0;
             right: 0;
             background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M100,100 L0,100 L100,0 Z" fill="%23d4a76a"/><path d="M100,100 L70,100 C80,80 70,60 100,30 Z" fill="%23a67c52"/></svg>');
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+            h1 {
+                margin-bottom: 15px;
+            }
         }
     </style>
 </head>
