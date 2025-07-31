@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>六爻基础练习</title>
+    <style>
+        @font-face {
+            font-family: 'ChineseFont';
+            src: url('//cdn.jsdelivr.net/gh/googlefonts/noto-cjk@main/Sans/OTF/Chinese-Simplified/NotoSansCJKsc-Regular.otf');
+        }
+        
+        body {
+            font-family: 'ChineseFont', 'SimSun', '宋体', serif;
+            background-color: #f8f1e5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+            color: #5a3921;
+        }
+        
+        .container {
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        h1 {
+            color: #5a3921;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .nav-button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin: 15px 0;
+            background-color: #8b4513;
+            color: #f8e8c8;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            border: 2px solid #5a3921;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            font-family: 'ChineseFont', 'SimSun', '宋体', serif;
+        }
+        
+        .nav-button:hover {
+            background-color: #a0522d;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .corner-decoration {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            opacity: 0.7;
+            z-index: 0;
+        }
+        
+        .top-left {
+            top: 0;
+            left: 0;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M0,0 L100,0 L0,100 Z" fill="%23d4a76a"/><path d="M0,0 L30,0 C20,20 30,40 0,70 Z" fill="%23a67c52"/></svg>');
+        }
+        
+        .top-right {
+            top: 0;
+            right: 0;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M100,0 L0,0 L100,100 Z" fill="%23d4a76a"/><path d="M100,0 L70,0 C80,20 70,40 100,70 Z" fill="%23a67c52"/></svg>');
+        }
+        
+        .bottom-left {
+            bottom: 0;
+            left: 0;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M0,100 L100,100 L0,0 Z" fill="%23d4a76a"/><path d="M0,100 L30,100 C20,80 30,60 0,30 Z" fill="%23a67c52"/></svg>');
+        }
+        
+        .bottom-right {
+            bottom: 0;
+            right: 0;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M100,100 L0,100 L100,0 Z" fill="%23d4a76a"/><path d="M100,100 L70,100 C80,80 70,60 100,30 Z" fill="%23a67c52"/></svg>');
+        }
+    </style>
+</head>
+<body>
+    <div class="corner-decoration top-left"></div>
+    <div class="corner-decoration top-right"></div>
+    <div class="corner-decoration bottom-left"></div>
+    <div class="corner-decoration bottom-right"></div>
+    
+    <div class="container">
+        <h1>六爻基础练习</h1>
+        <a href="y/pg.html" class="nav-button">辟卦地支</a>
+        <a href="y/ny.html" class="nav-button">甲子纳音</a>
+        <a href="y/gg.html" class="nav-button">卦宫定位</a>
+    </div>
+</body>
+</html>
