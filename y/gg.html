@@ -1,181 +1,461 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>六十四卦定位练习</title>
     <style>
         body {
-            font-family: "SimSun", "宋体", serif;
-            margin: 10px;
+            font-family: "STKaiti", "KaiTi", "FangSong", "SimSun", serif;
+            margin: 0;
             text-align: center;
+            background: linear-gradient(135deg, #f8f5f0 0%, #e6f0ea 100%);
+            background-attachment: fixed;
+            color: #3a2c1a;
         }
+
+        h1,
+        .name,
+        .toggle-label {
+            font-family: "STKaiti", "KaiTi", "FangSong", "SimSun", serif;
+            letter-spacing: 2px;
+        }
+
         .flashcard {
-            margin: 4px auto;
-            padding: 4px;
-            border: 2px solid #333;
-            border-radius: 8px;
-            max-width: 100%;
-            background-color: #f9f9f9;
+            margin: 18px auto 8px auto;
+            padding: 18px 12px 12px 12px;
+            /* border-radius: 16px; */
+            max-width: 420px;
+            background: rgba(255, 255, 255, 0.92);
+            box-shadow: 0 4px 16px rgba(80, 120, 80, 0.10);
+            border: 1.5px solid #a3cfa6;
+            border-image: linear-gradient(135deg, #a3cfa6 60%, #e6f0ea 100%) 1;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* 新增，保证边框圆角 */
         }
+
+        .flashcard::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 8px;
+            right: 8px;
+            bottom: 8px;
+            border: 1px dashed #a3cfa6;
+            pointer-events: none;
+            border-radius: 10px;
+            opacity: 0.32;
+        }
+
+        .flashcard-title {
+            font-size: 18px;
+            color: #3a7a4d;
+            font-weight: bold;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+        }
+
         .flashcard-container {
             display: flex;
+            flex-direction: row;
             align-items: center;
             justify-content: center;
-            gap: 20px;
-            margin-bottom: 0;
+            /* 水平居中 */
+            gap: 0;
+            margin-bottom: 6px;
+            width: 100%;
+            max-width: 420px;
+            box-sizing: border-box;
         }
+
         .symbol {
-            font-size: 64px;
+            font-size: 170px;
+            min-width: 0;
+            color: #7bb47e;
+            text-shadow: 2px 2px 8px #f3fbe8, 0 0 2px #a3cfa6;
+            font-family: "STKaiti", "KaiTi", "FangSong", "SimSun", serif;
+            align-items: center;
+            justify-content: end;
+            box-sizing: border-box;
         }
+
         .name {
-            font-size: 16px;
+            font-size: 38px;
             writing-mode: vertical-rl;
             text-orientation: upright;
-            line-height: 1.5;
-            height: 5em;
+            line-height: 1.3;
+            height: 6em;
             display: flex;
             align-items: center;
             justify-content: center;
             white-space: nowrap;
+            color: #3a7a4d;
+            font-weight: bold;
+            margin-left: 0;
+            letter-spacing: 2px;
+            transition: line-height 0.2s;
+            min-width: 4ch;
+            max-width: 4ch;
+            /* 保证移动端和PC端都能完整显示4个汉字 */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            box-sizing: border-box;
         }
-        button {
-            padding: 8px 16px;
-            font-size: 14px;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin: 8px;
-        }
-        button:hover {
-            opacity: 0.9;
-        }
-        #next-btn {
-            background-color: #4CAF50;
-        }
-        #toggle-btn {
-            background-color: #2196F3;
-        }
-        .hint-text {
-            font-size: 12px;
-            color: #666;
-            margin-top: 15px;
-            line-height: 1.4;
-            text-align: left;
-            padding: 0; /* 修改为0 */
-        }
-        .hint-text ul {
-            margin: 0;
-            padding-left: 20px;
-        }
-        .hint-text li {
-            margin-bottom: 0;
-        }
-        table {
-            border-collapse: collapse;
+
+        .button-container {
+            display: flex;
+            align-items: baseline;
+            /* 关键：让子元素基线对齐 */
+            justify-content: center;
+            gap: 10px;
+            margin-top: 8px;
             width: 100%;
-            margin-top: 20px;
-            font-size: 14px;
+            box-sizing: border-box;
+            position: relative;
         }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 4px;
+
+        .button-container span {
+            flex: 1 1 70%;
+            font-size: 16px;
+            color: #3a2c1a;
+            font-family: "STKaiti", "KaiTi", "FangSong", "SimSun", serif;
+            letter-spacing: 1px;
+            line-height: 1;
+            /* 保证基线对齐 */
+            display: flex;
+            align-items: baseline;
+            /* 保证span内文字基线对齐 */
+            justify-content: flex-end;
+        }
+
+        button {
+            padding: 7px 18px;
+            font-size: 15px;
+            color: #fff;
+            border: none;
+            border-radius: 18px;
+            cursor: pointer;
+            margin: 10px 6px 0 6px;
+            background: linear-gradient(90deg, #7bb47e 60%, #a3cfa6 100%);
+            box-shadow: 0 2px 8px rgba(163, 207, 166, 0.10);
+            font-family: "STKaiti", "KaiTi", "FangSong", "SimSun", serif;
+            letter-spacing: 2px;
+            transition: background 0.2s;
+        }
+
+        button#next-btn {
+            flex: 1 1 30%;
+            padding: 3px 14px;
+            font-size: 13px;
+            border-radius: 14px;
+            margin-left: 8px;
+            width: 80px;
+            /* 固定宽度 */
+            min-width: 80px;
+            max-width: 80px;
             text-align: center;
         }
+
+        button:hover {
+            background: linear-gradient(90deg, #a3cfa6 60%, #7bb47e 100%);
+            opacity: 0.96;
+        }
+
+        #next-btn {
+            background: linear-gradient(90deg, #7bb47e 60%, #a3cfa6 100%);
+        }
+
+        #toggle-btn {
+            margin-top: 4px; ;
+            background: linear-gradient(90deg, #a3cfa6 60%, #7bb47e 100%);
+        }
+
+        .hint-text {
+            font-size: 16px;
+            color: #3a2c1a;
+            margin: 4px auto 0 auto;
+            line-height: 1.8;
+            text-align: left;
+            padding: 14px 18px;
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(163, 207, 166, 0.08);
+            border: 1.5px solid #e6f0ea;
+            max-width: 600px;
+        }
+
+        .hint-text ul {
+            margin: 0;
+            padding-left: 28px;
+        }
+
+        .hint-text li {
+            margin-bottom: 8px;
+        }
+
+        table {
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+            margin: 22px auto 0 auto;
+            font-size: 22px;
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 14px;
+            box-shadow: 0 4px 16px rgba(163, 207, 166, 0.10);
+            border: 2px solid #a3cfa6;
+            overflow: hidden;
+            max-width: 900px;
+        }
+
+        th,
+        td {
+            border: 1px solid #e6f0ea;
+            padding: 12px 8px;
+            text-align: center;
+            font-family: "STKaiti", "KaiTi", "FangSong", "SimSun", serif;
+            background: rgba(255, 255, 255, 0.98);
+            font-size: 22px;
+        }
+
         th {
-            background-color: #f2f2f2;
+            background: linear-gradient(90deg, #e6f0ea 60%, #f5f9f3 100%);
             font-weight: bold;
-            padding: 6px;
+            padding: 16px 8px;
+            color: #3a7a4d;
+            font-size: 24px;
+            border-bottom: 2px solid #a3cfa6;
         }
+
         .table-symbol {
-            font-size: 18px;
+            font-size: 26px;
             line-height: 1.2;
+            color: #7bb47e;
+            font-family: "STKaiti", "KaiTi", "FangSong", "SimSun", serif;
         }
+
         .hidden {
             display: none;
         }
+
         .highlight {
-            background-color: #dff0d8;
+            background: linear-gradient(90deg, #e6f0ea 60%, #f5f9f3 100%);
+            border: 2px solid #3a7a4d !important;
         }
+
         .pure-gua {
-            background-color: #e6f7ff;
+            background: linear-gradient(90deg, #e6f0ea 60%, #fffbe8 100%);
+            font-weight: bold;
+            color: #3a7a4d;
         }
+
         .toggle-container {
-            margin: 8px 0 0 0;
+            margin: 4px 0 0 0;
             display: flex;
             align-items: center;
-            justify-content: flex-start;
-            gap: 10px;
-            padding: 0; /* 修改为0 */
+            justify-content: center;
+            gap: 0;
+            padding: 0;
         }
+
+        .toggle-container input[type="checkbox"] {
+            margin-left: 36px;
+        }   
+
         .toggle-label {
             cursor: pointer;
-            font-size: 12px;
-            color: #666;
-            margin: 0;
+            font-size: 17px;
+            color: #3a7a4d;
+            margin: 0 8px 0 2px;
+            line-height: 2.4;
+            letter-spacing: 1px;
+            user-select: none;
+        }
+
+        /* 响应式 question-bar 字体 */
+        .question-bar span {
+            font-size: 18px;
+            color: #3a2c1a;
+            font-family: "STKaiti", "KaiTi", "FangSong", "SimSun", serif;
+            letter-spacing: 1px;
         }
 
         @media (max-width: 600px) {
+            .flashcard {
+                padding: 8px 2vw 8px 2vw;
+                max-width: 98vw;
+            }
+
+            .flashcard-container {
+                gap: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                /* 保证整体居中 */
+                width: 100%;
+            }
             .symbol {
-                font-size: 64px;
+                font-size: 125px;
             }
             .name {
-                font-size: 16px;
-                line-height: 1.5;
-                height: 5em;
+                font-size: 30px;
+                height: 6em;
+                display: flex;
+                align-items: center;
+                justify-content: center;
                 white-space: nowrap;
+                min-width: 4ch;
+                max-width: 4ch;
             }
+
             .hint-text {
-                font-size: 11px;
+                font-size: 12px;
+                padding: 7px 4px;
+            }
+
+            table {
+                font-size: 18px;
+            }
+
+            th,
+            td {
+                padding: 3px;
+                font-size: 18px;
+            }
+
+            .table-symbol {
+                font-size: 18px;
+            }
+
+            .toggle-label {
+                font-size: 14px;
+                line-height: 2.1;
+            }
+
+            .question-bar span {
+                font-size: 13px;
+            }
+        }
+
+        /* 针对高DPI缩放和小屏幕优化 */
+        @media (max-width: 1200px), (min-width: 1200px) and (max-height: 900px), (min-resolution: 1.5dppx) {
+            .flashcard {
+                max-width: 340px;
+                padding: 8px 2vw 8px 2vw;
+            }
+            .flashcard-container {
+                gap: 6px;
+            }
+            .symbol {
+                font-size: 90px;
+            }
+            .name {
+                font-size: 22px;
+                height: 5em;
+                min-width: 3ch;
+                max-width: 3ch;
+            }
+            .button-container span,
+            .hint-text {
+                font-size: 13px;
             }
             table {
-                font-size: 12px;
+                font-size: 14px;
+                max-width: 600px;
             }
             th, td {
-                padding: 2px;
+                padding: 3px;
+                font-size: 14px;
             }
             .table-symbol {
-                font-size: 16px;
+                font-size: 15px;
             }
+            .toggle-label {
+                font-size: 12px;
+                line-height: 1.8;
+            }
+            .question-bar span {
+                font-size: 12px;
+            }
+        }
+
+        .cell-tooltip {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            font-size: 18px;
+            font-weight: bold;
+            font-family: "STKaiti", "KaiTi", "FangSong", "SimSun", serif;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(163, 207, 166, 0.13);
+            letter-spacing: 2px;
+            transition: opacity 0.2s;
+            opacity: 1;
+            pointer-events: none;
+            padding: 0 12px;
+            border: 2px solid #b6d47a;
+            background: linear-gradient(90deg, #eaf7d1 60%, #d2e393 100%);
+            color: #3a7a4d;
+        }
+
+        .cell-tooltip.wrong {
+            border: 2px solid #ffb3b3;
+            background: linear-gradient(90deg, #ffeaea 60%, #ffd6d6 100%);
+            color: #c0392b;
+        }
+
+        .flashcard,
+        .hint-text,
+        table {
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
+            box-sizing: border-box;
         }
     </style>
 </head>
+
 <body>
     <h1 style="display:none;">六十四卦定位练习</h1>
-    
     <div class="flashcard" id="flashcard">
         <div class="flashcard-container">
             <div class="symbol" id="symbol"></div>
             <div class="name" id="name"></div>
         </div>
-        <p>这个卦应该在哪个宫位？</p>
-        <button id="next-btn">下一个</button>
-        <button id="toggle-btn">显示所有卦</button>
     </div>
-
+    <div class="question-bar"
+        style="display:flex;align-items:baseline;justify-content:center;gap:10px;margin:18px 0 0 0;">
+        <span
+            style="font-size:16px;color:#3a2c1a;font-family:'STKaiti','KaiTi','FangSong','SimSun',serif;letter-spacing:1px;">这个卦应该在哪个宫位？</span>
+        <button id="next-btn" style="padding:3px 14px;font-size:13px;border-radius:14px;margin-left:8px;">下一个</button>
+    </div>
     <div id="bagua-table"></div>
-    
+    <div class="toggle-container">
+        <input type="checkbox" id="toggle-all-checkbox">
+        <label for="toggle-all-checkbox" class="toggle-label">显示所有卦</label>
+        <input type="checkbox" id="toggle-name-checkbox">
+        <label for="toggle-name-checkbox" class="toggle-label" id="fullname-label">显示卦名全称</label>
+    </div>
     <div class="hint-text">
         <div>
             <ul>
-                <li>世应诀：天同二世天变五，地同四世地变初，本宫六世三世异，人同游魂人变归。</li>
-                <li>寻宫诀：一二三六外卦宫，四五游魂内变更，归魂内卦是本宫。</li>
+                <li>天同二世天变五，地同四世地变初，<br>本宫六世三世异，人同游魂人变归。</li>
+                <li>一二三六外卦宫，四五游魂内变更，归魂内卦是本宫。</li>
             </ul>
         </div>
     </div>
-    
-    <div class="toggle-container">
-        <input type="checkbox" id="toggle-name-checkbox">
-        <label for="toggle-name-checkbox" class="toggle-label">显示卦名全称</label>
-    </div>
-
-<script>
+    <script>
         // 数据定义
-        const lssg = ["䷀", "䷁", "䷂", "䷃", "䷄", "䷅", "䷆", "䷇", "䷈", "䷉", "䷊", "䷋", "䷌", "䷍", "䷎", "䷏", "䷐", "䷑", "䷒", "䷓", "䷔", "䷕", "䷖", "䷗", "䷘", "䷙", "䷚", "䷛", "䷜", "䷝", "䷞", "䷟", "䷠", "䷡", "䷢", "䷣", "䷤", "䷥", "䷦", "䷧", "䷨", "䷩", "䷪", "䷫", "䷬", "䷭", "䷮", "䷯", "䷰", "䷱", "䷲", "䷳", "䷴", "䷵", "䷶", "䷷", "䷸", "䷹", "䷺", "䷻", "䷼", "䷽", "䷾", "䷿"];
+        const lssg = ["䷀", "䷅", "䷂", "䷃", "䷄", "䷅", "䷆", "䷇", "䷈", "䷉", "䷊", "䷋", "䷌", "䷍", "䷎", "䷏", "䷐", "䷑", "䷒", "䷓", "䷔", "䷕", "䷖", "䷗", "䷘", "䷙", "䷚", "䷛", "䷜", "䷝", "䷞", "䷟", "䷠", "䷡", "䷢", "䷣", "䷤", "䷥", "䷦", "䷧", "䷨", "䷩", "䷪", "䷫", "䷬", "䷭", "䷮", "䷯", "䷰", "䷱", "䷲", "䷳", "䷴", "䷵", "䷶", "䷷", "䷸", "䷹", "䷺", "䷻", "䷼", "䷽", "䷾", "䷿"];
         const lssgm = ["乾為天", "坤為地", "水雷屯", "山水蒙", "水天需", "天水訟", "地水師", "水地比", "風天小畜", "天澤履", "地天泰", "天地否", "天火同人", "火天大有", "地山謙", "雷地豫", "澤雷隨", "山風蠱", "地澤臨", "風地觀", "火雷噬嗑", "山火賁", "山地剝", "地雷復", "天雷无妄", "山天大畜", "山雷頤", "澤風大過", "坎為水", "離為火", "澤山咸", "雷風恆", "天山遯", "雷天大壯", "火地晉", "地火明夷", "風火家人", "火澤睽", "水山蹇", "雷水解", "山澤損", "風雷益", "澤天夬", "天風姤", "泽地萃", "地风升", "泽水困", "水风井", "泽火革", "火风鼎", "震为雷", "艮为山", "风山渐", "雷泽归妹", "雷火丰", "火山旅", "巽为风", "兑为泽", "风水涣", "水泽节", "风泽中孚", "雷山小过", "水火既济", "火水未济"];
         const lssgm2 = ["乾", "坤", "屯", "蒙", "需", "訟", "師", "比", "小畜", "履", "泰", "否", "同人", "大有", "謙", "豫", "隨", "蠱", "臨", "觀", "噬嗑", "賁", "剝", "復", "无妄", "大畜", "頤", "大過", "坎", "離", "咸", "恆", "遯", "大壯", "晉", "明夷", "家人", "睽", "蹇", "解", "損", "益", "夬", "姤", "萃", "升", "困", "井", "革", "鼎", "震", "艮", "漸", "歸妹", "豐", "旅", "巽", "兌", "渙", "節", "中孚", "小過", "既濟", "未濟"];
-        
         const bagong = [
             [1, 44, 33, 12, 20, 23, 35, 14],
             [2, 24, 19, 11, 34, 43, 5, 8],
@@ -186,62 +466,47 @@
             [51, 16, 40, 32, 46, 48, 28, 17],
             [57, 9, 37, 42, 25, 21, 27, 18]
         ];
-        
-        const headers = ['纯卦','一世','二世','三世','四世','五世','游魂','归魂'];
+        const headers = ['纯卦', '一世', '二世', '三世', '四世', '五世', '游魂', '归魂'];
         let showFullName = false;
-
         // 创建表格
         function createBaguaTable() {
             const table = document.createElement('table');
-            
             const thead = document.createElement('thead');
             const headerRow = document.createElement('tr');
-            
             headers.forEach(header => {
                 const th = document.createElement('th');
                 th.textContent = header;
                 headerRow.appendChild(th);
             });
-            
             thead.appendChild(headerRow);
             table.appendChild(thead);
-            
             const tbody = document.createElement('tbody');
-            
             for (let i = 0; i < bagong.length; i++) {
                 const row = document.createElement('tr');
-                
                 for (let j = 0; j < bagong[i].length; j++) {
                     const index = bagong[i][j] - 1;
                     const cell = document.createElement('td');
                     cell.dataset.guaIndex = index;
-                    
                     const symbolDiv = document.createElement('div');
                     symbolDiv.className = 'table-symbol';
                     symbolDiv.textContent = lssg[index];
-                    
                     const nameDiv = document.createElement('div');
                     nameDiv.textContent = showFullName ? lssgm[index] : lssgm2[index];
-                    
                     if (j === 0) {
                         cell.classList.add('pure-gua');
                     } else {
                         symbolDiv.classList.add('hidden');
                         nameDiv.classList.add('hidden');
                     }
-                    
                     cell.appendChild(symbolDiv);
                     cell.appendChild(nameDiv);
                     row.appendChild(cell);
                 }
-                
                 tbody.appendChild(row);
             }
-            
             table.appendChild(tbody);
             return table;
         }
-
         // 更新表格中的卦名显示
         function updateTableNames() {
             const nameDivs = document.querySelectorAll('td div:not(.table-symbol)');
@@ -250,42 +515,35 @@
                 div.textContent = showFullName ? lssgm[index] : lssgm2[index];
             });
         }
-
         // 渲染表格
         document.getElementById('bagua-table').appendChild(createBaguaTable());
 
-        // 闪卡功能
+        // 变量获取和事件绑定必须在表格渲染后
         const symbolElement = document.getElementById('symbol');
         const nameElement = document.getElementById('name');
         const nextBtn = document.getElementById('next-btn');
-        const toggleBtn = document.getElementById('toggle-btn');
         const toggleNameCheckbox = document.getElementById('toggle-name-checkbox');
-        const tableCells = document.querySelectorAll('td');
-        
+        const toggleAllCheckbox = document.getElementById('toggle-all-checkbox');
+        let tableCells = document.querySelectorAll('td');
         let askedIndices = [];
         let currentIndex = -1;
         let isShowingAll = false;
-        
         function getRandomIndex() {
             const array = new Uint32Array(1);
             window.crypto.getRandomValues(array);
             return array[0] % lssg.length;
         }
-        
         function getRandomGua() {
             if (askedIndices.length >= 10) {
                 askedIndices = [];
             }
-            
             let index;
             do {
                 index = getRandomIndex();
             } while (askedIndices.includes(index) || isPureGua(index));
-            
             askedIndices.push(index);
             return index;
         }
-        
         function isPureGua(index) {
             for (let i = 0; i < bagong.length; i++) {
                 if (bagong[i][0] - 1 === index) {
@@ -294,36 +552,29 @@
             }
             return false;
         }
-        
         function showRandomGua() {
             currentIndex = getRandomGua();
             symbolElement.textContent = lssg[currentIndex];
             nameElement.textContent = lssgm[currentIndex];
-            
             tableCells.forEach(cell => {
                 const guaIndex = parseInt(cell.dataset.guaIndex);
                 const symbolDiv = cell.querySelector('.table-symbol');
                 const nameDiv = cell.querySelector('div:not(.table-symbol)');
-                
                 cell.classList.remove('highlight');
                 cell.style.backgroundColor = '';
-                
                 if (!cell.classList.contains('pure-gua') && !isShowingAll) {
                     symbolDiv.classList.add('hidden');
                     nameDiv.classList.add('hidden');
                 }
             });
         }
-        
         function toggleAllGua() {
             isShowingAll = !isShowingAll;
             toggleBtn.textContent = isShowingAll ? '隐藏其他卦' : '显示所有卦';
-            
             tableCells.forEach(cell => {
                 if (!cell.classList.contains('pure-gua')) {
                     const symbolDiv = cell.querySelector('.table-symbol');
                     const nameDiv = cell.querySelector('div:not(.table-symbol)');
-                    
                     if (isShowingAll) {
                         symbolDiv.classList.remove('hidden');
                         nameDiv.classList.remove('hidden');
@@ -334,44 +585,119 @@
                 }
             });
         }
-
         function toggleNameDisplay() {
             showFullName = toggleNameCheckbox.checked;
             updateTableNames();
         }
-        
+        function showTooltip(isCorrect) {
+            // 移除已有 tooltip
+            const oldTip = document.getElementById('cell-tooltip');
+            if (oldTip) oldTip.remove();
+
+            // 找到 question-bar
+            const questionBar = document.querySelector('.question-bar');
+            if (!questionBar) return;
+
+            const tooltip = document.createElement('div');
+            tooltip.id = 'cell-tooltip';
+            tooltip.textContent = isCorrect ? '回答正确，下一个' : '不对哦，再来一次';
+            tooltip.style.position = 'absolute';
+            tooltip.style.left = '-12px'; // 左右各留 margin
+            tooltip.style.top = '0';
+            tooltip.style.width = (questionBar.offsetWidth + 10) + 'px'; // 宽度加大
+            tooltip.style.height = (questionBar.offsetHeight) + 'px'; // 高度稍小
+            tooltip.style.display = 'flex';
+            tooltip.style.alignItems = 'center';
+            tooltip.style.justifyContent = 'center';
+            tooltip.style.zIndex = 1000;
+            tooltip.style.background = isCorrect
+                ? 'linear-gradient(90deg, #eaf7d1 60%, #d2e393 100%)'
+                : 'linear-gradient(90deg, #ffeaea 60%, #ffd6d6 100%)';
+            tooltip.style.color = isCorrect ? '#3a7a4d' : '#c0392b';
+            tooltip.style.fontSize = '18px';
+            tooltip.style.fontWeight = 'bold';
+            tooltip.style.fontFamily = '"STKaiti","KaiTi","FangSong","SimSun",serif';
+            tooltip.style.borderRadius = '12px';
+            tooltip.style.boxShadow = '0 2px 12px rgba(163,207,166,0.13)';
+            tooltip.style.border = isCorrect ? '2px solid #b6d47a' : '2px solid #ffb3b3';
+            tooltip.style.letterSpacing = '2px';
+            tooltip.style.transition = 'opacity 0.2s';
+            tooltip.style.opacity = '1';
+            tooltip.style.pointerEvents = 'none';
+            tooltip.style.padding = '0 12px';
+
+            // 定位到 question-bar 覆盖其上
+            const rect = questionBar.getBoundingClientRect();
+            const scrollTop = window.scrollY || document.documentElement.scrollTop;
+            const scrollLeft = window.scrollX || document.documentElement.scrollLeft;
+            tooltip.style.left = (rect.left + scrollLeft - 12) + 'px';
+            tooltip.style.top = (rect.top + scrollTop) + 'px';
+
+            document.body.appendChild(tooltip);
+
+            setTimeout(() => {
+                tooltip.style.opacity = '0';
+                setTimeout(() => {
+                    tooltip.remove();
+                    if (isCorrect) showRandomGua();
+                }, 400);
+            }, 1200);
+        }
+
         function handleCellClick(event) {
             if (currentIndex === -1) return;
-            
             const cell = event.currentTarget;
             const guaIndex = parseInt(cell.dataset.guaIndex);
-            
             if (cell.classList.contains('pure-gua')) {
                 return;
             }
-            
             const symbolDiv = cell.querySelector('.table-symbol');
             const nameDiv = cell.querySelector('div:not(.table-symbol)');
             symbolDiv.classList.remove('hidden');
             nameDiv.classList.remove('hidden');
-            
+            // 只移除高亮，不重置背景色，这样颜色会保持
+            tableCells.forEach(c => {
+                c.classList.remove('highlight');
+            });
             if (guaIndex === currentIndex) {
                 cell.classList.add('highlight');
+                cell.style.backgroundColor = '#d2e393'; // 新的浅绿色
+                showTooltip(true);
             } else {
-                cell.style.backgroundColor = '#ffcdd2';
+                cell.style.backgroundColor = '#ffeaea'; // 浅红色
+                showTooltip(false);
             }
         }
-        
         // 初始化
         showRandomGua();
-        
         // 事件监听
         nextBtn.addEventListener('click', showRandomGua);
-        toggleBtn.addEventListener('click', toggleAllGua);
-        toggleNameCheckbox.addEventListener('change', toggleNameDisplay);
+        toggleNameCheckbox.addEventListener('change', function () {
+            showFullName = toggleNameCheckbox.checked;
+            updateTableNames();
+        });
+        toggleAllCheckbox.addEventListener('change', function () {
+            isShowingAll = toggleAllCheckbox.checked;
+            toggleAllCheckbox.nextElementSibling.textContent = isShowingAll ? '隐藏其他卦' : '显示所有卦';
+            tableCells.forEach(cell => {
+                if (!cell.classList.contains('pure-gua')) {
+                    const symbolDiv = cell.querySelector('.table-symbol');
+                    const nameDiv = cell.querySelector('div:not(.table-symbol)');
+                    if (isShowingAll) {
+                        symbolDiv.classList.remove('hidden');
+                        nameDiv.classList.remove('hidden');
+                    } else {
+                        symbolDiv.classList.add('hidden');
+                        nameDiv.classList.add('hidden');
+                    }
+                }
+            });
+        });
+        // 绑定单元格点击事件（必须在表格渲染后）
         tableCells.forEach(cell => {
             cell.addEventListener('click', handleCellClick);
         });
     </script>
 </body>
+
 </html>

@@ -4,294 +4,202 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>十二辟卦与地支</title>
-</head>
-<body>
-    <div class="card-container">
-        <div class="card">
-            <!-- 标题部分 -->
-            <div class="header-container">
-                <h1>十二辟卦与地支</h1>
-            </div>
-            
-            <!-- 主体内容部分 -->
-            <div class="main-container">
-                <div class="question" id="question"></div>
-                <div class="options" id="options"></div>
-                <div class="feedback" id="feedback"></div>
-            </div>
-            
-            <!-- 底部统计部分 -->
-            <div class="footer-container">
-                <div class="stats">
-                    <div class="stat-item">
-                        总用时
-                        <b id="timer">0s</b>
-                    </div>
-                    <div class="stat-item">
-                        已答
-                        <b id="question-count">0</b>
-                    </div>
-                    <div class="stat-item">
-                        正确
-                        <b id="correct-count">0</b>
-                    </div>
-                    <div class="stat-item">
-                        正确率
-                        <b id="accuracy">0%</b>
-                    </div>
-                    <div class="stat-item">
-                        平均
-                        <b id="average-time">N/A</b>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <style>
-        * {
-            box-sizing: border-box;
-        }
-        
+        * { box-sizing: border-box; }
         body {
-            font-family: 'Microsoft YaHei', Arial, sans-serif;
-            background-color: #6a5acd; /* 紫色背景 */
+            font-family: 'KaiTi', 'FangSong', 'SimSun', serif;
+            background: #f8f5ee;
             margin: 0;
-            padding: 20px;
+            padding: 0;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
         }
-        
         .card-container {
             width: 100%;
-            max-width: 500px;
+            max-width: 420px;
+            margin: 0 auto;
         }
-        
-        .card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 12px;
-            padding: 0;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            overflow: hidden;
+        .main-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 22px 14px 14px 14px;
+            margin: 10px 0;
+            box-shadow: 0 4px 16px rgba(120, 160, 120, 0.10);
+            border: 1.5px solid #d0e6d7;
+            position: relative;
         }
-        
-        /* 标题部分 */
-        .header-container {
-            background: linear-gradient(145deg, #7e57c2, #ba68c8); /* 深紫色渐变 */
-            padding: 15px 20px;
-            text-align: center;
-            border-bottom: 2px solid #ffffff30;
-        }
-        
         h1 {
-            color: white;
-            margin: 0;
-            font-size: 24px;
-            font-weight: 600;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
-        }
-        
-        /* 主体内容部分 */
-        .main-container {
-            padding: 20px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        
-        .question {
-            font-size: 22px;
-            margin: 15px 0;
+            color: #3e5c3a;
             text-align: center;
-            min-height: 35px;
-            color: #2c3e50;
-            font-weight: 500;
+            margin: 0 0 18px 0;
+            font-size: 26px;
+            font-family: inherit;
+            letter-spacing: 2px;
+            font-weight: 600;
+            border-bottom: 2px solid #b7d6c2;
+            padding-bottom: 8px;
         }
-        
-        .options {
+        .question {
+            font-size: 20px;
+            margin: 18px 0 10px 0;
+            font-weight: 500;
+            color: #2c3e50;
+            min-height: 30px;
+            text-align: center;
+            font-family: inherit;
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 1;
+        }
+        .options-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 12px;
-            margin: 25px 0;
+            margin: 20px 0;
         }
-        
         .option {
-            background: linear-gradient(145deg, #f0f8ff, #e6f3ff);
-            border: 2px solid #d1e7ff;
-            border-radius: 10px;
-            padding: 12px 8px;
+            background: #f5f9f6;
+            border: 1.5px solid #b7d6c2;
+            border-radius: 12px;
+            padding: 13px 8px;
             font-size: 16px;
+            font-family: inherit;
             font-weight: 500;
-            color: #2c3e50;
+            color: #355c48;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s;
             outline: none;
+            box-shadow: 0 1px 3px rgba(183,215,201,0.08);
         }
-        
         .option:hover:not(:disabled) {
-            background: linear-gradient(145deg, #e1f0ff, #d1e7ff);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            background: #e6f2ea;
+            border-color: #8ec6b7;
+            transform: translateY(-2px) scale(1.03);
         }
-        
         .option:active:not(:disabled) {
-            transform: translateY(0);
+            transform: translateY(0) scale(0.98);
         }
-        
         .option:disabled {
             cursor: not-allowed;
             opacity: 0.6;
         }
-        
+        .option.correct {
+            background: #e0f7fa;
+            border-color: #80cbc4;
+            color: #00695c;
+        }
+        .option.incorrect {
+            background: #ffebee;
+            border-color: #e57373;
+            color: #b71c1c;
+        }
         .feedback {
-            margin: 20px 0;
-            padding: 15px;
+            position: absolute;
+            left: 50%;
+            top: 0;
+            transform: translate(-50%, -110%);
+            min-width: 120px;
+            max-width: 90vw;
+            background: #fffbe8;
+            color: #388e3c;
+            border: 1.5px solid #b7d6c2;
             border-radius: 10px;
-            font-size: 18px;
+            box-shadow: 0 4px 16px rgba(60,80,60,0.10);
+            padding: 10px 18px;
+            font-size: 17px;
+            z-index: 10;
+            display: none;
+            white-space: pre-line;
+            pointer-events: none;
+            font-family: inherit;
             font-weight: 500;
             text-align: center;
-            min-height: 55px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
+            transition: opacity 0.2s;
         }
-        
-        .feedback.correct {
-            background: linear-gradient(145deg, #d4edda, #c3e6cb);
-            color: #155724;
-            border: 1px solid #c3e6cb;
+        .question-tooltip-active .feedback {
+            display: block;
+            animation: fadeInTooltip 0.2s;
         }
-        
-        .feedback.incorrect {
-            background: linear-gradient(145deg, #f8d7da, #f1b0b7);
-            color: #721c24;
-            border: 1px solid #f1b0b7;
+        @keyframes fadeInTooltip {
+            from { opacity: 0; transform: translate(-50%, -130%);}
+            to   { opacity: 1; transform: translate(-50%, -110%);}
         }
-        
-        /* 底部统计部分 */
-        .footer-container {
-            background: linear-gradient(145deg, #7e57c2, #ba68c8); /* 深紫色渐变 */
-            padding: 15px 20px;
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
             margin-top: 20px;
+            font-size: 13px;
+            padding: 10px 0 0 0;
+            background: none;
+            border: none;
             border-radius: 12px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        
-        .stats {
-            display: flex;
-            justify-content: space-between;
-            gap: 12px;
-            flex-wrap: nowrap; /* 防止换行 */
-        }
-        
-        .stat-item {
-            flex: 1;
-            background: white;
-            padding: 12px 8px;
-            border-radius: 8px;
-            font-size: 12px;
-            color: #495057;
-            border: 1px solid #dee2e6;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
             text-align: center;
         }
-        
+        .stat-item {
+            background: #f8f5ee;
+            padding: 7px 5px;
+            border-radius: 8px;
+            border: 1px solid #d0e6d7;
+            color: #3e5c3a;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-align: center;
+        }
         .stat-item b {
             display: block;
-            font-size: 16px;
-            color: #212529;
-            margin-top: 5px;
-            font-weight: 600;
+            font-size: 14px;
+            color: #1b3b2a;
+            margin-top: 2px;
+            font-family: inherit;
         }
-        
         @media (max-width: 600px) {
-            body {
-                padding: 15px;
-            }
-            
-            .header-container {
-                padding: 12px 15px;
-            }
-            
-            h1 {
-                font-size: 22px;
-            }
-            
-            .main-container {
-                padding: 15px;
-            }
-            
-            .question {
-                font-size: 20px;
-                margin: 15px 0;
-            }
-            
-            .options {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 10px;
-                margin: 15px 0;
-            }
-            
-            .option {
-                padding: 10px 5px;
-                font-size: 14px;
-                min-height: 45px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-            
-            .feedback {
-                font-size: 16px;
-                padding: 12px;
-            }
-            
-            .footer-container {
-                padding: 12px 15px;
-            }
-            
-            .stats {
-                gap: 8px;
-            }
-            
-            .stat-item {
-                padding: 10px 5px;
-                font-size: 11px;
-            }
-            
-            .stat-item b {
-                font-size: 14px;
-                margin-top: 3px;
-            }
+            body { padding: 10px; }
+            .main-card { padding: 10px; }
+            h1 { font-size: 18px; margin-bottom: 10px; }
+            .question { font-size: 15px; margin: 10px 0; }
+            .options-grid { gap: 6px; margin: 12px 0; }
+            .option { padding: 8px; font-size: 13px; }
+            .feedback { font-size: 13px; padding: 8px; }
+            .card-container { max-width: 98vw; min-width: 0; padding: 0; }
+            .stats-container { gap: 4px; padding: 8px; font-size: 11px; }
+            .stat-item { padding: 4px 2px; }
+            .stat-item b { font-size: 11px; margin-top: 1px; }
         }
-        
-        @media (max-width: 480px) {
-            .options {
-                gap: 8px;
-            }
-            
-            .option {
-                padding: 8px 4px;
-                font-size: 13px;
-                min-height: 40px;
-            }
+        @media (max-width: 400px) {
+            .options-grid { grid-template-columns: repeat(3, 1fr); }
+            .stats-container { font-size: 9px; }
+            .stat-item b { font-size: 10px; }
         }
     </style>
-
+</head>
+<body>
+    <div class="card-container">
+        <h1>十二辟卦与地支</h1>
+        <div class="main-card">
+            <div class="question" id="question">
+                <div class="feedback" id="feedback"></div>
+            </div>
+            <div class="options-grid" id="options"></div>
+            <div class="stats-container">
+                <div class="stat-item"> 总用时 <b id="timer">0s</b> </div>
+                <div class="stat-item"> 已答 <b id="question-count">0</b> </div>
+                <div class="stat-item"> 正确 <b id="correct-count">0</b> </div>
+                <div class="stat-item"> 正确率 <b id="accuracy">0%</b> </div>
+                <div class="stat-item"> 平均 <b id="average-time">N/A</b> </div>
+            </div>
+        </div>
+    </div>
     <script>
         // 定义十二辟卦和十二地支
         const baGua = ['地雷復', '地泽臨', '地天泰', '雷天大壯', '泽天夬', '乾为天', '天风姤', '天山遯', '天地否', '风地觀', '山地剝', '坤为地'];
         const diZhi = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
-        
         // 创建对应关系映射
         const baGuaToDiZhi = Object.fromEntries(baGua.map((g, i) => [g, diZhi[i]]));
         const diZhiToBaGua = Object.fromEntries(diZhi.map((d, i) => [d, baGua[i]]));
-        
         // 获取DOM元素
         const questionElement = document.getElementById('question');
         const optionsElement = document.getElementById('options');
@@ -301,7 +209,6 @@
         const correctCountElement = document.getElementById('correct-count');
         const accuracyElement = document.getElementById('accuracy');
         const averageTimeElement = document.getElementById('average-time');
-        
         // 状态变量
         let currentIsBaGua = true;
         let lastQuestion = null;
@@ -309,14 +216,10 @@
         let startTime = new Date();
         let questionsAnswered = 0;
         let correctAnswers = 0;
-        
         // 使用crypto生成安全的随机数
         function secureRandom(max) {
-            const array = new Uint32Array(1);
-            window.crypto.getRandomValues(array);
-            return array[0] % max;
+            return Math.floor(Math.random() * max);
         }
-
         // 启动并更新计时器
         function startTimer() {
             setInterval(() => {
@@ -324,91 +227,77 @@
                 timerElement.textContent = `${elapsedSeconds}s`;
             }, 1000);
         }
-        
         // 更新统计信息
         function updateStats(isCorrect = false) {
             questionsAnswered++;
             if (isCorrect) correctAnswers++;
-            
             const elapsedSeconds = Math.floor((new Date() - startTime) / 1000);
             const averageTime = questionsAnswered > 0 ? (elapsedSeconds / questionsAnswered).toFixed(2) : 0;
             const accuracy = questionsAnswered > 0 ? ((correctAnswers / questionsAnswered) * 100).toFixed(1) : 0;
-            
             questionCountElement.textContent = questionsAnswered;
             correctCountElement.textContent = correctAnswers;
             accuracyElement.textContent = `${accuracy}%`;
             averageTimeElement.textContent = `${averageTime}s`;
         }
-
         function showNextQuestion() {
             // 清除 feedback
-            feedbackElement.className = 'feedback';
+            questionElement.classList.remove('question-tooltip-active');
             feedbackElement.textContent = '';
-            
             currentIsBaGua = secureRandom(2) === 0;
-            
             let currentQuestion;
             let attempts = 0;
             const maxAttempts = 100;
-            
             do {
                 const sourceArray = currentIsBaGua ? baGua : diZhi;
                 currentQuestion = sourceArray[secureRandom(sourceArray.length)];
                 attempts++;
             } while (
-                (recentQuestions.includes(currentQuestion) || currentQuestion === lastQuestion) 
+                (recentQuestions.includes(currentQuestion) || currentQuestion === lastQuestion)
                 && attempts < maxAttempts
             );
-            
             recentQuestions.push(currentQuestion);
             if (recentQuestions.length > 10) recentQuestions.shift();
             lastQuestion = currentQuestion;
-            
-            questionElement.textContent = currentIsBaGua
+            questionElement.childNodes[0].nodeValue = currentIsBaGua
                 ? `${currentQuestion} 对应的地支是？`
                 : `${currentQuestion} 对应的卦是？`;
-            
             generateOptions(currentQuestion, currentIsBaGua);
         }
-        
         function generateOptions(currentQuestion, isBaGuaQuestion) {
             optionsElement.innerHTML = '';
             const correctAnswer = isBaGuaQuestion
                 ? baGuaToDiZhi[currentQuestion]
                 : diZhiToBaGua[currentQuestion];
-            
             const options = isBaGuaQuestion ? [...diZhi] : [...baGua];
-            
             options.forEach(optionText => {
                 const button = document.createElement('button');
                 button.className = 'option';
                 button.textContent = optionText;
-                button.addEventListener('click', () => checkAnswer(optionText, correctAnswer));
+                button.addEventListener('click', () => checkAnswer(button, optionText, correctAnswer));
                 optionsElement.appendChild(button);
             });
         }
-        
-        function checkAnswer(selectedAnswer, correctAnswer) {
-            Array.from(optionsElement.children).forEach(button => button.disabled = true);
-
+        function checkAnswer(button, selectedAnswer, correctAnswer) {
+            Array.from(optionsElement.children).forEach(btn => {
+                btn.disabled = true;
+                if (btn.textContent === correctAnswer) btn.classList.add('correct');
+                else if (btn.textContent === selectedAnswer) btn.classList.add('incorrect');
+            });
             const isCorrect = selectedAnswer === correctAnswer;
-            
-            // 在底部显示 feedback
             if (isCorrect) {
                 feedbackElement.textContent = '正确！';
-                feedbackElement.className = 'feedback correct';
+                feedbackElement.style.color = '#155724';
             } else {
                 feedbackElement.textContent = `错误！正确答案是: ${correctAnswer}`;
-                feedbackElement.className = 'feedback incorrect';
+                feedbackElement.style.color = '#721c24';
             }
-            
+            questionElement.classList.add('question-tooltip-active');
             updateStats(isCorrect);
-            
-            // 正确时显示时间缩短为0.5s
-            const delay = isCorrect ? 500 : 1500;
-            setTimeout(showNextQuestion, delay);
+            setTimeout(() => {
+                questionElement.classList.remove('question-tooltip-active');
+                showNextQuestion();
+            }, isCorrect ? 700 : 1800);
         }
-
         // 初始化
         showNextQuestion();
         startTimer();

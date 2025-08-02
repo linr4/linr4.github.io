@@ -7,122 +7,80 @@
     <style>
         @font-face {
             font-family: 'ChineseFont';
-            src: local('SimSun'), local('宋体');
+            src: local('KaiTi'), local('楷体'), local('SimSun'), local('宋体');
         }
-        
         body {
-            font-family: 'ChineseFont', 'SimSun', '宋体', serif;
-            background-color: #f8f1e5;
+            font-family: 'ChineseFont', 'KaiTi', '楷体', 'SimSun', '宋体', serif;
+            background: linear-gradient(135deg, #f9f6f2 0%, #e6f0ea 100%);
             margin: 0;
             padding: 0;
+            min-height: 100vh;
+            color: #3e4a3f;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            position: relative;
-            overflow: hidden;
-            color: #5a3921;
         }
-        
         .container {
+            background: rgba(255,255,255,0.85);
+            border: 1.5px solid #b7d3c6;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px 0 rgba(120, 180, 160, 0.10);
             text-align: center;
-            width: 81%;
-            max-width: 350px;
-            padding: 15px;
+            width: 85%;
+            max-width: 370px;
+            padding: 28px 18px 22px 18px;
             position: relative;
-            z-index: 1;
         }
-        
         h1 {
-            color: #5a3921;
-            margin-bottom: 15px;
-            font-size: clamp(1.6rem, 5vw, 2.2rem);
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            color: #2e5c4d;
+            margin-bottom: 22px;
+            font-size: clamp(1.7rem, 5vw, 2.3rem);
+            font-family: 'ChineseFont', 'KaiTi', '楷体', serif;
+            letter-spacing: 2px;
+            font-weight: 600;
+            text-shadow: 0 2px 8px rgba(180, 220, 200, 0.13);
         }
-        
         .nav-button {
             display: block;
-            width: 96%;
-            padding: 10px;
-            margin: 10px 0;
-            background-color: #8b4513;
-            color: #f8e8c8;
+            width: 98%;
+            padding: 12px 0;
+            margin: 13px 0;
+            background: linear-gradient(90deg, #e6f0ea 0%, #f9f6f2 100%);
+            color: #2e5c4d;
             text-decoration: none;
-            border-radius: 5px;
-            font-size: clamp(0.9rem, 3.5vw, 1.1rem);
+            border-radius: 8px;
+            font-size: clamp(1.05rem, 3.5vw, 1.18rem);
+            font-family: 'ChineseFont', 'KaiTi', '楷体', 'SimSun', '宋体', serif;
+            border: 1.5px solid #b7d3c6;
+            box-shadow: 0 2px 8px rgba(120, 180, 160, 0.08);
             font-weight: 500;
-            transition: all 0.3s;
-            border: 2px solid #5a3921;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            font-family: 'ChineseFont', 'SimSun', '宋体', serif;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            transition: all 0.22s;
+            letter-spacing: 1px;
         }
-        
         .nav-button:hover {
-            background-color: #a0522d;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            background: #d0e6d6;
+            color: #1a3c2b;
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 6px 18px rgba(120, 180, 160, 0.15);
         }
-        
-        .corner-decoration {
-            position: absolute;
-            width: clamp(70px, 20vw, 100px);
-            height: clamp(70px, 20vw, 100px);
-            background-size: contain;
-            background-repeat: no-repeat;
-            opacity: 0.7;
-            z-index: 0;
-        }
-        
-        .top-left {
-            top: 0;
-            left: 0;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M0,0 L100,0 L0,100 Z" fill="%23d4a76a"/><path d="M0,0 L30,0 C20,20 30,40 0,70 Z" fill="%23a67c52"/></svg>');
-        }
-        
-        .top-right {
-            top: 0;
-            right: 0;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M100,0 L0,0 L100,100 Z" fill="%23d4a76a"/><path d="M100,0 L70,0 C80,20 70,40 100,70 Z" fill="%23a67c52"/></svg>');
-        }
-        
-        .bottom-left {
-            bottom: 0;
-            left: 0;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M0,100 L100,100 L0,0 Z" fill="%23d4a76a"/><path d="M0,100 L30,100 C20,80 30,60 0,30 Z" fill="%23a67c52"/></svg>');
-        }
-        
-        .bottom-right {
-            bottom: 0;
-            right: 0;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M100,100 L0,100 L100,0 Z" fill="%23d4a76a"/><path d="M100,100 L70,100 C80,80 70,60 100,30 Z" fill="%23a67c52"/></svg>');
-        }
-
         @media (max-width: 480px) {
             .container {
-                width: 80%;
-                padding: 10px;
+                width: 92%;
+                padding: 14px 6px 12px 6px;
             }
             h1 {
-                margin-bottom: 10px;
-                font-size: 1.8rem;
+                margin-bottom: 12px;
+                font-size: 1.25rem;
             }
             .nav-button {
-                padding: 8px;
+                padding: 9px 0;
                 margin: 8px 0;
-                font-size: 0.95rem;
+                font-size: 1rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="corner-decoration top-left"></div>
-    <div class="corner-decoration top-right"></div>
-    <div class="corner-decoration bottom-left"></div>
-    <div class="corner-decoration bottom-right"></div>
-    
     <div class="container">
         <h1>六爻基础练习</h1>
         <a href="pg.html" class="nav-button">辟卦地支</a>
