@@ -15,6 +15,13 @@
             color: #3a2c1a;
         }
 
+        .main-container {
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative; /* 让 tooltip 绝对定位于此 */
+            width: 100%;
+            box-sizing: border-box;
+        }
         h1,
         .name,
         .toggle-label {
@@ -385,26 +392,32 @@
 
         .cell-tooltip {
             position: absolute;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            text-align: center;
             z-index: 1000;
             font-size: 18px;
             font-weight: bold;
             font-family: "STKaiti", "KaiTi", "FangSong", "SimSun", serif;
-            border-radius: 12px;
+            border-radius: 10px;
             box-shadow: 0 2px 12px rgba(163, 207, 166, 0.13);
             letter-spacing: 2px;
             transition: opacity 0.2s;
             opacity: 1;
             pointer-events: none;
-            padding: 0 12px;
+            margin: 14px auto 0 auto;
+            padding: 2px;
+            left: 8px;
+            right: 8px;
+            max-width: 600px;
+            min-width: 220px;
+        }
+
+        #cell-tooltip.correct {
             border: 2px solid #b6d47a;
             background: linear-gradient(90deg, #eaf7d1 60%, #d2e393 100%);
             color: #3a7a4d;
         }
 
-        .cell-tooltip.wrong {
+        #cell-tooltip.wrong {
             border: 2px solid #ffb3b3;
             background: linear-gradient(90deg, #ffeaea 60%, #ffd6d6 100%);
             color: #c0392b;
@@ -423,6 +436,7 @@
 </head>
 
 <body>
+    <div class="main-container">
     <h1 style="display:none;">六十四卦定位练习</h1>
     <div class="flashcard" id="flashcard">
         <div class="flashcard-container">
@@ -430,6 +444,7 @@
             <div class="name" id="name"></div>
         </div>
     </div>
+    <div id="cell-tooltip" class="cell-tooltip" style="display:none;"></div>
     <div class="question-bar"
         style="display:flex;align-items:baseline;justify-content:center;gap:10px;margin:18px 0 0 0;">
         <span
@@ -450,6 +465,7 @@
                 <li>一二三六外卦宫，四五游魂内变更，归魂内卦是本宫。</li>
             </ul>
         </div>
+    </div>
     </div>
     <script>
         // 数据定义
@@ -590,55 +606,18 @@
             updateTableNames();
         }
         function showTooltip(isCorrect) {
-            // 移除已有 tooltip
-            const oldTip = document.getElementById('cell-tooltip');
-            if (oldTip) oldTip.remove();
+            const tooltip = document.getElementById('cell-tooltip');
+            if (!tooltip) return;
 
-            // 找到 question-bar
-            const questionBar = document.querySelector('.question-bar');
-            if (!questionBar) return;
-
-            const tooltip = document.createElement('div');
-            tooltip.id = 'cell-tooltip';
-            tooltip.textContent = isCorrect ? '回答正确，下一个' : '不对哦，再来一次';
-            tooltip.style.position = 'absolute';
-            tooltip.style.left = '-12px'; // 左右各留 margin
-            tooltip.style.top = '0';
-            tooltip.style.width = (questionBar.offsetWidth + 10) + 'px'; // 宽度加大
-            tooltip.style.height = (questionBar.offsetHeight) + 'px'; // 高度稍小
-            tooltip.style.display = 'flex';
-            tooltip.style.alignItems = 'center';
-            tooltip.style.justifyContent = 'center';
-            tooltip.style.zIndex = 1000;
-            tooltip.style.background = isCorrect
-                ? 'linear-gradient(90deg, #eaf7d1 60%, #d2e393 100%)'
-                : 'linear-gradient(90deg, #ffeaea 60%, #ffd6d6 100%)';
-            tooltip.style.color = isCorrect ? '#3a7a4d' : '#c0392b';
-            tooltip.style.fontSize = '18px';
-            tooltip.style.fontWeight = 'bold';
-            tooltip.style.fontFamily = '"STKaiti","KaiTi","FangSong","SimSun",serif';
-            tooltip.style.borderRadius = '12px';
-            tooltip.style.boxShadow = '0 2px 12px rgba(163,207,166,0.13)';
-            tooltip.style.border = isCorrect ? '2px solid #b6d47a' : '2px solid #ffb3b3';
-            tooltip.style.letterSpacing = '2px';
-            tooltip.style.transition = 'opacity 0.2s';
+            tooltip.textContent = isCorrect ? '回答正确，下一个' : '没答对，再来一次';
+            tooltip.className = 'cell-tooltip ' + (isCorrect ? 'correct' : 'wrong');
+            tooltip.style.display = 'block';
             tooltip.style.opacity = '1';
-            tooltip.style.pointerEvents = 'none';
-            tooltip.style.padding = '0 12px';
-
-            // 定位到 question-bar 覆盖其上
-            const rect = questionBar.getBoundingClientRect();
-            const scrollTop = window.scrollY || document.documentElement.scrollTop;
-            const scrollLeft = window.scrollX || document.documentElement.scrollLeft;
-            tooltip.style.left = (rect.left + scrollLeft - 12) + 'px';
-            tooltip.style.top = (rect.top + scrollTop) + 'px';
-
-            document.body.appendChild(tooltip);
 
             setTimeout(() => {
                 tooltip.style.opacity = '0';
                 setTimeout(() => {
-                    tooltip.remove();
+                    tooltip.style.display = 'none';
                     if (isCorrect) showRandomGua();
                 }, 400);
             }, 1200);
