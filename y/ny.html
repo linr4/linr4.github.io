@@ -3,366 +3,623 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>六十甲子纳音</title>
+    <title>六十甲子纳音练习</title>
     <style>
-        body {
-            font-family: 'Microsoft YaHei', sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            text-align: center;
+        * {
+            box-sizing: border-box;
         }
-        .card {
-            background-color: #f9f9f9;
-            border-radius: 10px;
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 15px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .card-container {
+            width: 100%;
+            max-width: 900px;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
             padding: 20px;
-            margin: 20px 0;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin: 10px 0;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        /* --- 分组选择区域布局开始 --- */
+        .group-section {
+            /* display: none; */ /* 移除默认隐藏 */
+            visibility: hidden;   /* 新增：隐藏但保留空间 */
+            opacity: 0;          /* 新增：完全透明 */
+            /* 保持原有布局样式 */
+            align-items: center;
+            justify-content: center;
+            height: 4rem;            
+            line-height: 4rem;   
+            margin-top: 15px;         
+            margin-bottom: 15px;
+            gap: 10px; /* 元素间距 */
+            flex-wrap: wrap; /* 允许换行，以防内容过窄 */
+            /* 可选：添加过渡效果 */
+            transition: opacity 0.2s ease;
+        }
+        /* 当需要显示时 */
+        .group-section.visible {
+            visibility: visible;
+            opacity: 1;
+        }
+        .current-practice-label {
+            font-weight: 500;
+            color: #2c3e50;
+            font-size: 15px;
+            height: 2rem;
+            line-height: 2rem;
+            white-space: nowrap;
+        }
+        .selector-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px; /* 按钮间距 */
+            flex-wrap: wrap; /* 允许按钮换行（虽然通常不会） */
+        }
+        .wuxing-selector, .random-group-selector {
+            display: none; /* 默认隐藏 */
+        }
+        /* 选择器按钮样式 - 更紧凑 */
+        .wuxing-option, .random-group-option {
+            flex: 0 0 auto; /* 不伸缩，宽度由内容决定 */
+            background: linear-gradient(145deg, #f0f8ff, #e6f3ff);
+            border: 2px solid #d1e7ff;
+            border-radius: 8px;
+            padding: 6px 10px; /* 减小内边距，左右稍大 */
+            font-size: 14px;
+            font-weight: 500;
+            color: #616161; /* 默认灰色文字 */
+            cursor: pointer;
+            transition: all 0.2s ease;
+            outline: none;
+            white-space: nowrap;
+            min-width: 0; /* 防止内容撑开 */
+        }
+        .wuxing-option:hover:not(:disabled), .random-group-option:hover:not(:disabled) {
+            background: linear-gradient(145deg, #e1f0ff, #d1e7ff);
+            transform: translateY(-1px);
+        }
+        .wuxing-option:active:not(:disabled), .random-group-option:active:not(:disabled) {
+            transform: translateY(0);
+        }
+        .wuxing-option:disabled, .random-group-option:disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        /* 活动按钮样式 */
+        .wuxing-option.active, .random-group-option.active {
+            background: linear-gradient(145deg, #81d4fa, #4fc3f7);
+            border-color: #4fc3f7;
+            color: #01579b;
+            font-weight: 700;
+        }
+        /* --- 分组选择区域布局结束 --- */
+        h1 {
+            color: #fdf8b6;
+            text-align: center;
+            margin: 0 0 20px 0;
+            font-size: 26px;
+            font-weight: 600;
         }
         .question {
-            font-size: 24px;
+            font-size: clamp(20px, 5vw, 24px);
             margin: 20px 0;
+            font-weight: 500;
+            color: #2c3e50;
+            min-height: 30px;
+            text-align: center; /* 1. 问题提示文字居中显示 */
         }
-        .options {
+        .options-grid {
+            /* display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            gap: 10px;
+            margin: 20px 0; */
+            /* 2. 待选项一行显示三个 */
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(3, 1fr); /* 强制三列 */
             gap: 10px;
             margin: 20px 0;
         }
         .option {
-            background-color: #eaeaea;
-            border: none;
-            border-radius: 5px;
-            padding: 10px;
-            font-size: 16px;
+            background: linear-gradient(145deg, #f0f8ff, #e6f3ff);
+            border: 2px solid #d1e7ff;
+            border-radius: 10px;
+            padding: 12px;
+            font-size: clamp(14px, 3.5vw, 17px);
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            color: #2c3e50;
+            outline: none;
         }
-        .option:hover {
-            background-color: #d0d0d0;
+        .option:hover:not(:disabled) {
+            background: linear-gradient(145deg, #e1f0ff, #d1e7ff);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .option:active:not(:disabled) {
+            transform: translateY(0);
+        }
+        .option:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
         }
         .option.correct {
-            background-color: #a8f0a8;
+            background: linear-gradient(145deg, #d4edda, #c3e6cb);
+            border-color: #c3e6cb;
+            color: #155724;
         }
         .option.incorrect {
-            background-color: #f0a8a8;
+            background: linear-gradient(145deg, #f8d7da, #f1b0b7);
+            border-color: #f1b0b7;
+            color: #721c24;
         }
         .feedback {
-            font-size: 18px;
-            margin: 10px 0;
-            height: 24px;
+            font-size: clamp(15px, 4vw, 17px);
+            margin: 15px 0;
+            min-height: 40px;
+            font-weight: 500;
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            color: #2c3e50;
         }
-        .stats {
+        /* --- 统计信息样式优化开始 --- */
+        .stats-container {
+            display: grid;
+            /* grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); */ /* 旧的 */
+            grid-template-columns: repeat(5, 1fr); /* 强制5列 */
+            gap: 6px; /* 减小间距 */
             margin-top: 20px;
-            font-size: 16px;
+            /* font-size: clamp(12px, 3vw, 14px); */ /* 旧的 */
+            font-size: 12px; /* 固定较小字体 */
+            padding: 10px; /* 减小内边距 */
+            background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .stat-item {
+            background: linear-gradient(145deg, #ffffff, #f0f0f0);
+            /* padding: 8px; */ /* 旧的 */
+            padding: 6px 4px; /* 显著减小内边距 */
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            color: #495057;
+            /* font-size: 12px; */ /* 不再需要，由 .stats-container 控制 */
+            white-space: nowrap; /* 防止统计项内部换行 */
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .stat-item b {
+            display: block;
+            /* font-size: clamp(13px, 3vw, 15px); */ /* 旧的 */
+            font-size: 13px; /* 固定稍大字体 */
+            color: #212529;
+            margin-top: 2px; /* 减小上边距 */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        /* --- 统计信息样式优化结束 --- */
+        /* --- 设置区域样式优化开始 --- */
+        .settings {
+            margin-top: 15px; /* 减小上边距 */
+            padding: 12px; /* 减小内边距 */
+            background: linear-gradient(145deg, #fffde7, #fff9c4);
+            border-radius: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 10px; /* 减小间距 */
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .settings label {
+            /* font-size: clamp(14px, 3.5vw, 16px); */ /* 旧的 */
+            font-size: 14px; /* 固定字体 */
+            cursor: pointer;
+            white-space: nowrap;
+            color: #2c3e50;
+        }
+        .settings input[type="checkbox"] {
+            width: 16px; /* 稍微减小 */
+            height: 16px;
+            cursor: pointer;
+        }
+        /* --- 设置区域样式优化结束 --- */
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            /* 在小屏幕上，减小选择器按钮的内边距和字体 */
+            .wuxing-option, .random-group-option {
+                padding: 5px 8px;
+                font-size: 13px;
+            }
+             .group-section {
+                 gap: 8px; /* 减小间距 */
+            }
+            /* --- 小屏幕统计信息优化 --- */
+            .stats-container {
+                /* grid-template-columns: repeat(5, 1fr); */ /* 保持5列 */
+                gap: 4px; /* 进一步减小间距 */
+                padding: 8px; /* 进一步减小内边距 */
+                font-size: 10px; /* 更小的字体 */
+            }
+            .stat-item {
+                padding: 4px 2px; /* 更小的内边距 */
+            }
+            .stat-item b {
+                font-size: 11px; /* 更小的字体 */
+                margin-top: 1px; /* 更小的上边距 */
+            }
+            /* --- 小屏幕设置区域优化 --- */
+            .settings {
+                padding: 10px; /* 更小的内边距 */
+                gap: 8px; /* 更小的间距 */
+            }
+            .settings label {
+                font-size: 12px; /* 更小的字体 */
+            }
+            .settings input[type="checkbox"] {
+                width: 14px; /* 更小的尺寸 */
+                height: 14px;
+            }
+        }
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .container { padding: 15px; }
+            h1 { font-size: 22px; margin-bottom: 15px; }
+            .question { font-size: 18px; margin: 15px 0; }
+            .options-grid { gap: 8px; margin: 15px 0; }
+            .option { padding: 10px; font-size: 14px; }
+            .feedback { font-size: 15px; padding: 10px; }
+            /* .stats-container { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 6px; padding: 10px; font-size: 11px; } */
+            /* .stat-item { padding: 6px; } */
+            /* .stat-item b { font-size: 12px; } */
+            /* .settings { padding: 12px; gap: 8px; } */
+            /* .settings label { font-size: 13px; } */
+        }
+        @media (max-width: 400px) {
+            .options-grid { grid-template-columns: repeat(3, 1fr); }
+            /* .stats-container { grid-template-columns: repeat(3, 1fr); } */ /* 不再需要 */
+            /* --- 超小屏幕进一步优化统计信息 --- */
+            .stats-container {
+                font-size: 9px; /* 最小字体 */
+            }
+            .stat-item b {
+                font-size: 10px; /* 最小字体 */
+            }
         }
     </style>
 </head>
 <body>
-    <h1>六十甲子纳音</h1>
-    <div class="card">
-        <div class="question" id="question"></div>
-        <div class="options" id="options"></div>
-        <div class="feedback" id="feedback"></div>
+    <div class="card-container">
+        <h1>六十甲子纳音练习</h1>
+        <div class="container">
+            <div class="question" id="question">加载中...</div>
+            <div class="options-grid" id="options"></div>
+            <div class="feedback" id="feedback"></div>
+            <!-- --- 调换位置：设置区域移到统计信息上方 --- -->
+            <div class="settings">
+                <input type="checkbox" id="group-mode-checkbox">
+                <label for="group-mode-checkbox">按纳音五行分组练习</label>
+                <input type="checkbox" id="random-group-mode-checkbox">
+                <label for="random-group-mode-checkbox">随机分组练习</label>
+            </div>
+            <!-- 3. 把提示“当前练习”的模块挪到复选框的下方 -->
+            <!-- 分组选择区域 (默认隐藏但占位) -->
+            <div class="group-section" id="group-section">
+                <div class="selector-container">
+                <span class="current-practice-label">当前练习:</span>
+                    <div id="wuxing-selector" class="wuxing-selector"></div>
+                    <div id="random-group-selector" class="random-group-selector"></div>
+                </div>
+            </div>
+            <div class="stats-container" id="stats">
+                <div class="stat-item"> 计时 <b id="timer">0s</b> </div>
+                <div class="stat-item"> 已答题 <b id="answered">0</b> </div>
+                <div class="stat-item"> 正确 <b id="correct">0</b> </div>
+                <div class="stat-item"> 正确率 <b id="accuracy">N/A</b> </div>
+                <div class="stat-item"> 平均用时 <b id="avg-time">N/A</b> </div>
+            </div>
+            <!-- --- 调换位置结束 --- -->
+        </div>
     </div>
-    <div class="stats" id="stats">已答题: 0/100 | 正确: 0</div>
-
     <script>
-        // 六十甲子及其对应的纳音
-        const ganZhiList = [
-            { ganZhi: '甲子', nayin: '海中金' },
-            { ganZhi: '乙丑', nayin: '海中金' },
-            { ganZhi: '丙寅', nayin: '炉中火' },
-            { ganZhi: '丁卯', nayin: '炉中火' },
-            { ganZhi: '戊辰', nayin: '大林木' },
-            { ganZhi: '己巳', nayin: '大林木' },
-            { ganZhi: '庚午', nayin: '路旁土' },
-            { ganZhi: '辛未', nayin: '路旁土' },
-            { ganZhi: '壬申', nayin: '剑锋金' },
-            { ganZhi: '癸酉', nayin: '剑锋金' },
-            { ganZhi: '甲戌', nayin: '山头火' },
-            { ganZhi: '乙亥', nayin: '山头火' },
-            { ganZhi: '丙子', nayin: '涧下水' },
-            { ganZhi: '丁丑', nayin: '涧下水' },
-            { ganZhi: '戊寅', nayin: '城头土' },
-            { ganZhi: '己卯', nayin: '城头土' },
-            { ganZhi: '庚辰', nayin: '白腊金' },
-            { ganZhi: '辛巳', nayin: '白腊金' },
-            { ganZhi: '壬午', nayin: '杨柳木' },
-            { ganZhi: '癸未', nayin: '杨柳木' },
-            { ganZhi: '甲申', nayin: '井泉水' },
-            { ganZhi: '乙酉', nayin: '井泉水' },
-            { ganZhi: '丙戌', nayin: '屋上土' },
-            { ganZhi: '丁亥', nayin: '屋上土' },
-            { ganZhi: '戊子', nayin: '霹雳火' },
-            { ganZhi: '己丑', nayin: '霹雳火' },
-            { ganZhi: '庚寅', nayin: '松柏木' },
-            { ganZhi: '辛卯', nayin: '松柏木' },
-            { ganZhi: '壬辰', nayin: '长流水' },
-            { ganZhi: '癸巳', nayin: '长流水' },
-            { ganZhi: '甲午', nayin: '沙中金' },
-            { ganZhi: '乙未', nayin: '沙中金' },
-            { ganZhi: '丙申', nayin: '山下火' },
-            { ganZhi: '丁酉', nayin: '山下火' },
-            { ganZhi: '戊戌', nayin: '平地木' },
-            { ganZhi: '己亥', nayin: '平地木' },
-            { ganZhi: '庚子', nayin: '壁上土' },
-            { ganZhi: '辛丑', nayin: '壁上土' },
-            { ganZhi: '壬寅', nayin: '金箔金' },
-            { ganZhi: '癸卯', nayin: '金箔金' },
-            { ganZhi: '甲辰', nayin: '佛灯火' },
-            { ganZhi: '乙巳', nayin: '佛灯火' },
-            { ganZhi: '丙午', nayin: '天河水' },
-            { ganZhi: '丁未', nayin: '天河水' },
-            { ganZhi: '戊申', nayin: '大驿土' },
-            { ganZhi: '己酉', nayin: '大驿土' },
-            { ganZhi: '庚戌', nayin: '钗钏金' },
-            { ganZhi: '辛亥', nayin: '钗钏金' },
-            { ganZhi: '壬子', nayin: '桑柘木' },
-            { ganZhi: '癸丑', nayin: '桑柘木' },
-            { ganZhi: '甲寅', nayin: '大溪水' },
-            { ganZhi: '乙卯', nayin: '大溪水' },
-            { ganZhi: '丙辰', nayin: '沙中土' },
-            { ganZhi: '丁巳', nayin: '沙中土' },
-            { ganZhi: '戊午', nayin: '天上火' },
-            { ganZhi: '己未', nayin: '天上火' },
-            { ganZhi: '庚申', nayin: '石榴木' },
-            { ganZhi: '辛酉', nayin: '石榴木' },
-            { ganZhi: '壬戌', nayin: '大海水' },
-            { ganZhi: '癸亥', nayin: '大海水' }
+        const ganZhiListOriginal = [
+            { ganZhi: '甲子', nayin: '海中金' }, { ganZhi: '乙丑', nayin: '海中金' }, { ganZhi: '丙寅', nayin: '炉中火' }, { ganZhi: '丁卯', nayin: '炉中火' },
+            { ganZhi: '戊辰', nayin: '大林木' }, { ganZhi: '己巳', nayin: '大林木' }, { ganZhi: '庚午', nayin: '路旁土' }, { ganZhi: '辛未', nayin: '路旁土' },
+            { ganZhi: '壬申', nayin: '剑锋金' }, { ganZhi: '癸酉', nayin: '剑锋金' }, { ganZhi: '甲戌', nayin: '山头火' }, { ganZhi: '乙亥', nayin: '山头火' },
+            { ganZhi: '丙子', nayin: '涧下水' }, { ganZhi: '丁丑', nayin: '涧下水' }, { ganZhi: '戊寅', nayin: '城头土' }, { ganZhi: '己卯', nayin: '城头土' },
+            { ganZhi: '庚辰', nayin: '白腊金' }, { ganZhi: '辛巳', nayin: '白腊金' }, { ganZhi: '壬午', nayin: '杨柳木' }, { ganZhi: '癸未', nayin: '杨柳木' },
+            { ganZhi: '甲申', nayin: '井泉水' }, { ganZhi: '乙酉', nayin: '井泉水' }, { ganZhi: '丙戌', nayin: '屋上土' }, { ganZhi: '丁亥', nayin: '屋上土' },
+            { ganZhi: '戊子', nayin: '霹雳火' }, { ganZhi: '己丑', nayin: '霹雳火' }, { ganZhi: '庚寅', nayin: '松柏木' }, { ganZhi: '辛卯', nayin: '松柏木' },
+            { ganZhi: '壬辰', nayin: '长流水' }, { ganZhi: '癸巳', nayin: '长流水' }, { ganZhi: '甲午', nayin: '沙中金' }, { ganZhi: '乙未', nayin: '沙中金' },
+            { ganZhi: '丙申', nayin: '山下火' }, { ganZhi: '丁酉', nayin: '山下火' }, { ganZhi: '戊戌', nayin: '平地木' }, { ganZhi: '己亥', nayin: '平地木' },
+            { ganZhi: '庚子', nayin: '壁上土' }, { ganZhi: '辛丑', nayin: '壁上土' }, { ganZhi: '壬寅', nayin: '金箔金' }, { ganZhi: '癸卯', nayin: '金箔金' },
+            { ganZhi: '甲辰', nayin: '佛灯火' }, { ganZhi: '乙巳', nayin: '佛灯火' }, { ganZhi: '丙午', nayin: '天河水' }, { ganZhi: '丁未', nayin: '天河水' },
+            { ganZhi: '戊申', nayin: '大驿土' }, { ganZhi: '己酉', nayin: '大驿土' }, { ganZhi: '庚戌', nayin: '钗钏金' }, { ganZhi: '辛亥', nayin: '钗钏金' },
+            { ganZhi: '壬子', nayin: '桑柘木' }, { ganZhi: '癸丑', nayin: '桑柘木' }, { ganZhi: '甲寅', nayin: '大溪水' }, { ganZhi: '乙卯', nayin: '大溪水' },
+            { ganZhi: '丙辰', nayin: '沙中土' }, { ganZhi: '丁巳', nayin: '沙中土' }, { ganZhi: '戊午', nayin: '天上火' }, { ganZhi: '己未', nayin: '天上火' },
+            { ganZhi: '庚申', nayin: '石榴木' }, { ganZhi: '辛酉', nayin: '石榴木' }, { ganZhi: '壬戌', nayin: '大海水' }, { ganZhi: '癸亥', nayin: '大海水' }
         ];
-
-        // 获取加密安全的随机数
-        function getCryptoRandomInt(min, max) {
-            const range = max - min + 1;
-            const maxRange = 0xFFFFFFFF; // 2^32 - 1
-            let randomValue;
-            
-            do {
-                randomValue = crypto.getRandomValues(new Uint32Array(1))[0];
-            } while (randomValue > maxRange - (maxRange % range));
-            
-            return min + (randomValue % range);
+        function getGanZhiListCopy() {
+             return ganZhiListOriginal.map(item => ({...item}));
         }
-
-        // 从数组中随机选择n个不重复的元素
-        function getRandomItems(array, n) {
-            const result = [];
-            const arrayCopy = [...array];
-            const len = arrayCopy.length;
-            
-            for (let i = 0; i < n && i < len; i++) {
-                const randomIndex = getCryptoRandomInt(0, arrayCopy.length - 1);
-                result.push(arrayCopy[randomIndex]);
-                arrayCopy.splice(randomIndex, 1);
+        const wuxingGroups = {
+            '水': ['大海水', '长流水', '涧下水', '大溪水', '井泉水', '天河水'],
+            '火': ['炉中火', '山头火', '霹雳火', '山下火', '佛灯火', '天上火'],
+            '木': ['大林木', '杨柳木', '松柏木', '平地木', '桑柘木', '石榴木'],
+            '金': ['海中金', '剑锋金', '白腊金', '沙中金', '金箔金', '钗钏金'],
+            '土': ['路旁土', '城头土', '屋上土', '壁上土', '大驿土', '沙中土']
+        };
+        let ganZhiList = getGanZhiListCopy();
+        let correctCount = 0, totalAnswered = 0, startTime = Date.now(), timerInterval;
+        let wrongAnswerQueue = [], isGroupMode = false, isRandomGroupMode = false, currentGroupIndex = 0, currentGroupWrongs = [];
+        const groupOrder = ['水', '火', '木', '金', '土'];
+        const randomGroupOrder = ['随机组一', '随机组二', '随机组三', '随机组四', '随机组五'];
+        let randomGroups = {};
+        const questionEl = document.getElementById('question');
+        const optionsEl = document.getElementById('options');
+        const feedbackEl = document.getElementById('feedback');
+        // const groupProgressEl = document.getElementById('group-progress'); // 不再需要
+        const groupSectionEl = document.getElementById('group-section'); // 获取分组区域
+        const groupModeCheckbox = document.getElementById('group-mode-checkbox');
+        const randomGroupModeCheckbox = document.getElementById('random-group-mode-checkbox');
+        const wuxingSelectorEl = document.getElementById('wuxing-selector');
+        const randomGroupSelectorEl = document.getElementById('random-group-selector');
+        function updateStats() {
+            const elapsedSeconds = Math.round((Date.now() - startTime) / 1000);
+            document.getElementById('timer').textContent = `${elapsedSeconds}s`;
+            document.getElementById('answered').textContent = `${totalAnswered}`;
+            document.getElementById('correct').textContent = `${correctCount}`;
+            if (totalAnswered > 0) {
+                document.getElementById('accuracy').textContent = `${((correctCount / totalAnswered) * 100).toFixed(1)}%`;
+                document.getElementById('avg-time').textContent = `${(elapsedSeconds / totalAnswered).toFixed(1)}s`;
+            } else {
+                document.getElementById('accuracy').textContent = 'N/A';
+                document.getElementById('avg-time').textContent = 'N/A';
             }
-            
-            return result;
         }
-
-        // 生成错误选项
-        function generateWrongOptions(correctAnswer, allOptions) {
-            let wrongOptions = [];
-            const allPossibleOptions = allOptions.filter(opt => opt !== correctAnswer);
-            
-            while (wrongOptions.length < 5) {
-                if (allPossibleOptions.length === 0) break;
-                
-                const randomIndex = getCryptoRandomInt(0, allPossibleOptions.length - 1);
-                const option = allPossibleOptions[randomIndex];
-                wrongOptions.push(option);
-                allPossibleOptions.splice(randomIndex, 1);
-            }
-            
-            for (let i = wrongOptions.length - 1; i > 0; i--) {
-                const j = getCryptoRandomInt(0, i);
-                [wrongOptions[i], wrongOptions[j]] = [wrongOptions[j], wrongOptions[i]];
-            }
-            
-            return [...wrongOptions, correctAnswer];
-        }
-
-        // 打乱数组顺序
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
-                const j = getCryptoRandomInt(0, i);
+                const j = Math.floor(Math.random() * (i + 1));
                 [array[i], array[j]] = [array[j], array[i]];
             }
             return array;
         }
-
-        // 游戏状态
-        let askedQuestions = [];
-        let correctCount = 0;
-        let totalQuestions = 0;
-
-        // 生成干支问题
-        function generateGanZhiQuestion() {
-            const availableQuestions = ganZhiList.filter(item => 
-                !askedQuestions.some(q => q.ganZhi === item.ganZhi && q.type === 'ganZhi')
-            );
-            
-            if (availableQuestions.length === 0) {
-                askedQuestions = askedQuestions.filter(q => q.type !== 'ganZhi');
-                if (askedQuestions.length === 0) {
-                    return null;
-                }
-                return generateGanZhiQuestion();
-            }
-            
-            const randomIndex = getCryptoRandomInt(0, availableQuestions.length - 1);
-            const selectedGanZhi = availableQuestions[randomIndex];
-            
-            askedQuestions.push({ ganZhi: selectedGanZhi.ganZhi, type: 'ganZhi' });
-            
-            const allNayins = [...new Set(ganZhiList.map(item => item.nayin))];
-            const wrongOptions = generateWrongOptions(selectedGanZhi.nayin, allNayins);
-            
-            const shuffledOptions = shuffleArray(wrongOptions);
-            
-            return {
-                type: 'ganZhi',
-                question: `${selectedGanZhi.ganZhi}对应的纳音是？`,
-                options: shuffledOptions,
-                correctAnswer: selectedGanZhi.nayin
-            };
+        function getRandomItems(array, n) {
+            return shuffleArray([...array]).slice(0, n);
         }
-
-        // 生成纳音问题
-        function generateNayinQuestion() {
-            const availableQuestions = ganZhiList.filter(item => 
-                !askedQuestions.some(q => q.nayin === item.nayin && q.type === 'nayin')
-            );
-            
-            if (availableQuestions.length === 0) {
-                askedQuestions = askedQuestions.filter(q => q.type !== 'nayin');
-                if (askedQuestions.length === 0) {
-                    return null;
-                }
-                return generateNayinQuestion();
+        function generateRandomGroups() {
+            const shuffledList = shuffleArray([...getGanZhiListCopy()]);
+            randomGroups = {};
+            for (let i = 0; i < 5; i++) {
+                const startIndex = i * 12;
+                const endIndex = startIndex + 12;
+                randomGroups[randomGroupOrder[i]] = shuffledList.slice(startIndex, endIndex);
             }
-            
-            const nayins = [...new Set(ganZhiList.map(item => item.nayin))];
-            const randomNayinIndex = getCryptoRandomInt(0, nayins.length - 1);
-            const selectedNayin = nayins[randomNayinIndex];
-            
-            const matchingGanZhis = ganZhiList.filter(item => item.nayin === selectedNayin);
-            
-            askedQuestions.push({ nayin: selectedNayin, type: 'nayin' });
-            
-            const correctOptions = matchingGanZhis.map(item => item.ganZhi);
-            
-            const wrongOptions = ganZhiList
-                .filter(item => item.nayin !== selectedNayin)
-                .map(item => item.ganZhi);
-            
-            const selectedWrongOptions = getRandomItems(wrongOptions, 5);
-            
-            const allOptions = [...selectedWrongOptions, ...correctOptions];
-            const shuffledOptions = shuffleArray(allOptions);
-            
-            return {
-                type: 'nayin',
-                question: `${selectedNayin}对应的干支是？`,
-                options: shuffledOptions,
-                correctAnswers: correctOptions  // 修改为存储所有正确答案
-            };
         }
-
-        // 生成问题
         function generateQuestion() {
-            const isGanZhiQuestion = getCryptoRandomInt(0, 1) === 0;
-            
-            let question;
-            if (isGanZhiQuestion) {
-                question = generateGanZhiQuestion();
-                if (!question) {
-                    question = generateNayinQuestion();
+            if ((isGroupMode || isRandomGroupMode) && currentGroupWrongs.length > 0) return currentGroupWrongs.shift();
+            if (!isGroupMode && !isRandomGroupMode && wrongAnswerQueue.length > 0 && totalAnswered >= wrongAnswerQueue[0].reaskAt) return wrongAnswerQueue.shift().question;
+            let questionPool = ganZhiList;
+            if (isGroupMode) {
+                const currentWuxing = groupOrder[currentGroupIndex];
+                const nayinsInGroup = wuxingGroups[currentWuxing];
+                questionPool = ganZhiList.filter(item => nayinsInGroup.includes(item.nayin));
+                // 不再更新文本，因为选择器已经显示当前组
+                // groupProgressEl.textContent = `当前练习: ${currentWuxing}`;
+                const remainingInGroup = questionPool.filter(q => !q.mastered);
+                if (remainingInGroup.length === 0) {
+                    currentGroupIndex = (currentGroupIndex + 1) % groupOrder.length;
+                    if (groupOrder.every((_, idx) => isGroupMastered(idx))) {
+                        return { type: 'finished' };
+                    }
+                    resetGroupMastery();
+                    renderWuxingSelector();
+                    // groupProgressEl.textContent = `恭喜完成本组！已自动进入下一组...`;
+                    return generateQuestion();
                 }
-            } else {
-                question = generateNayinQuestion();
-                if (!question) {
-                    question = generateGanZhiQuestion();
+                questionPool = remainingInGroup;
+            } else if (isRandomGroupMode) {
+                const currentGroupName = randomGroupOrder[currentGroupIndex];
+                questionPool = randomGroups[currentGroupName];
+                // 不再更新文本，因为选择器已经显示当前组
+                // groupProgressEl.textContent = `当前练习: ${currentGroupName}`;
+                const remainingInGroup = questionPool.filter(q => !q.mastered);
+                if (remainingInGroup.length === 0) {
+                    currentGroupIndex = (currentGroupIndex + 1) % randomGroupOrder.length;
+                    const allGroupsMastered = randomGroupOrder.every(name =>
+                        randomGroups[name].every(item => item.mastered)
+                    );
+                    if (allGroupsMastered) {
+                         return { type: 'finished' };
+                    }
+                    resetGroupMastery();
+                    renderRandomGroupSelector();
+                    // groupProgressEl.textContent = `恭喜完成本组！已自动进入下一组...`;
+                    return generateQuestion();
                 }
+                questionPool = remainingInGroup;
             }
-            
-            return question || null;
+            // 非分组模式下不处理 groupProgressEl.textContent
+            const isGanZhiToNayin = Math.random() > 0.5;
+            if (isGanZhiToNayin) {
+                const item = questionPool[Math.floor(Math.random() * questionPool.length)];
+                const correctAnswer = item.nayin;
+                const wrongOptions = getRandomItems([...new Set(ganZhiList.map(i => i.nayin))].filter(n => n !== correctAnswer), 5);
+                return { type: 'ganZhiToNayin', questionText: `${item.ganZhi} 的纳音是？`, options: shuffleArray([correctAnswer, ...wrongOptions]), correctAnswers: [correctAnswer], originalItem: item };
+            } else {
+                const selectedNayin = [...new Set(questionPool.map(i => i.nayin))][Math.floor(Math.random() * [...new Set(questionPool.map(i => i.nayin))].length)];
+                const correctGanZhiPair = ganZhiList.filter(i => i.nayin === selectedNayin).map(i => i.ganZhi);
+                const correctAnswer = correctGanZhiPair[Math.floor(Math.random() * correctGanZhiPair.length)];
+                const wrongOptions = getRandomItems(ganZhiList.map(i => i.ganZhi).filter(g => !correctGanZhiPair.includes(g)), 5);
+                return { type: 'nayinToGanZhi', questionText: `${selectedNayin} 对应的干支是？`, options: shuffleArray([correctAnswer, ...wrongOptions]), correctAnswers: [correctAnswer], originalItem: ganZhiList.find(i => i.ganZhi === correctAnswer) };
+            }
         }
-
-        // 显示问题
-        function displayQuestion(question) {
-            document.getElementById('question').textContent = question.question;
-            
-            const optionsContainer = document.getElementById('options');
-            optionsContainer.innerHTML = '';
-            
-            question.options.forEach(option => {
+        function displayQuestion(q) {
+            if (q.type === 'finished') {
+                questionEl.textContent = '恭喜！您已完成所有分组练习！';
+                optionsEl.innerHTML = '';
+                feedbackEl.textContent = '可以取消勾选，进行随机练习，或选择分组再次练习。';
+                return;
+            }
+            questionEl.textContent = q.questionText;
+            optionsEl.innerHTML = '';
+            feedbackEl.textContent = '';
+            q.options.forEach(option => {
                 const button = document.createElement('button');
                 button.className = 'option';
                 button.textContent = option;
-                button.addEventListener('click', () => {
-                    if (question.type === 'nayin') {
-                        checkAnswer(option, question.correctAnswers);  // 传入所有正确答案
-                    } else {
-                        checkAnswer(option, [question.correctAnswer]);
-                    }
-                });
-                optionsContainer.appendChild(button);
+                button.addEventListener('click', () => checkAnswer(option, q));
+                optionsEl.appendChild(button);
             });
-            
-            document.getElementById('feedback').textContent = '';
         }
-
-        // 检查答案
-        function checkAnswer(selectedOption, correctAnswers) {
-            const options = document.querySelectorAll('.option');
-            let isCorrect = false;
-            
-            options.forEach(option => {
-                if (correctAnswers.includes(option.textContent)) {
-                    option.classList.add('correct');
-                    if (option.textContent === selectedOption) {
-                        isCorrect = true;
-                    }
-                } else if (option.textContent === selectedOption) {
-                    option.classList.add('incorrect');
-                }
-                
-                option.disabled = true;
+        function checkAnswer(selectedOption, question) {
+            totalAnswered++;
+            const isCorrect = question.correctAnswers.includes(selectedOption);
+            Array.from(optionsEl.children).forEach(button => {
+                button.disabled = true;
+                if (question.correctAnswers.includes(button.textContent)) button.classList.add('correct');
+                else if (button.textContent === selectedOption) button.classList.add('incorrect');
             });
-            
-            totalQuestions++;
             if (isCorrect) {
                 correctCount++;
-            }
-            
-            document.getElementById('stats').textContent = `已答题: ${totalQuestions}/100 | 正确: ${correctCount}`;
-            
-            setTimeout(() => {
-                if (totalQuestions < 101) {
-                    showNextQuestion();
-                } else {
-                    document.getElementById('question').textContent = '测试完成！';
-                    document.getElementById('options').innerHTML = '';
-                    document.getElementById('feedback').textContent = `最终成绩: ${correctCount}/100`;
+                feedbackEl.textContent = "正确！";
+                feedbackEl.style.color = '#155724';
+                if (isGroupMode || isRandomGroupMode) {
+                     question.originalItem.mastered = true;
                 }
-            }, 2500);
-        }
-
-        // 显示下一题
-        function showNextQuestion() {
-            const question = generateQuestion();
-            if (question) {
-                displayQuestion(question);
             } else {
-                document.getElementById('question').textContent = '没有更多问题了！';
-                document.getElementById('options').innerHTML = '';
-                document.getElementById('feedback').textContent = '';
+                const correctPair = ganZhiList.filter(item => item.nayin === question.originalItem.nayin).map(item => item.ganZhi);
+                feedbackEl.textContent = `错误。正确答案: ${question.type === 'ganZhiToNayin' ? question.originalItem.nayin : correctPair.join(' 或 ')}`;
+                feedbackEl.style.color = '#721c24';
+                if (isGroupMode) currentGroupWrongs.push(generateQuestionFromItem(question.originalItem));
+                else if (isRandomGroupMode) currentGroupWrongs.push(generateQuestionFromItem(question.originalItem));
+                else wrongAnswerQueue.push({ question, reaskAt: totalAnswered + 3 });
+            }
+            updateStats();
+            setTimeout(() => displayQuestion(generateQuestion()), isCorrect ? 500 : 2500);
+        }
+        function generateQuestionFromItem(item) {
+            const correctAnswer = item.nayin;
+            const wrongOptions = getRandomItems([...new Set(ganZhiList.map(i => i.nayin))].filter(n => n !== correctAnswer), 5);
+            return { type: 'ganZhiToNayin', questionText: `${item.ganZhi} 的纳音是？`, options: shuffleArray([correctAnswer, ...wrongOptions]), correctAnswers: [correctAnswer], originalItem: item };
+        }
+        function resetGroupMastery() {
+            if (isGroupMode) {
+                ganZhiList.forEach(item => item.mastered = false);
+            } else if (isRandomGroupMode) {
+                Object.values(randomGroups).flat().forEach(item => item.mastered = false);
             }
         }
-
-        // 开始测试
-        showNextQuestion();
+        function isGroupMastered(groupIndex) {
+            if (isGroupMode) {
+                const nayinsInGroup = wuxingGroups[groupOrder[groupIndex]];
+                return ganZhiList.filter(item => nayinsInGroup.includes(item.nayin)).every(item => item.mastered);
+            } else if (isRandomGroupMode) {
+                const groupName = randomGroupOrder[groupIndex];
+                return randomGroups[groupName].every(item => item.mastered);
+            }
+            return false;
+        }
+        function renderWuxingSelector() {
+            wuxingSelectorEl.innerHTML = '';
+            groupOrder.forEach((wuxing, index) => {
+                const button = document.createElement('button');
+                button.className = 'wuxing-option';
+                button.textContent = wuxing;
+                if (index === currentGroupIndex) button.classList.add('active');
+                button.addEventListener('click', () => selectGroup(index, 'wuxing'));
+                wuxingSelectorEl.appendChild(button);
+            });
+            wuxingSelectorEl.style.display = 'flex'; // 使用 flex 显示
+            randomGroupSelectorEl.style.display = 'none';
+        }
+        function renderRandomGroupSelector() {
+            randomGroupSelectorEl.innerHTML = '';
+            randomGroupOrder.forEach((groupName, index) => {
+                const button = document.createElement('button');
+                button.className = 'random-group-option';
+                const displayTextMap = {
+                    '随机组一': '一', '随机组二': '二', '随机组三': '三', '随机组四': '四', '随机组五': '五'
+                };
+                button.textContent = displayTextMap[groupName] || groupName;
+                if (index === currentGroupIndex) button.classList.add('active');
+                button.addEventListener('click', () => selectGroup(index, 'random'));
+                randomGroupSelectorEl.appendChild(button);
+            });
+            randomGroupSelectorEl.style.display = 'flex'; // 使用 flex 显示
+            wuxingSelectorEl.style.display = 'none';
+        }
+        function selectGroup(index, type) {
+            currentGroupIndex = index;
+            currentGroupWrongs = [];
+            resetGroupMastery();
+            if (type === 'wuxing') {
+                renderWuxingSelector();
+            } else if (type === 'random') {
+                renderRandomGroupSelector();
+            }
+            displayQuestion(generateQuestion());
+        }
+        function startNewGame() {
+            correctCount = 0; totalAnswered = 0; startTime = Date.now();
+            wrongAnswerQueue = []; currentGroupWrongs = [];
+            ganZhiList = getGanZhiListCopy();
+            resetGroupMastery();
+            // 互斥逻辑
+            if (groupModeCheckbox.checked && randomGroupModeCheckbox.checked) {
+                randomGroupModeCheckbox.checked = false;
+            }
+            isGroupMode = groupModeCheckbox.checked;
+            isRandomGroupMode = randomGroupModeCheckbox.checked;
+            if (isGroupMode) {
+                // groupSectionEl.style.display = 'flex'; // 移除或注释掉
+                groupSectionEl.classList.add('visible'); // 新增：添加 visible 类
+                currentGroupIndex = 0;
+                renderWuxingSelector();
+            } else if (isRandomGroupMode) {
+                // groupSectionEl.style.display = 'flex'; // 移除或注释掉
+                groupSectionEl.classList.add('visible'); // 新增：添加 visible 类
+                currentGroupIndex = 0;
+                generateRandomGroups();
+                renderRandomGroupSelector();
+            } else {
+                // groupSectionEl.style.display = 'none'; // 移除或注释掉
+                groupSectionEl.classList.remove('visible'); // 新增：移除 visible 类
+                wuxingSelectorEl.style.display = 'none';
+                randomGroupSelectorEl.style.display = 'none';
+            }
+            displayQuestion(generateQuestion());
+            updateStats();
+        }
+        groupModeCheckbox.addEventListener('change', function() {
+            if (this.checked) { randomGroupModeCheckbox.checked = false; }
+            startNewGame();
+        });
+        randomGroupModeCheckbox.addEventListener('change', function() {
+            if (this.checked) { groupModeCheckbox.checked = false; }
+            startNewGame();
+        });
+        timerInterval = setInterval(updateStats, 1000);
+        startNewGame();
     </script>
 </body>
 </html>
