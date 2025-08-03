@@ -7,7 +7,7 @@
     <title>六十四卦定位练习</title>
     <style>
         body {
-            font-family: "STKaiti", "KaiTi", "FangSong", "SimSun", serif;
+            font-family: "FangSong", "SimHei", "STKaiti", "KaiTi", "SimSun", serif;
             margin: 0;
             text-align: center;
             background: linear-gradient(135deg, #f8f5f0 0%, #e6f0ea 100%);
@@ -25,25 +25,25 @@
         h1,
         .name,
         .toggle-label {
-            font-family: "STKaiti", "KaiTi", "FangSong", "SimSun", serif;
+            /* font-family: "STKaiti", "KaiTi", "FangSong", "SimSun", serif; */
             letter-spacing: 2px;
         }
 
         .flashcard {
             margin: 18px auto 8px auto;
             padding: 18px 12px 12px 12px;
-            /* border-radius: 16px; */
+            border-radius: 15px;
             max-width: 420px;
             background: rgba(255, 255, 255, 0.92);
             box-shadow: 0 4px 16px rgba(80, 120, 80, 0.10);
-            border: 1.5px solid #a3cfa6;
+            /* border: 3.5px solid #a3cfa6; */
+            border: none;
             border-image: linear-gradient(135deg, #a3cfa6 60%, #e6f0ea 100%) 1;
             position: relative;
             overflow: hidden;
             display: flex;
             flex-direction: column;
             align-items: center;
-            /* 新增，保证边框圆角 */
         }
 
         .flashcard::before {
@@ -53,7 +53,7 @@
             top: 8px;
             right: 8px;
             bottom: 8px;
-            border: 1px dashed #a3cfa6;
+            border: 1px solid #a3cfa6;
             pointer-events: none;
             border-radius: 10px;
             opacity: 0.32;
@@ -85,7 +85,7 @@
             min-width: 0;
             color: #7bb47e;
             text-shadow: 2px 2px 8px #f3fbe8, 0 0 2px #a3cfa6;
-            font-family: "STKaiti", "KaiTi", "FangSong", "SimSun", serif;
+            /* font-family: "STKaiti", "KaiTi", "FangSong", "SimSun", serif; */
             align-items: center;
             justify-content: end;
             box-sizing: border-box;
@@ -130,7 +130,7 @@
             flex: 1 1 70%;
             font-size: 16px;
             color: #3a2c1a;
-            font-family: "STKaiti", "KaiTi", "FangSong", "SimSun", serif;
+            /* font-family: "STKaiti", "KaiTi", "FangSong", "SimSun", serif; */
             letter-spacing: 1px;
             line-height: 1;
             /* 保证基线对齐 */
@@ -150,7 +150,7 @@
             margin: 10px 6px 0 6px;
             background: linear-gradient(90deg, #7bb47e 60%, #a3cfa6 100%);
             box-shadow: 0 2px 8px rgba(163, 207, 166, 0.10);
-            font-family: "STKaiti", "KaiTi", "FangSong", "SimSun", serif;
+            /* font-family: "STKaiti", "KaiTi", "FangSong", "SimSun", serif; */
             letter-spacing: 2px;
             transition: background 0.2s;
         }
@@ -212,7 +212,7 @@
             margin: 22px auto 0 auto;
             font-size: 22px;
             background: rgba(255, 255, 255, 0.97);
-            border-radius: 14px;
+            border-radius: 15px;
             box-shadow: 0 4px 16px rgba(163, 207, 166, 0.10);
             border: 2px solid #a3cfa6;
             overflow: hidden;
@@ -224,7 +224,7 @@
             border: 1px solid #e6f0ea;
             padding: 12px 8px;
             text-align: center;
-            font-family: "STKaiti", "KaiTi", "FangSong", "SimSun", serif;
+            /* font-family: "STKaiti", "KaiTi", "FangSong", "SimSun", serif; */
             background: rgba(255, 255, 255, 0.98);
             font-size: 22px;
         }
@@ -242,7 +242,7 @@
             font-size: 26px;
             line-height: 1.2;
             color: #7bb47e;
-            font-family: "STKaiti", "KaiTi", "FangSong", "SimSun", serif;
+            /* font-family: "STKaiti", "KaiTi", "FangSong", "SimSun", serif; */
         }
 
         .hidden {
@@ -287,18 +287,18 @@
         .question-bar span {
             font-size: 18px;
             color: #3a2c1a;
-            font-family: "STKaiti", "KaiTi", "FangSong", "SimSun", serif;
+            /* font-family: "STKaiti", "KaiTi", "FangSong", "SimSun", serif; */
             letter-spacing: 1px;
         }
 
         @media (max-width: 600px) {
             .flashcard {
-                padding: 8px 2vw 8px 2vw;
-                max-width: 98vw;
+                padding: 1px 0vw 1px 5vw;
+                max-width: 96vw;
             }
 
             .flashcard-container {
-                gap: 10px;
+                /* gap: 10px; */
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -318,7 +318,9 @@
                 min-width: 4ch;
                 max-width: 4ch;
             }
-
+            .toggle-container input[type="checkbox"] {
+                margin-left: 6px;
+            }   
             .hint-text {
                 font-size: 12px;
                 padding: 7px 4px;
@@ -349,7 +351,7 @@
         }
 
         /* 针对高DPI缩放和小屏幕优化 */
-        @media (max-width: 1200px), (min-width: 1200px) and (max-height: 900px), (min-resolution: 1.5dppx) {
+        /* @media (max-width: 1200px), (min-width: 1200px) and (max-height: 900px), (min-resolution: 1.5dppx) {
             .flashcard {
                 max-width: 340px;
                 padding: 8px 2vw 8px 2vw;
@@ -388,7 +390,7 @@
             .question-bar span {
                 font-size: 12px;
             }
-        }
+        } */
 
         .cell-tooltip {
             position: absolute;
@@ -396,7 +398,7 @@
             z-index: 1000;
             font-size: 18px;
             font-weight: bold;
-            font-family: "STKaiti", "KaiTi", "FangSong", "SimSun", serif;
+            /* font-family: "STKaiti", "KaiTi", "FangSong", "SimSun", serif; */
             border-radius: 10px;
             box-shadow: 0 2px 12px rgba(163, 207, 166, 0.13);
             letter-spacing: 2px;
@@ -432,6 +434,12 @@
             width: 100%;
             box-sizing: border-box;
         }
+
+        /* 让可选单元格 hover 时变为 pointer */
+        td:not(.pure-gua):hover {
+            cursor: pointer;
+            background: #f5f9f3;
+        }
     </style>
 </head>
 
@@ -453,10 +461,12 @@
     </div>
     <div id="bagua-table"></div>
     <div class="toggle-container">
-        <input type="checkbox" id="toggle-all-checkbox">
+        <input type="checkbox" id="toggle-gong-checkbox">
+        <label for="toggle-gong-checkbox" class="toggle-label">单个卦宫练习</label>        <input type="checkbox" id="toggle-all-checkbox">
         <label for="toggle-all-checkbox" class="toggle-label">显示所有卦</label>
         <input type="checkbox" id="toggle-name-checkbox">
         <label for="toggle-name-checkbox" class="toggle-label" id="fullname-label">显示卦名全称</label>
+
     </div>
     <div class="hint-text">
         <div>
@@ -484,6 +494,8 @@
         ];
         const headers = ['纯卦', '一世', '二世', '三世', '四世', '五世', '游魂', '归魂'];
         let showFullName = false;
+        let singleGongMode = false;
+        let currentGongIndex = 0;
         // 创建表格
         function createBaguaTable() {
             const table = document.createElement('table');
@@ -550,15 +562,31 @@
             return array[0] % lssg.length;
         }
         function getRandomGua() {
-            if (askedIndices.length >= 10) {
-                askedIndices = [];
+            if (singleGongMode) {
+                // 只在当前卦宫随机，且不出纯卦（即 group[0]）
+                const group = bagong[currentGongIndex];
+                let pool = group.slice(1); // 跳过第一个纯卦
+                // 去掉已出过的
+                pool = pool.filter(idx => !askedIndices.includes(idx - 1));
+                if (pool.length === 0) {
+                    askedIndices = [];
+                    pool = group.slice(1);
+                }
+                const rand = Math.floor(Math.random() * pool.length);
+                const index = pool[rand] - 1;
+                askedIndices.push(index);
+                return index;
+            } else {
+                if (askedIndices.length >= 10) {
+                    askedIndices = [];
+                }
+                let index;
+                do {
+                    index = getRandomIndex();
+                } while (askedIndices.includes(index) || isPureGua(index));
+                askedIndices.push(index);
+                return index;
             }
-            let index;
-            do {
-                index = getRandomIndex();
-            } while (askedIndices.includes(index) || isPureGua(index));
-            askedIndices.push(index);
-            return index;
         }
         function isPureGua(index) {
             for (let i = 0; i < bagong.length; i++) {
@@ -672,6 +700,41 @@
                 }
             });
         });
+        // 监听“单个卦宫练习”checkbox
+        const toggleGongCheckbox = document.getElementById('toggle-gong-checkbox');
+        toggleGongCheckbox.addEventListener('change', function () {
+            singleGongMode = toggleGongCheckbox.checked;
+            highlightCurrentGong();
+            showRandomGua();
+        });
+
+        // 高亮当前卦宫的纯卦
+        function highlightCurrentGong() {
+            document.querySelectorAll('td.pure-gua').forEach((cell, idx) => {
+                if (idx === currentGongIndex && singleGongMode) {
+                    cell.style.outline = '';
+                    cell.style.boxShadow = 'inset 0 0 0 3px #e6b800';
+                    cell.style.background = '#fffbe8';
+                    cell.style.cursor = 'pointer';
+                } else {
+                    cell.style.outline = '';
+                    cell.style.boxShadow = '';
+                    cell.style.background = '';
+                    cell.style.cursor = singleGongMode ? 'pointer' : '';
+                }
+            });
+        }
+
+        // 允许点击纯卦切换卦宫
+        document.querySelectorAll('td.pure-gua').forEach((cell, idx) => {
+            cell.addEventListener('click', function () {
+                if (!singleGongMode) return;
+                currentGongIndex = idx;
+                highlightCurrentGong();
+                showRandomGua();
+            });
+        });
+
         // 绑定单元格点击事件（必须在表格渲染后）
         tableCells.forEach(cell => {
             cell.addEventListener('click', handleCellClick);
