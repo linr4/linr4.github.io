@@ -7,7 +7,7 @@
     <style>
         * { box-sizing: border-box; }
         body {
-            font-family: 'KaiTi', 'FangSong', 'SimSun', serif;
+            font-family: "FangSong", "SimHei", "STKaiti", "KaiTi", "SimSun", serif;
             background: #f8f5ee;
             margin: 0;
             padding: 0;
@@ -33,7 +33,7 @@
         h1 {
             color: #3e5c3a;
             text-align: center;
-            margin: 0 0 18px 0;
+            margin: 18px 0 18px 0;
             font-size: 26px;
             font-family: inherit;
             letter-spacing: 2px;
@@ -43,8 +43,8 @@
         }
         .question {
             font-size: 20px;
-            margin: 18px 0 10px 0;
-            font-weight: 500;
+            margin: 18px 0 28px 0;
+            font-weight: 600;
             color: #2c3e50;
             min-height: 30px;
             text-align: center;
@@ -55,18 +55,18 @@
         }
         .options-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(2, 1fr);
             gap: 12px;
-            margin: 20px 0;
+            margin: 0 0;
         }
         .option {
             background: #f5f9f6;
             border: 1.5px solid #b7d6c2;
             border-radius: 12px;
-            padding: 13px 8px;
-            font-size: 16px;
+            padding: 10px 8px;
+            font-size: 18px;
             font-family: inherit;
-            font-weight: 500;
+            font-weight: 600;
             color: #355c48;
             cursor: pointer;
             transition: all 0.2s;
@@ -114,7 +114,7 @@
             white-space: pre-line;
             pointer-events: none;
             font-family: inherit;
-            font-weight: 500;
+            font-weight: 600;
             text-align: center;
             transition: opacity 0.2s;
         }
@@ -170,7 +170,7 @@
             .stat-item b { font-size: 11px; margin-top: 1px; }
         }
         @media (max-width: 400px) {
-            .options-grid { grid-template-columns: repeat(3, 1fr); }
+            .options-grid { grid-template-columns: repeat(2, 1fr); }
             .stats-container { font-size: 9px; }
             .stat-item b { font-size: 10px; }
         }
@@ -185,7 +185,7 @@
             </div>
             <div class="options-grid" id="options"></div>
             <div class="stats-container">
-                <div class="stat-item"> 总用时 <b id="timer">0s</b> </div>
+                <div class="stat-item"> 计时 <b id="timer">0s</b> </div>
                 <div class="stat-item"> 已答 <b id="question-count">0</b> </div>
                 <div class="stat-item"> 正确 <b id="correct-count">0</b> </div>
                 <div class="stat-item"> 正确率 <b id="accuracy">0%</b> </div>
@@ -259,8 +259,8 @@
             if (recentQuestions.length > 10) recentQuestions.shift();
             lastQuestion = currentQuestion;
             questionElement.childNodes[0].nodeValue = currentIsBaGua
-                ? `${currentQuestion} 对应的地支是？`
-                : `${currentQuestion} 对应的卦是？`;
+                ? `『${currentQuestion}』对应的地支是？`
+                : `『${currentQuestion}』对应的辟卦是？`;
             generateOptions(currentQuestion, currentIsBaGua);
         }
         function generateOptions(currentQuestion, isBaGuaQuestion) {
@@ -285,10 +285,10 @@
             });
             const isCorrect = selectedAnswer === correctAnswer;
             if (isCorrect) {
-                feedbackElement.textContent = '正确！';
+                feedbackElement.textContent = '答对了！下一个';
                 feedbackElement.style.color = '#155724';
             } else {
-                feedbackElement.textContent = `错误！正确答案是: ${correctAnswer}`;
+                feedbackElement.textContent = `应该是『${correctAnswer}』`;
                 feedbackElement.style.color = '#721c24';
             }
             questionElement.classList.add('question-tooltip-active');

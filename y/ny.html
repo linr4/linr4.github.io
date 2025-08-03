@@ -9,7 +9,7 @@
             box-sizing: border-box;
         }
         body {
-            font-family: '霞鹜文楷', '思源宋体', '宋体', '楷体', serif;
+            font-family: "FangSong", "SimHei", "STKaiti", "KaiTi", "SimSun", serif;
             background: linear-gradient(135deg, #e8f5e9 0%, #fdf6e3 100%);
             margin: 0;
             padding: 15px;
@@ -44,7 +44,7 @@
             text-align: center;
             margin: 0 0 20px 0;
             font-size: 28px;
-            font-family: '霞鹜文楷', '思源宋体', '宋体', '楷体', serif;
+            /* font-family: '霞鹜文楷', '思源宋体', '宋体', '楷体', serif; */
             letter-spacing: 2px;
             font-weight: 600;
             text-shadow: 0 2px 8px #e0f2f1;
@@ -54,11 +54,11 @@
         .question {
             font-size: clamp(20px, 5vw, 24px);
             margin: 20px 0;
-            font-weight: 500;
+            font-weight: 600;
             color: #2c3e50;
             min-height: 30px;
             text-align: center;
-            font-family: '霞鹜文楷', '思源宋体', '宋体', '楷体', serif;
+            /* font-family: '霞鹜文楷', '思源宋体', '宋体', '楷体', serif; */
             letter-spacing: 1px;
             /* 变为定位父元素 */
             position: relative;
@@ -78,7 +78,7 @@
             font-size: clamp(15px, 3.5vw, 18px);
             cursor: pointer;
             transition: all 0.3s cubic-bezier(.4,2,.6,1);
-            font-weight: 500;
+            font-weight: 600;
             color: #3e5c3a;
             outline: none;
             font-family: inherit;
@@ -182,7 +182,7 @@
             flex-wrap: wrap;
             align-items: center;
             justify-content: center;
-            gap: 12px;
+            /* gap: 2px; */
             font-family: inherit;
         }
         .settings label {
@@ -190,6 +190,7 @@
             cursor: pointer;
             white-space: nowrap;
             color: #3e5c3a;
+            margin-right: 16px;            
             font-family: inherit;
         }
         .settings input[type="checkbox"] {
@@ -303,6 +304,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            font-family: inherit;
+
         }
         .wuxing-option:hover:not(:disabled), .random-group-option:hover:not(:disabled) {
             background: linear-gradient(145deg, #e8f5e9, #f5fff7);
@@ -333,14 +336,7 @@
                 <div class="feedback" id="feedback"></div>
             </div>
             <div class="options-grid" id="options"></div>
-            <!-- --- 调换位置：设置区域移到统计信息上方 --- -->
-            <div class="settings">
-                <input type="checkbox" id="group-mode-checkbox">
-                <label for="group-mode-checkbox">按纳音五行分组练习</label>
-                <input type="checkbox" id="random-group-mode-checkbox">
-                <label for="random-group-mode-checkbox">随机分组练习</label>
-            </div>
-            <!-- 3. 把提示“当前练习”的模块挪到复选框的下方 -->
+
             <!-- 分组选择区域 (默认隐藏但占位) -->
             <div class="group-section" id="group-section">
                 <div class="selector-container">
@@ -348,12 +344,19 @@
                     <div id="random-group-selector" class="random-group-selector"></div>
                 </div>
             </div>
+            <div class="settings">
+                <input type="checkbox" id="random-group-mode-checkbox">
+                <label for="random-group-mode-checkbox">随机分组练习</label>
+                <input type="checkbox" id="group-mode-checkbox">
+                <label for="group-mode-checkbox">按纳音五行分组练习</label>
+
+            </div>            
             <div class="stats-container" id="stats">
                 <div class="stat-item"> 计时 <b id="timer">0s</b> </div>
-                <div class="stat-item"> 已答题 <b id="answered">0</b> </div>
+                <div class="stat-item"> 已答 <b id="answered">0</b> </div>
                 <div class="stat-item"> 正确 <b id="correct">0</b> </div>
                 <div class="stat-item"> 正确率 <b id="accuracy">N/A</b> </div>
-                <div class="stat-item"> 平均用时 <b id="avg-time">N/A</b> </div>
+                <div class="stat-item"> 平均 <b id="avg-time">N/A</b> </div>
             </div>
             <!-- --- 调换位置结束 --- -->
         </div>
