@@ -227,6 +227,7 @@
             /* font-family: "STKaiti", "KaiTi", "FangSong", "SimSun", serif; */
             background: rgba(255, 255, 255, 0.98);
             font-size: 22px;
+            box-sizing: border-box;
         }
 
         th {
@@ -251,7 +252,7 @@
 
         .highlight {
             background: linear-gradient(90deg, #e6f0ea 60%, #f5f9f3 100%);
-            border: 2px solid #3a7a4d !important;
+            border: 1px solid #D0FBCA;
         }
 
         .pure-gua {
@@ -406,7 +407,7 @@
             opacity: 1;
             pointer-events: none;
             margin: 14px auto 0 auto;
-            padding: 2px;
+            padding: 4px;
             left: 8px;
             right: 8px;
             max-width: 600px;
@@ -668,7 +669,7 @@
             });
             if (guaIndex === currentIndex) {
                 cell.classList.add('highlight');
-                cell.style.backgroundColor = '#d2e393'; // 新的浅绿色
+                cell.style.backgroundColor = '#D0FBCA'; // 浅绿色
                 showTooltip(true);
             } else {
                 cell.style.backgroundColor = '#ffeaea'; // 浅红色
