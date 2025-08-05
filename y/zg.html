@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <title>六十四卦装卦</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f8f5f0 60%, #e6f0ea 100%);
+            margin: 0;
+            color: #2d3a2e;
+            font-family: "STKaiti", "SimSun","FangSong", "KaiTi", serif;
+            letter-spacing: 1px;
+        }
+
+        .main-container {
+            max-width: 680px;
+            margin: 32px auto 0 auto;
+            padding: 24px 16px 36px 16px;
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 12px;
+            box-shadow: 0 6px 32px rgba(80, 120, 80, 0.13);
+            border: 1.5px solid #e6f0ea;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gua-header {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 18px;
+            z-index: 1;
+            position: relative;
+        }
+
+        .gua-header .gua-top-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            height: 70px;
+            width: 100%;
+        }
+
+        .gua-symbol {
+            font-size: 64px;
+            color: #7bb47e;
+            margin-right: 8px;
+            display: flex;
+            align-items: center;
+            height: 100%;
+            text-shadow: 0 2px 8px #e6f0ea;
+            /* font-family: "SimSun","FangSong","STKaiti", "KaiTi", serif; */
+        }
+
+        .gua-title {
+            font-size: 26px;
+            font-weight: bold;
+            color: #3a7a4d;
+            letter-spacing: 3px;
+            display: flex;
+            align-items: center;
+            height: 100%;
+            text-shadow: 0 1px 0 #e6f0ea;
+            /* font-family: "SimSun","FangSong","STKaiti", "KaiTi", serif; */
+        }
+
+        .ri-gan-row {
+            font-size: 17px;
+            color: #3a7a4d;
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+            width: 100%;
+            z-index: 1;
+        }
+
+        #ri-gan-group {
+            display: inline-flex;
+            gap: 8px;
+        }
+
+        .ri-gan-btn {
+            min-width: 54px;
+            padding: 4px 0;
+            border: 1.5px solid #b6cdb8;
+            background: linear-gradient(90deg, #f7f7f7 80%, #e6f0ea 100%);
+            color: #3a7a4d;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.18s, color 0.18s, border 0.18s;
+            font-family: inherit;
+            box-shadow: 0 1px 2px #e6f0ea;
+        }
+
+        .ri-gan-btn.selected,
+        .ri-gan-btn:active {
+            background: linear-gradient(90deg, #7bb47e 80%, #b6cdb8 100%);
+            color: #fff;
+            border-color: #7bb47e;
+            font-weight: bold;
+            box-shadow: 0 2px 8px #e6f0ea;
+        }
+
+        .gua-table,
+        .gua-list-table {
+            border-radius: 8px;
+            box-shadow: 0 4px 18px rgba(80, 120, 80, 0.10);
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .gua-table {
+            width: 100%;
+            margin-top: 18px;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: #fff;
+            margin-bottom: 18px;
+        }
+
+        .gua-table th,
+        .gua-table td {
+            padding: 10px 6px;
+            font-size: 20px;
+            line-height: 0.7;
+            text-align: center;
+            border: 1px solid #e6f0ea;
+            background: #fff;
+            transition: background 0.15s;
+            /* font-family: "SimSun","FangSong","STKaiti", "KaiTi", serif; */
+        }
+
+        .gua-table th,
+        .gua-list-table th {
+            color: #3a7a4d;
+            font-weight: bold;
+            background: linear-gradient(90deg, #f3f3f3 80%, #e6f0ea 100%);
+            font-size: 20px;
+            border-bottom: 2px solid #b6cdb8;
+        }
+
+        .gua-table tr:last-child td {
+            border-bottom: 1px solid #e6f0ea;
+        }
+
+        .gua-table td.selected {
+            background: #7bb47e;
+            color: #fff;
+        }
+
+        .gua-table td:hover {
+            background: #e6f0ea;
+        }
+
+        .gua-list-table {
+            width: 100%;
+            margin-top: 18px;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .gua-list-table th {
+            font-size: 18px;
+            padding: 7px 0;
+            letter-spacing: 2px;
+        }
+
+        .gua-list-table td {
+            padding: 10px 4px;
+            font-size: 20px;
+            text-align: center;
+            border: 1px solid #e6f0ea;
+            cursor: pointer;
+            background: #fff;
+            transition: background 0.15s;
+            /* font-family: "SimSun","FangSong","STKaiti", "KaiTi", serif; */
+        }
+
+        .gua-list-table td.selected {
+            background: #7bb47e !important;
+            color: #fff !important;
+            font-weight: bold;
+            box-shadow: 0 2px 8px #e6f0ea;
+        }
+
+        .gua-list-table td.selected:hover {
+            background: #7bb47e !important;
+            color: #fff !important;
+        }
+
+        .gua-list-table td:hover {
+            background: #e6f0ea;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                font-family: "FangSong", "SimSun", "STKaiti",  "KaiTi", serif;
+
+            }
+            .main-container {
+                padding: 6px 2vw 18px 2vw;
+            }
+
+            .gua-header {
+                gap: 4px;
+            }
+
+            .gua-header .gua-top-row {
+                height: 48px;
+            }
+
+            .gua-title {
+                font-size: 24px;
+            }
+
+            .gua-symbol {
+                font-size: 38px;
+            }
+
+            .gua-table th,
+            .gua-list-table th,
+            .gua-table td {
+                font-size: 14px;
+                padding: 3px 2px;
+            }
+
+            .gua-table th {
+                line-height: .7;
+            }
+
+            .gua-list-table td {
+                font-size: 15px;
+                padding: 4px 2px;
+            }
+
+            .ri-gan-row {
+                font-size: 13px;
+                gap: 4px;
+                margin-bottom: 0;
+                justify-content: flex-start;
+                align-items: center;
+                width: 100%;
+            }
+
+            #ri-gan-group {
+                gap: 4px;
+            }
+
+            .ri-gan-btn {
+                min-width: 38px;
+                font-size: 13px;
+                padding: 2px 0;
+                border-radius: 6px;
+            }
+
+            .ri-gan-row,
+            #ri-gan-group,
+            .ri-gan-btn {
+                vertical-align: middle;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main-container">
+        <div class="gua-header">
+            <div class="gua-top-row">
+                <div class="gua-symbol" id="gua-symbol"></div>
+                <div class="gua-title" id="gua-title"></div>
+            </div>
+            <div class="ri-gan-row">
+                <span>日辰</span>
+                <span id="ri-gan-group">
+                    <button type="button" class="ri-gan-btn selected" data-value="甲乙">甲乙</button>
+                    <button type="button" class="ri-gan-btn" data-value="丙丁">丙丁</button>
+                    <button type="button" class="ri-gan-btn" data-value="戊">戊</button>
+                    <button type="button" class="ri-gan-btn" data-value="己">己</button>
+                    <button type="button" class="ri-gan-btn" data-value="庚辛">庚辛</button>
+                    <button type="button" class="ri-gan-btn" data-value="壬癸">壬癸</button>
+                </span>
+            </div>
+        </div>
+        <table class="gua-table" id="gua-table">
+            <thead>
+                <tr>
+                    <th>六神</th>
+                    <th style="width:60px;">卦爻</th>
+                    <th>纳甲</th>
+                    <th>纳音</th>
+                    <th>纳甲</th>
+                    <th>纳音</th>
+                    <th>六亲</th>
+                </tr>
+            </thead>
+            <tbody id="gua-tbody"></tbody>
+        </table>
+        <table class="gua-list-table" id="gua-list-table"></table>
+    </div>
+    <script>
+        // 六神顺序规则
+        const sixGodsMap = {
+            "甲乙": ["青龙", "朱雀", "勾陈", "螣蛇", "白虎", "玄武"],
+            "丙丁": ["朱雀", "勾陈", "螣蛇", "白虎", "玄武", "青龙"],
+            "戊": ["勾陈", "螣蛇", "白虎", "玄武", "青龙", "朱雀"],
+            "己": ["螣蛇", "白虎", "玄武", "青龙", "朱雀", "勾陈"],
+            "庚辛": ["白虎", "玄武", "青龙", "朱雀", "勾陈", "螣蛇"],
+            "壬癸": ["玄武", "青龙", "朱雀", "勾陈", "螣蛇", "白虎"]
+        };
+        let currentRiGan = "甲乙";
+
+        // 日辰按钮事件
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.ri-gan-btn').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    document.querySelectorAll('.ri-gan-btn').forEach(b => b.classList.remove('selected'));
+                    this.classList.add('selected');
+                    currentRiGan = this.dataset.value;
+                    selectGua(window.currentGuaIndex || 1);
+                });
+            });
+        });
+
+        // 纳音对照表
+        const nayinList = [
+            { ganzhi: '甲子', nayin: '海中金' }, { ganzhi: '乙丑', nayin: '海中金' }, { ganzhi: '丙寅', nayin: '炉中火' }, { ganzhi: '丁卯', nayin: '炉中火' },
+            { ganzhi: '戊辰', nayin: '大林木' }, { ganzhi: '己巳', nayin: '大林木' }, { ganzhi: '庚午', nayin: '路旁土' }, { ganzhi: '辛未', nayin: '路旁土' },
+            { ganzhi: '壬申', nayin: '剑锋金' }, { ganzhi: '癸酉', nayin: '剑锋金' }, { ganzhi: '甲戌', nayin: '山头火' }, { ganzhi: '乙亥', nayin: '山头火' },
+            { ganzhi: '丙子', nayin: '涧下水' }, { ganzhi: '丁丑', nayin: '涧下水' }, { ganzhi: '戊寅', nayin: '城头土' }, { ganzhi: '己卯', nayin: '城头土' },
+            { ganzhi: '庚辰', nayin: '白腊金' }, { ganzhi: '辛巳', nayin: '白腊金' }, { ganzhi: '壬午', nayin: '杨柳木' }, { ganzhi: '癸未', nayin: '杨柳木' },
+            { ganzhi: '甲申', nayin: '井泉水' }, { ganzhi: '乙酉', nayin: '井泉水' }, { ganzhi: '丙戌', nayin: '屋上土' }, { ganzhi: '丁亥', nayin: '屋上土' },
+            { ganzhi: '戊子', nayin: '霹雳火' }, { ganzhi: '己丑', nayin: '霹雳火' }, { ganzhi: '庚寅', nayin: '松柏木' }, { ganzhi: '辛卯', nayin: '松柏木' },
+            { ganzhi: '壬辰', nayin: '长流水' }, { ganzhi: '癸巳', nayin: '长流水' }, { ganzhi: '甲午', nayin: '沙中金' }, { ganzhi: '乙未', nayin: '沙中金' },
+            { ganzhi: '丙申', nayin: '山下火' }, { ganzhi: '丁酉', nayin: '山下火' }, { ganzhi: '戊戌', nayin: '平地木' }, { ganzhi: '己亥', nayin: '平地木' },
+            { ganzhi: '庚子', nayin: '壁上土' }, { ganzhi: '辛丑', nayin: '壁上土' }, { ganzhi: '壬寅', nayin: '金箔金' }, { ganzhi: '癸卯', nayin: '金箔金' },
+            { ganzhi: '甲辰', nayin: '佛灯火' }, { ganzhi: '乙巳', nayin: '佛灯火' }, { ganzhi: '丙午', nayin: '天河水' }, { ganzhi: '丁未', nayin: '天河水' },
+            { ganzhi: '戊申', nayin: '大驿土' }, { ganzhi: '己酉', nayin: '大驿土' }, { ganzhi: '庚戌', nayin: '钗钏金' }, { ganzhi: '辛亥', nayin: '钗钏金' },
+            { ganzhi: '壬子', nayin: '桑柘木' }, { ganzhi: '癸丑', nayin: '桑柘木' }, { ganzhi: '甲寅', nayin: '大溪水' }, { ganzhi: '乙卯', nayin: '大溪水' },
+            { ganzhi: '丙辰', nayin: '沙中土' }, { ganzhi: '丁巳', nayin: '沙中土' }, { ganzhi: '戊午', nayin: '天上火' }, { ganzhi: '己未', nayin: '天上火' },
+            { ganzhi: '庚申', nayin: '石榴木' }, { ganzhi: '辛酉', nayin: '石榴木' }, { ganzhi: '壬戌', nayin: '大海水' }, { ganzhi: '癸亥', nayin: '大海水' }
+        ];
+
+        function getNayin(ganzhi) {
+            const found = nayinList.find(item => item.ganzhi === ganzhi);
+            return found ? found.nayin : '';
+        }
+
+        // 读取 hexagrams.json 数据
+        let hexagrams = [];
+        fetch('hg.json')
+            .then(res => res.json())
+            .then(data => {
+                hexagrams = data;
+                renderGuaList();
+                selectGua(1); // 默认显示第一个卦
+            });
+
+        // 渲染底部卦列表表格
+        function renderGuaList() {
+            const palaceOrder = [
+                "乾宫", "坤宫", "艮宫", "兑宫", "离宫", "坎宫", "震宫", "巽宫"
+            ];
+            const palaceMap = {};
+            palaceOrder.forEach(p => palaceMap[p] = []);
+            hexagrams.forEach(g => {
+                if (palaceMap[g.卦宫]) palaceMap[g.卦宫].push(g);
+            });
+            const table = document.getElementById('gua-list-table');
+            table.innerHTML = '';
+            // 添加表头
+            const thead = document.createElement('thead');
+            const headTr = document.createElement('tr');
+            const headers = ['本宫', '一世', '二世', '三世', '四世', '五世', '游魂', '归魂'];
+            headers.forEach(text => {
+                const th = document.createElement('th');
+                th.textContent = text;
+                headTr.appendChild(th);
+            });
+            thead.appendChild(headTr);
+            table.appendChild(thead);
+
+            // 添加内容
+            for (let i = 0; i < palaceOrder.length; i++) {
+                const tr = document.createElement('tr');
+                const group = palaceMap[palaceOrder[i]];
+                for (let j = 0; j < 8; j++) {
+                    const g = group && group[j];
+                    const td = document.createElement('td');
+                    if (g) {
+                        td.textContent = g.卦名简称;
+                        td.title = g.卦名繁体;
+                        td.dataset.index = g.卦序;
+                        td.onclick = () => selectGua(g.卦序);
+                    } else {
+                        td.textContent = '';
+                    }
+                    tr.appendChild(td);
+                }
+                table.appendChild(tr);
+            }
+        }
+
+        // 选中某个卦，顶部展示
+        function selectGua(guaIndex) {
+            window.currentGuaIndex = guaIndex;
+            const gua = hexagrams.find(g => g.卦序 == guaIndex);
+            if (!gua) return;
+            document.querySelectorAll('.gua-list-table td').forEach(td => {
+                td.classList.toggle('selected', td.dataset.index == guaIndex);
+            });
+            document.getElementById('gua-symbol').textContent = gua.卦符号;
+            document.getElementById('gua-title').textContent = `${gua.卦名}`;
+            // 六神按当前日辰规则
+            const sixGods = sixGodsMap[currentRiGan] || sixGodsMap["甲乙"];
+            const tbody = document.getElementById('gua-tbody');
+            tbody.innerHTML = '';
+            // 正序遍历：i=0(初爻)到i=5(上爻)，六神顺序与纳甲顺序一一对应
+            for (let i = 0; i < 6; i++) {
+                const tr = document.createElement('tr');
+                // 六神（初爻配sixGods[0]，二爻配sixGods[1]...）
+                const tdGod = document.createElement('td');
+                tdGod.textContent = sixGods[5 - i];
+                tr.appendChild(tdGod);
+                // 卦爻
+                const yao = gua.爻位 && gua.爻位[i] ? gua.爻位[i] : {};
+                const tdYao = document.createElement('td');
+                if (yao.阴阳 === "阳" || yao.阴阳 === 1) {
+                    tdYao.textContent = '⚊';
+                } else if (yao.阴阳 === "阴" || yao.阴阳 === 0) {
+                    tdYao.textContent = '⚋';
+                } else {
+                    tdYao.textContent = '';
+                }
+                tdYao.style.fontSize = '32px';
+                tdYao.style.fontFamily = '"STKaiti","KaiTi","FangSong","SimSun",serif';
+                tdYao.style.color = '#7bb47e';
+                tdYao.style.textAlign = 'center';
+                tdYao.style.verticalAlign = 'middle';
+                tr.appendChild(tdYao);
+                // 纳甲1、纳音1
+                let najia1 = '', nayin1 = '', najia2 = '', nayin2 = '';
+                if (yao.纳甲 && Array.isArray(yao.纳甲)) {
+                    najia1 = yao.纳甲[0] || '';
+                    nayin1 = najia1 ? getNayin(najia1) : '';
+                    najia2 = yao.纳甲[1] || '';
+                    nayin2 = najia2 ? getNayin(najia2) : '';
+                }
+                const tdNajia1 = document.createElement('td');
+                tdNajia1.textContent = najia1;
+                tr.appendChild(tdNajia1);
+                const tdNayin1 = document.createElement('td');
+                tdNayin1.textContent = nayin1;
+                tr.appendChild(tdNayin1);
+                const tdNajia2 = document.createElement('td');
+                tdNajia2.textContent = najia2;
+                tr.appendChild(tdNajia2);
+                const tdNayin2 = document.createElement('td');
+                tdNayin2.textContent = nayin2;
+                tr.appendChild(tdNayin2);
+                // 六亲
+                const tdLiuqin = document.createElement('td');
+                tdLiuqin.textContent = yao.六亲 || '';
+                tr.appendChild(tdLiuqin);
+                tbody.appendChild(tr);
+            }
+        }
+    </script>
+</body>
+
+</html>
