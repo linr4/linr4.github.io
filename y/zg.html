@@ -233,13 +233,12 @@
             left: 50%;
             bottom: 120%;
             transform: translateX(-50%);
-            width: 120px;
             border-radius: 8px;
             box-shadow: 0 4px 18px rgba(80,120,80,0.18);
             background: #fff;
             border: 1px solid #e6f0ea;
             z-index: 10;
-            /* tooltip 箭头 */
+            transition: width 0.2s;
         }
 
         .info a .wx-img-preview::after {
@@ -408,7 +407,9 @@
     </div>
     <div class="info">
         <p>
-            数据可能存在错漏，请留意核对，有问题请 <a href="javascript:;" id="wx-link">联系作者<img class="wx-img-preview" src="./assets/wx.jpg" alt="微信" />
+            数据可能存在错漏，请留意核对，有问题请
+            <a href="javascript:;" id="wx-link">联系作者
+                <img class="wx-img-preview" src="./assets/wx.jpg" alt="微信" />
             </a>
         </p>
     </div>
@@ -583,30 +584,82 @@
 
         // 兼容PC和移动端的hover/点击显示
         const wxLink = document.getElementById('wx-link');
+        const wxImg = wxLink.querySelector('.wx-img-preview');
         let wxImgTimer = null;
+
+        // 判断是否移动端
+        function isMobile() {
+            return window.matchMedia('(max-width: 600px)').matches;
+        }
 
         // PC端hover
         wxLink.addEventListener('mouseenter', function () {
-            this.classList.add('show-img');
+            if (!isMobile()) {
+                this.classList.add('show-img');
+            }
         });
         wxLink.addEventListener('mouseleave', function () {
-            this.classList.remove('show-img');
+            if (!isMobile()) {
+                this.classList.remove('show-img');
+            }
         });
 
         // 移动端点击
-        wxLink.addEventListener('touchstart', function (e) {
-            e.preventDefault();
-            if (this.classList.contains('show-img')) {
-                this.classList.remove('show-img');
-            } else {
+        wxLink.addEventListener('click', function (e) {
+            if (isMobile()) {
+                e.stopPropagation();
                 this.classList.add('show-img');
-                // 3秒后自动隐藏
+                // 设置图片宽度为屏幕宽度的50%，并保证不会超出屏幕
+                let imgW = Math.floor(window.innerWidth * 0.5);
+                // 最大宽度不超过屏幕宽度-32px（左右各留16px安全边距）
+                imgW = Math.min(imgW, window.innerWidth - 32);
+                wxImg.style.width = imgW + 'px';
+                wxImg.style.maxWidth = '90vw';
+                wxImg.style.left = '30%';
+                wxImg.style.transform = 'translateX(-66%)';
+                // 10秒后自动隐藏
                 clearTimeout(wxImgTimer);
                 wxImgTimer = setTimeout(() => {
                     wxLink.classList.remove('show-img');
-                }, 3000);
+                }, 10000);
             }
         });
+
+        // 点击图片本身可放大原图
+        wxImg.addEventListener('click', function (e) {
+            e.stopPropagation();
+            window.open(this.src, '_blank');
+        });
+        wxImg.addEventListener('touchstart', function (e) {
+            e.stopPropagation();
+        });
+
+        // 点击其它地方隐藏图片（移动端）
+        document.addEventListener('click', function () {
+            if (isMobile()) wxLink.classList.remove('show-img');
+        });
+        document.addEventListener('touchstart', function () {
+            if (isMobile()) wxLink.classList.remove('show-img');
+        });
+
+        // PC端图片更大
+        function setWxImgWidth() {
+            if (isMobile()) {
+                let imgW = Math.floor(window.innerWidth * 0.5);
+                imgW = Math.min(imgW, window.innerWidth - 32);
+                wxImg.style.width = imgW + 'px';
+                wxImg.style.maxWidth = '90vw';
+                wxImg.style.left = '50%';
+                wxImg.style.transform = 'translateX(-50%)';
+            } else {
+                wxImg.style.width = '180px';
+                wxImg.style.maxWidth = 'none';
+                wxImg.style.left = '50%';
+                wxImg.style.transform = 'translateX(-50%)';
+            }
+        }
+        window.addEventListener('resize', setWxImgWidth);
+        setWxImgWidth();
     </script>
 </body>
 
