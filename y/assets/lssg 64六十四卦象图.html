@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>八宮六十四卦</title>
+    <style>
+        html, body {
+            margin: 0;
+            box-sizing: border-box;
+            font-family: 'LXGW WenKai Screen';
+            background: wheat;
+
+        }
+        .container {
+            /* border: 1px solid auto; */
+            padding: 10px 0 10px 0;
+        }
+        .row {
+            text-align: center;
+        }
+        span {
+            font-size: 20px;
+        }
+        .cell {
+            width: 100px;
+            display: inline-block;
+            margin: 5px;
+            text-align: center;
+            border: 1px solid #000;
+        }
+        .gua {
+            font-size: 64px;
+            display: block;
+        }
+        .guaxu {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+
+    </div>
+
+    <script>
+        let containerEl = document.querySelector(".container");
+        let gua = document.createElement("div");
+
+        const lssg = ["䷀", "䷁", "䷂", "䷃", "䷄", "䷅", "䷆", "䷇", "䷈", "䷉", "䷊", "䷋", "䷌", "䷍", "䷎", "䷏", "䷐", "䷑", "䷒", "䷓", "䷔", "䷕", "䷖", "䷗", "䷘", "䷙", "䷚", "䷛", "䷜", "䷝", "䷞", "䷟", "䷠", "䷡", "䷢", "䷣", "䷤", "䷥", "䷦", "䷧", "䷨", "䷩", "䷪", "䷫", "䷬", "䷭", "䷮", "䷯", "䷰", "䷱", "䷲", "䷳", "䷴", "䷵", "䷶", "䷷", "䷸", "䷹", "䷺", "䷻", "䷼", "䷽", "䷾", "䷿"];
+        const lssgm = ["乾為天", "坤為地", "水雷屯", "山水蒙", "水天需", "天水訟", "地水師", "水地比", "風天小畜", "天澤履", "地天泰", "天地否", "天火同人", "火天大有", "地山謙", "雷地豫", "澤雷隨", "山風蠱", "地澤臨", "風地觀", "火雷噬嗑", "山火賁", "山地剝", "地雷復", "天雷无妄", "山天大畜", "山雷頤", "澤風大過", "坎為水", "離為火", "澤山咸", "雷風恆", "天山遯", "雷天大壯", "火地晉", "地火明夷", "風火家人", "火澤睽", "水山蹇", "雷水解", "山澤損", "風雷益", "澤天夬", "天風姤", "澤地萃", "地風升", "澤水困", "水風井", "澤火革", "火風鼎", "震為雷", "艮為山", "風山漸", "雷澤歸妹", "雷火豐", "火山旅", "巽為風", "兌為澤", "風水渙", "水澤節", "風澤中孚", "雷山小過", "水火既濟", "火水未濟"];
+        const lssgm2 = ["乾", "坤", "屯", "蒙", "需", "訟", "師", "比", "小畜", "履", "泰", "否", "同人", "大有", "謙", "豫", "隨", "蠱", "臨", "觀", "噬嗑", "賁", "剝", "復", "无妄", "大畜", "頤", "大過", "坎", "離", "咸", "恆", "遯", "大壯", "晉", "明夷", "家人", "睽", "蹇", "解", "損", "益", "夬", "姤", "萃", "升", "困", "井", "革", "鼎", "震", "艮", "漸", "歸妹", "豐", "旅", "巽", "兌", "渙", "節", "中孚", "小過", "既濟", "未濟"];
+        const bagong = [
+            [1, 44, 33, 12, 20, 23, 35, 14],
+            [2, 24, 19, 11, 34, 43, 5, 8],
+            [52, 22, 26, 41, 38, 10, 61, 53],
+            [58, 47, 45, 31, 39, 15, 62, 54]
+            [30, 56, 50, 64, 4, 59, 6, 13],
+            [29, 60, 3, 63, 49, 55, 36, 7],
+            [51, 16, 40, 32, 46, 48, 28, 17],
+            [57, 9, 37, 42, 25, 21, 27, 18],
+        ];
+
+        for (let i = 0; i < bagong.length; i++) {
+            let row = [];
+            row[i] = document.createElement("div");
+            row[i].classList.add("row");
+            for (let j = 0; j < bagong[i].length; j++) {
+                let index = bagong[i][j] - 1; // Adjusting for 0-based index
+                let cellEl = document.createElement("div");
+                let guaEl = document.createElement("span");
+                let guamingEl = document.createElement("span");
+                let guaxuEl = document.createElement("span");
+
+                cellEl.classList.add("cell");
+                guaEl.classList.add("gua");
+                guamingEl.classList.add("guaming");
+                guaxuEl.classList.add("guaxu");
+
+                guaEl.textContent = `${lssg[index]}`;
+                guamingEl.textContent = `${lssgm[index]}`;
+                guaxuEl.textContent = `${bagong[i][j]}`;
+
+                // cellEl.innerHTML =  `${lssg[index]}<br>${lssgm[index]}<br>${bagong[i][j]} `
+                
+                cellEl.appendChild(guaEl);
+                cellEl.appendChild(guamingEl);
+                cellEl.appendChild(guaxuEl);
+                row[i].appendChild(cellEl);
+                containerEl.appendChild(row[i]);
+
+            }
+        }
+    </script>
+</body>
+
+</html>
