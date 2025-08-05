@@ -128,14 +128,27 @@
 
         .gua-table th,
         .gua-table td {
+            border-left: none;
+            border-right: none;
+            border-top: 0.5px solid #e6f0ea;
+            border-bottom: 0.5px solid #e6f0ea;
             padding: 10px 6px;
             font-size: 20px;
             line-height: 0.7;
             text-align: center;
-            border: 1px solid #e6f0ea;
             background: #fff;
             transition: background 0.15s;
             /* font-family: "SimSun","FangSong","STKaiti", "KaiTi", serif; */
+        }
+
+        .gua-table tr td:first-child,
+        .gua-table tr th:first-child {
+            border-left: 0.5px solid #e6f0ea;
+        }
+
+        .gua-table tr td:last-child,
+        .gua-table tr th:last-child {
+            border-right: 0.5px solid #e6f0ea;
         }
 
         .gua-table th,
@@ -202,8 +215,47 @@
 
         .info {
             margin-top: 24px;
-            font-size: 14px;
+            font-size: 12px;
             color: #3a7a4d;
+            text-align: center;
+        }
+
+        .info a {
+            position: relative;
+            color: #3a7a4d;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .info a .wx-img-preview {
+            display: none;
+            position: absolute;
+            left: 50%;
+            bottom: 120%;
+            transform: translateX(-50%);
+            width: 120px;
+            border-radius: 8px;
+            box-shadow: 0 4px 18px rgba(80,120,80,0.18);
+            background: #fff;
+            border: 1px solid #e6f0ea;
+            z-index: 10;
+            /* tooltip 箭头 */
+        }
+
+        .info a .wx-img-preview::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 100%;
+            transform: translateX(-50%);
+            border-width: 8px 8px 0 8px;
+            border-style: solid;
+            border-color: #fff transparent transparent transparent;
+            filter: drop-shadow(0 2px 2px #e6f0ea);
+        }
+
+        .info a.show-img .wx-img-preview {
+            display: block;
         }
 
         @media (max-width: 600px) {
@@ -273,6 +325,47 @@
             .ri-gan-btn {
                 vertical-align: middle;
             }
+
+            .info a .wx-img-preview {
+                width: 90px;
+            }
+        }
+
+        .back-home-float {
+            position: fixed;
+            right: 18px;
+            top: 22px;
+            z-index: 999;
+            background: linear-gradient(90deg, #eaf6ed 80%, #e6f0ea 100%);
+            color: #7bb47e;
+            font-size: 16px;
+            padding: 10px 22px;
+            border-radius: 22px 22px 4px 22px;
+            box-shadow: 0 4px 18px rgba(80,120,80,0.13);
+            text-decoration: none;
+            font-family: "STKaiti","KaiTi","FangSong","SimSun",serif;
+            letter-spacing: 2px;
+            transition: background 0.18s, box-shadow 0.18s, color 0.18s;
+            opacity: 0.92;
+            display: flex;
+            align-items: center;
+        }
+
+        .back-home-float:hover {
+            background: linear-gradient(90deg, #5fae6b 80%, #a6cdb8 100%);
+            color: #fff;
+            opacity: 1;
+            box-shadow: 0 6px 24px rgba(80,120,80,0.18);
+        }
+
+        @media (max-width: 600px) {
+            .back-home-float {
+                font-size: 13px;
+                padding: 7px 14px;
+                right: 8px;
+                top: 10px;
+                border-radius: 16px 16px 3px 16px;
+            }
         }
     </style>
 </head>
@@ -314,10 +407,12 @@
 
     </div>
     <div class="info">
-        <ul>
-            <li>装卦信息可能存在错漏，请留意核对。</li>
-        </ul>
+        <p>
+            数据可能存在错漏，请留意核对，有问题请 <a href="javascript:;" id="wx-link">联系作者<img class="wx-img-preview" src="./assets/wx.jpg" alt="微信" />
+            </a>
+        </p>
     </div>
+    <a href="/y/index.html" class="back-home-float" title="返回主页">回主页</a>
     <script>
         // 六神顺序规则
         const sixGodsMap = {
@@ -368,7 +463,7 @@
 
         // 读取 hexagrams.json 数据
         let hexagrams = [];
-        fetch('hg.json')
+        fetch('./assets/hg.json')
             .then(res => res.json())
             .then(data => {
                 hexagrams = data;
@@ -485,6 +580,33 @@
                 tbody.appendChild(tr);
             }
         }
+
+        // 兼容PC和移动端的hover/点击显示
+        const wxLink = document.getElementById('wx-link');
+        let wxImgTimer = null;
+
+        // PC端hover
+        wxLink.addEventListener('mouseenter', function () {
+            this.classList.add('show-img');
+        });
+        wxLink.addEventListener('mouseleave', function () {
+            this.classList.remove('show-img');
+        });
+
+        // 移动端点击
+        wxLink.addEventListener('touchstart', function (e) {
+            e.preventDefault();
+            if (this.classList.contains('show-img')) {
+                this.classList.remove('show-img');
+            } else {
+                this.classList.add('show-img');
+                // 3秒后自动隐藏
+                clearTimeout(wxImgTimer);
+                wxImgTimer = setTimeout(() => {
+                    wxLink.classList.remove('show-img');
+                }, 3000);
+            }
+        });
     </script>
 </body>
 
