@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>六十四卦装卦</title>
+    <title>装卦信息</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
@@ -200,6 +200,12 @@
             background: #e6f0ea;
         }
 
+        .info {
+            margin-top: 24px;
+            font-size: 14px;
+            color: #3a7a4d;
+        }
+
         @media (max-width: 600px) {
             body {
                 font-family: "FangSong", "SimSun", "STKaiti",  "KaiTi", serif;
@@ -242,6 +248,7 @@
             }
 
             .ri-gan-row {
+                margin: 10px;
                 font-size: 13px;
                 gap: 4px;
                 margin-bottom: 0;
@@ -304,6 +311,12 @@
             <tbody id="gua-tbody"></tbody>
         </table>
         <table class="gua-list-table" id="gua-list-table"></table>
+
+    </div>
+    <div class="info">
+        <ul>
+            <li>装卦信息可能存在错漏，请留意核对。</li>
+        </ul>
     </div>
     <script>
         // 六神顺序规则
