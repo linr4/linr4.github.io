@@ -39,7 +39,8 @@
 
         .gua-header .gua-top-row {
             display: flex;
-            align-items: center;
+            align-items: flex-end;
+            /* 底部对齐 */
             justify-content: center;
             gap: 16px;
             height: 70px;
@@ -51,7 +52,8 @@
             color: #7bb47e;
             margin-right: 8px;
             display: flex;
-            align-items: center;
+            align-items: flex-end;
+            /* 底部对齐 */
             height: 100%;
             text-shadow: 0 2px 8px #e6f0ea;
             /* font-family: "SimSun","FangSong","STKaiti", "KaiTi", serif; */
@@ -64,6 +66,8 @@
             letter-spacing: 3px;
             display: flex;
             align-items: center;
+            /* 底部对齐 */
+            gap: 10px;
             height: 100%;
             text-shadow: 0 1px 0 #e6f0ea;
             /* font-family: "SimSun","FangSong","STKaiti", "KaiTi", serif; */
@@ -366,6 +370,16 @@
                 border-radius: 16px 16px 3px 16px;
             }
         }
+
+        .gua-info-detail {
+            font-size: 13px;
+            color: #888;
+            margin-left: 8px;
+            font-family: "STKaiti","KaiTi","FangSong","SimSun",serif;
+            letter-spacing: 1px;
+            vertical-align: baseline;
+            padding-top: 9px;
+        }
     </style>
 </head>
 
@@ -526,7 +540,32 @@
                 td.classList.toggle('selected', td.dataset.index == guaIndex);
             });
             document.getElementById('gua-symbol').textContent = gua.卦符号;
-            document.getElementById('gua-title').textContent = `${gua.卦名}`;
+
+            // 新增：在卦名右侧显示卦宫和世序信息
+            const guaTitle = document.getElementById('gua-title');
+
+            // 直接用“卦变序列”字段
+            let seqText = '';
+            if (gua.卦宫 && gua.卦变序列) {
+                seqText = `${gua.卦宫} ${gua.卦变序列}卦`;
+            } else if (gua.卦宫) {
+                seqText = `${gua.卦宫}`;
+            }
+
+            // 先清空 gua-title
+            guaTitle.innerHTML = '';
+            // 主标题
+            const mainSpan = document.createElement('span');
+            mainSpan.textContent = gua.卦名;
+            guaTitle.appendChild(mainSpan);
+            // info span
+            if (seqText) {
+                const infoSpan = document.createElement('span');
+                infoSpan.className = 'gua-info-detail';
+                infoSpan.textContent = seqText;
+                guaTitle.appendChild(infoSpan);
+            }
+
             // 六神按当前日辰规则
             const sixGods = sixGodsMap[currentRiGan] || sixGodsMap["甲乙"];
             const tbody = document.getElementById('gua-tbody');
