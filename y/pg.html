@@ -157,22 +157,26 @@
             font-family: inherit;
         }
         @media (max-width: 600px) {
-            body { padding: 10px; }
+            body { 
+                margin-top: -16px;
+                padding: 10px; 
+                font-size: 18px;
+            }
             .main-card { padding: 10px; }
-            h1 { font-size: 18px; margin-bottom: 10px; }
-            .question { font-size: 15px; margin: 10px 0; }
-            .options-grid { gap: 6px; margin: 12px 0; }
-            .option { padding: 8px; font-size: 13px; }
-            .feedback { font-size: 13px; padding: 8px; }
+            h1 { font-size: 24px; margin: 5px 0; }
+            .question { font-size: 18px; margin: 10px 0; }
+            .options-grid { gap: 8px; margin: 10px; }
+            .option { padding: 10px; font-size: 16px; }
+            .feedback { font-size: 16px; padding: 10px; }
             .card-container { max-width: 98vw; min-width: 0; padding: 0; }
-            .stats-container { gap: 4px; padding: 8px; font-size: 11px; }
-            .stat-item { padding: 4px 2px; }
-            .stat-item b { font-size: 11px; margin-top: 1px; }
+            .stats-container { gap: 6px; padding: 10px; font-size: 12px; }
+            .stat-item { padding: 7px 4px; font-size: 13px; }
+            .stat-item b { font-size: 15px; margin-top: 1px; }
         }
-        @media (max-width: 400px) {
+        @media (max-width: 400px) {            
             .options-grid { grid-template-columns: repeat(2, 1fr); }
-            .stats-container { font-size: 9px; }
-            .stat-item b { font-size: 10px; }
+            .stats-container { font-size: 13px; }
+            .stat-item b { font-size: 13px; }
         }
         .back-home-float {
             position: fixed;

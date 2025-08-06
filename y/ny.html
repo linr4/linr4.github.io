@@ -172,28 +172,34 @@
         /* --- 统计信息样式优化结束 --- */
         /* --- 设置区域样式优化开始 --- */
         .settings {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 6px;
             margin-top: 15px;
             padding: 13px;
-            /* 移除背景色和边框，仅保留布局 */
             background: none;
             border: none;
             border-radius: 10px;
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: center;
-            /* gap: 2px; */
             font-family: inherit;
         }
+        .settings .setting-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0;
+            gap: 0px;
+        }
         .settings label {
+            margin-left: 4px;
             font-size: 15px;
             cursor: pointer;
             white-space: nowrap;
             color: #3e5c3a;
-            margin-right: 14px;            
             font-family: inherit;
         }
         .settings input[type="checkbox"] {
+            margin-right: 0;
+            margin-left: 6px;
             width: 16px;
             height: 16px;
             cursor: pointer;
@@ -224,11 +230,12 @@
             }
             /* --- 小屏幕设置区域优化 --- */
             .settings {
-                padding: 10px;
-                gap: 8px;
+                padding: 1px;
+                gap: 6px;
             }
             .settings label {
                 font-size: 12px;
+                margin-right: 8px;
             }
             .settings input[type="checkbox"] {
                 width: 14px;
@@ -359,6 +366,106 @@
                 border-radius: 16px 16px 3px 16px;
             }
         }
+
+        /* 纳音表蒙板样式 */
+        #nayin-table-mask {
+            position: fixed;
+            z-index: 9999;
+            left: 0; top: 0; right: 0; bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .nayin-table-mask-bg {
+            position: absolute;
+            left: 0; top: 0; right: 0; bottom: 0;
+            background: rgba(40,60,40,0.18);
+            backdrop-filter: blur(2px);
+        }
+        .nayin-table-modal {
+            position: relative;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(60,80,60,0.18);
+            padding: 24px 12px 18px 12px;
+            max-width: 98vw;
+            min-width: 0;
+            width: 98vw;
+            max-height: 90vh;
+            overflow: auto;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .nayin-table-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #388e3c;
+            margin-bottom: 12px;
+            letter-spacing: 2px;
+        }
+        .nayin-table-close {
+            margin-top: 18px;
+            padding: 7px 28px;
+            font-size: 15px;
+            border-radius: 18px;
+            border: none;
+            background: linear-gradient(90deg, #eaf6ed 80%, #e6f0ea 100%);
+            color: #388e3c;
+            cursor: pointer;
+            font-family: inherit;
+            box-shadow: 0 2px 8px rgba(60,80,60,0.10);
+            transition: background 0.18s, color 0.18s;
+        }
+        .nayin-table-close:hover {
+            background: linear-gradient(90deg, #5fae6b 80%, #a6cdb8 100%);
+            color: #fff;
+        }
+        .nayin-table-content-table {
+            border-collapse: collapse;
+            width: 100%;
+            min-width: 320px;
+            background: #f8fdf8;
+            margin: 0 auto;
+        }
+        .nayin-table-content-table th, .nayin-table-content-table td {
+            border: 1px solid #b7d6c2;
+            padding: 6px 8px;
+            text-align: center;
+            font-size: 15px;
+            font-family: inherit;
+        }
+        .nayin-table-content-table th {
+            background: #eaf6ed;
+            color: #388e3c;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        .nayin-table-content-table tr.nayin-block-gap > td {
+            background: #fff;
+            border: none;
+            height: 18px;
+            padding: 0;
+        }
+        @media (max-width: 600px) {
+            .nayin-table-modal {
+                padding: 8px 2px 10px 2px;
+                max-width: 99vw;
+            }
+            .nayin-table-content-table th, .nayin-table-content-table td {
+                font-size: 13px;
+                padding: 4px 2px;
+            }
+            .nayin-table-title {
+                font-size: 16px;
+            }
+            .nayin-table-close {
+                font-size: 13px;
+                padding: 6px 18px;
+            }
+        }
+        
     </style>
 </head>
 <body>
@@ -379,11 +486,16 @@
                 </div>
             </div>
             <div class="settings">
-                <input type="checkbox" id="random-group-mode-checkbox">
-                <label for="random-group-mode-checkbox">随机分组练习</label>
-                <input type="checkbox" id="group-mode-checkbox">
-                <label for="group-mode-checkbox">按五行分组练习</label>
+                <div class="setting-row">
+                    <input type="checkbox" id="random-group-mode-checkbox">
+                    <label for="random-group-mode-checkbox">随机分组练习</label>
 
+                    <input type="checkbox" id="group-mode-checkbox">
+                    <label for="group-mode-checkbox">按纳音五行分组</label>
+                
+                    <input type="checkbox" id="nayin-table-checkbox">
+                    <label for="nayin-table-checkbox">显示纳音表</label>
+                </div>
             </div>            
             <div class="stats-container" id="stats">
                 <div class="stat-item"> 计时 <b id="timer">0s</b> </div>
@@ -396,6 +508,17 @@
         </div>
     </div>
     <a href="/y/index.html" class="back-home-float" title="返回主页">回主页</a>
+
+    <!-- 纳音表蒙板结构，插在 .settings 后面即可 -->
+    <div id="nayin-table-mask" style="display:none;">
+        <div class="nayin-table-mask-bg"></div>
+        <div class="nayin-table-modal">
+            <div class="nayin-table-title">六十甲子纳音表</div>
+            <div id="nayin-table-content"></div>
+            <button id="close-nayin-table" class="nayin-table-close">关闭</button>
+        </div>
+    </div>
+
     <script>
         const ganZhiListOriginal = [
             { ganZhi: '甲子', nayin: '海中金' }, { ganZhi: '乙丑', nayin: '海中金' }, { ganZhi: '丙寅', nayin: '炉中火' }, { ganZhi: '丁卯', nayin: '炉中火' },
@@ -687,6 +810,80 @@
         });
         timerInterval = setInterval(updateStats, 1000);
         startNewGame();
+
+        // 纳音表相关脚本
+        const nayinTableCheckbox = document.getElementById('nayin-table-checkbox');
+        const nayinTableMask = document.getElementById('nayin-table-mask');
+        const nayinTableContent = document.getElementById('nayin-table-content');
+        const closeNayinTableBtn = document.getElementById('close-nayin-table');
+
+        // 构建纳音表格
+        function buildNayinTable() {
+            // 按题主指定顺序分三大块，每块5行，每行2组
+            const nayinRows = [
+                [
+                    ['甲子 乙丑 海中金', '甲午 乙未 沙中金'],
+                    ['丙寅 丁卯 炉中火', '丙申 丁酉 山下火'],
+                    ['戊辰 己巳 大林木', '戊戌 己亥 平地木'],
+                    ['庚午 辛未 路旁土', '庚子 辛丑 壁上土'],
+                    ['壬申 癸酉 剑锋金', '壬寅 癸卯 金箔金']
+                ],
+                [
+                    ['甲戌 乙亥 山头火', '甲辰 乙巳 佛灯火'],
+                    ['丙子 丁丑 涧下水', '丙午 丁未 天河水'],
+                    ['戊寅 己卯 城头土', '戊申 己酉 大驿土'],
+                    ['庚辰 辛巳 白腊金', '庚戌 辛亥 钗钏金'],
+                    ['壬午 癸未 杨柳木', '壬子 癸丑 桑柘木']
+                ],
+                [
+                    ['甲申 乙酉 井泉水', '甲寅 乙卯 大溪水'],
+                    ['丙戌 丁亥 屋上土', '丙辰 丁巳 沙中土'],
+                    ['戊子 己丑 霹雳火', '戊午 己未 天上火'],
+                    ['庚寅 辛卯 松柏木', '庚申 辛酉 石榴木'],
+                    ['壬辰 癸巳 长流水', '壬戌 癸亥 大海水']
+                ]
+            ];
+            let html = `<table class="nayin-table-content-table"><tbody>`;
+            nayinRows.forEach((block, idx) => {
+                block.forEach(row => {
+                    html += `<tr>`;
+                    row.forEach(cell => {
+                        html += `<td style="min-width:110px;">${cell}</td>`;
+                    });
+                    html += `</tr>`;
+                });
+                // 分组之间插入带特殊 class 的空行
+                if (idx < nayinRows.length - 1) {
+                    html += `<tr class="nayin-block-gap"><td colspan="2"></td></tr>`;
+                }
+            });
+            html += `</tbody></table>`;
+            return html;
+        }
+
+        // 事件绑定
+        nayinTableCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                nayinTableContent.innerHTML = buildNayinTable();
+                nayinTableMask.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            } else {
+                nayinTableMask.style.display = 'none';
+                document.body.style.overflow = '';
+            }
+        });
+        closeNayinTableBtn.addEventListener('click', function() {
+            nayinTableMask.style.display = 'none';
+            nayinTableCheckbox.checked = false;
+            document.body.style.overflow = '';
+        });
+        nayinTableMask.addEventListener('click', function(e) {
+            if (e.target === nayinTableMask || e.target === nayinTableMask.querySelector('.nayin-table-mask-bg')) {
+                nayinTableMask.style.display = 'none';
+                nayinTableCheckbox.checked = false;
+                document.body.style.overflow = '';
+            }
+        });
     </script>
 </body>
 </html>
