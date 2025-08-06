@@ -16,8 +16,8 @@
 
         .main-container {
             max-width: 680px;
-            margin: 49px auto 0 auto;
-            padding: 24px 16px 36px 16px;
+            margin: 32px auto 0 auto;
+            padding: 36px 16px 36px 16px;
             background: rgba(255, 255, 255, 0.97);
             border-radius: 12px;
             box-shadow: 0 6px 32px rgba(80, 120, 80, 0.13);
@@ -267,7 +267,7 @@
 
             }
             .main-container {
-                padding: 6px 2vw 18px 2vw;
+                padding: 16px 2vw 18px 2vw;
             }
 
             .gua-header {
@@ -402,6 +402,7 @@
                 </span>
             </div>
         </div>
+        <!-- 在表格位置加一个 loading 占位 -->
         <table class="gua-table" id="gua-table">
             <thead>
                 <tr>
@@ -414,9 +415,17 @@
                     <th>六亲</th>
                 </tr>
             </thead>
-            <tbody id="gua-tbody"></tbody>
+            <tbody id="gua-tbody">
+                <tr><td colspan="7" style="text-align:center;color:#bbb;">加载中...</td></tr>
+            </tbody>
         </table>
-        <table class="gua-list-table" id="gua-list-table"></table>
+        <table class="gua-list-table" id="gua-list-table">
+            <tbody>
+                <tr>
+                    <td colspan="8" style="text-align:center;color:#bbb;">加载中...</td>
+                </tr>
+            </tbody>
+        </table>
 
     </div>
     <div class="info">
@@ -478,13 +487,38 @@
 
         // 读取 hexagrams.json 数据
         let hexagrams = [];
-        fetch('./assets/hg.json')
-            .then(res => res.json())
-            .then(data => {
-                hexagrams = data;
-                renderGuaList();
-                selectGua(1); // 默认显示第一个卦
-            });
+
+        function loadHexagrams() {
+            const cacheKey = 'hg_json_cache_v1';
+            const cache = localStorage.getItem(cacheKey);
+            if (cache) {
+                try {
+                    hexagrams = JSON.parse(cache);
+                    renderGuaList();
+                    selectGua(1);
+                    // 异步后台更新（静默刷新缓存）
+                    fetch('./assets/hg.json')
+                        .then(res => res.json())
+                        .then(data => {
+                            localStorage.setItem(cacheKey, JSON.stringify(data));
+                        });
+                    return;
+                } catch (e) {
+                    // 缓存损坏，继续走网络
+                }
+            }
+            // 没有缓存，正常加载
+            fetch('./assets/hg.json')
+                .then(res => res.json())
+                .then(data => {
+                    hexagrams = data;
+                    localStorage.setItem(cacheKey, JSON.stringify(data));
+                    renderGuaList();
+                    selectGua(1);
+                });
+        }
+
+        loadHexagrams();
 
         // 渲染底部卦列表表格
         function renderGuaList() {
