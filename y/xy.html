@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>六爻象义</title>
+    <style>
+        body {
+            background: #f7f5ee;
+            font-family: "STKaiti", "KaiTi", "Microsoft YaHei", serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 900px;
+            margin: 32px auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px #e3e3e3;
+            padding: 32px 24px;
+        }
+        .search-box {
+            text-align: center;
+            margin-bottom: 18px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #searchInput {
+            width: 320px;
+            max-width: 96vw;
+            padding: 8px 12px;
+            border: 1px solid #b7d3c6;
+            border-radius: 6px;
+            font-size: 1em;
+            background: #f7faf7;
+            box-sizing: border-box;
+        }
+        .clear-btn {
+            position: relative;
+            left: -32px;
+            background: none;
+            border: none;
+            font-size: 1.2em;
+            color: #b8b8b8;
+            cursor: pointer;
+            padding: 0 6px;
+            height: 2em;
+            line-height: 2em;
+        }
+        .clear-btn:active {
+            color: #5a88ca;
+        }
+        #searchInput::placeholder {
+            color: #b8b8b8;
+            opacity: 1;
+        }
+        h1 {
+            text-align: center;
+            color: #3a6c4f;
+            margin-bottom: 18px;
+        }
+        .section {
+            margin-bottom: 32px;
+        }
+        .section-title {
+            font-size: 1.3em;
+            color: #5a88ca;
+            margin-bottom: 10px;
+        }
+        ul {
+            padding-left: 22px;
+            list-style: none;
+            margin: 0;
+        }
+        li {
+            margin-bottom: 4px;
+            color: #4d5c4f;
+        }
+        .triangle {
+            font-size: 0.85em;
+            vertical-align: middle;
+        }
+        .triangle:hover {
+            cursor: pointer;
+        }
+        .sublist {
+            margin-bottom: 10px;
+        }
+        .key {
+            color: #b85c38;
+            font-weight: bold;
+        }
+        .value {
+            color: #3a6c4f;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 8px 12px;
+                margin: 8px auto;
+                border-radius: 6px;
+            }
+            h1 {
+                font-size: 1.1em;
+                margin-bottom: 10px;
+            }
+            .section-title {
+                font-size: 1em;
+                margin-bottom: 6px;
+            }
+            ul {
+                padding-left: 10px;
+            }
+            #searchInput {
+                width: 80vw;
+                font-size: 1em;
+                padding: 7px 8px;
+            }
+            .sublist {
+                font-size: 0.98em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>六爻诸符号之象义</h1>
+        <div class="search-box">
+            <input id="searchInput" type="text" placeholder="输入关键字进行查询">
+            <button class="clear-btn" id="clearBtn" title="清除搜索" style="display:none;">&#10006;</button>
+        </div>
+        <div id="dataView"></div>
+    </div>
+    <script>
+    let rawData = null;
+    let lastSearch = '';
+    fetch('assets/xy.json')
+      .then(r => r.json())
+      .then(data => {
+        rawData = data;
+        renderData('');
+        const searchInput = document.getElementById('searchInput');
+        const clearBtn = document.getElementById('clearBtn');
+        searchInput.addEventListener('input', function() {
+            lastSearch = this.value.trim();
+            renderData(lastSearch);
+            clearBtn.style.display = lastSearch ? '' : 'none';
+        });
+        clearBtn.onclick = function() {
+            searchInput.value = '';
+            lastSearch = '';
+            renderData('');
+            clearBtn.style.display = 'none';
+            searchInput.focus();
+        };
+      });
+
+    function renderData(keyword) {
+        const view = document.getElementById('dataView');
+        let html = '';
+        const kw = keyword.toLowerCase();
+
+        // 六亲
+        html += `<div class='section'><div class='section-title'>六亲</div><ul>`;
+        for (const kin in rawData["六亲"]) {
+          const arr = rawData["六亲"][kin].filter(v => !kw || v.toLowerCase().includes(kw));
+          const allValues = rawData["六亲"][kin].join('，');
+          const id = `kin_${kin}`;
+          if (kw) {
+            if (arr.length > 0) {
+              html += `<li><span class='triangle' data-id='${id}'>&#9654;</span> <span class='key' data-id='${id}'>${kin}</span>：<span class='value'>${arr.join('，')}</span><div class='all-values' id='${id}' style='display:none;margin:4px 0 4px 1.5em;color:#888;'>${allValues}</div></li>`;
+            }
+          } else {
+            html += `<li><span class='triangle' data-id='${id}'>&#9654;</span> <span class='key' data-id='${id}'>${kin}</span>：<span class='value'>${allValues}</span></li>`;
+          }
+        }
+        html += '</ul></div>';
+
+        // 六神
+        html += `<div class='section'><div class='section-title'>六神</div><ul>`;
+        for (const god in rawData["六神"]) {
+          const arr = rawData["六神"][god].filter(v => !kw || v.toLowerCase().includes(kw));
+          const allValues = rawData["六神"][god].join('，');
+          const id = `god_${god}`;
+          if (kw) {
+            if (arr.length > 0) {
+              html += `<li><span class='triangle' data-id='${id}'>&#9654;</span> <span class='key' data-id='${id}'>${god}</span>：<span class='value'>${arr.join('，')}</span><div class='all-values' id='${id}' style='display:none;margin:4px 0 4px 1.5em;color:#888;'>${allValues}</div></li>`;
+            }
+          } else {
+            html += `<li><span class='triangle' data-id='${id}'>&#9654;</span> <span class='key' data-id='${id}'>${god}</span>：<span class='value'>${allValues}</span></li>`;
+          }
+        }
+        html += '</ul></div>';
+
+        // 纳音
+        html += `<div class='section'><div class='section-title'>纳音</div>`;
+        for (const na in rawData["纳音"]) {
+          const ganArr = rawData["纳音"][na]["干支"].filter(v => !kw || v.toLowerCase().includes(kw));
+          const xiangArr = rawData["纳音"][na]["象义"].filter(v => !kw || v.toLowerCase().includes(kw));
+          const ganAll = rawData["纳音"][na]["干支"].join('，');
+          const xiangAll = rawData["纳音"][na]["象义"].join('，');
+          const idGan = `na_${na}_gan`;
+          const idXiang = `na_${na}_xiang`;
+          if (kw) {
+            if (ganArr.length > 0 || xiangArr.length > 0) {
+              html += `<div class='sublist'><span class='key'>${na}</span>：<br><ul>`;
+              html += `<li><span class='triangle' data-id='${idGan}'>&#9654;</span> 干支：<span class='value'>${ganArr.join('，')}</span><div class='all-values' id='${idGan}' style='display:none;margin:4px 0 4px 1.5em;color:#888;'>${ganAll}</div></li>`;
+              html += `<li><span class='triangle' data-id='${idXiang}'>&#9654;</span> 象义：<span class='value'>${xiangArr.join('，')}</span><div class='all-values' id='${idXiang}' style='display:none;margin:4px 0 4px 1.5em;color:#888;'>${xiangAll}</div></li>`;
+              html += `</ul></div>`;
+            }
+          } else {
+            html += `<div class='sublist'><span class='key'>${na}</span>：<br><ul>`;
+            html += `<li><span class='triangle' data-id='${idGan}'>&#9654;</span> 干支：<span class='value'>${ganAll}</span></li>`;
+            html += `<li><span class='triangle' data-id='${idXiang}'>&#9654;</span> 象义：<span class='value'>${xiangAll}</span></li>`;
+            html += `</ul></div>`;
+          }
+        }
+        html += '</div>';
+
+        // 六十甲子
+        html += `<div class='section'><div class='section-title'>六十甲子</div>`;
+        for (const jiazi in rawData["六十甲子"]) {
+          const item = rawData["六十甲子"][jiazi];
+          const match =
+            (!kw) ||
+            jiazi.toLowerCase().includes(kw) ||
+            (item["纳音"] && item["纳音"].toLowerCase().includes(kw)) ||
+            (item["卦象"] && item["卦象"].toLowerCase().includes(kw)) ||
+            (item["象义"] && item["象义"].some(v => v.toLowerCase().includes(kw)));
+          const xiangArr = item["象义"].filter(v => !kw || v.toLowerCase().includes(kw));
+          const xiangAll = item["象义"].join('，');
+          const idXiang = `jiazi_${jiazi}_xiang`;
+          if (kw && match) {
+            html += `<div class='sublist'><span class='key'>${jiazi}</span>：<br><ul>`;
+            html += `<li>纳音：<span class='value'>${item["纳音"]}</span></li>`;
+            html += `<li>卦象：<span class='value'>${item["卦象"]}</span></li>`;
+            html += `<li><span class='triangle' data-id='${idXiang}'>&#9654;</span> 象义：<span class='value'>${xiangArr.join('，')}</span><div class='all-values' id='${idXiang}' style='display:none;margin:4px 0 4px 1.5em;color:#888;'>${xiangAll}</div></li>`;
+            html += `</ul></div>`;
+          } else if (!kw) {
+            html += `<div class='sublist'><span class='key'>${jiazi}</span>：<br><ul>`;
+            html += `<li>纳音：<span class='value'>${item["纳音"]}</span></li>`;
+            html += `<li>卦象：<span class='value'>${item["卦象"]}</span></li>`;
+            html += `<li><span class='triangle' data-id='${idXiang}'>&#9654;</span> 象义：<span class='value'>${xiangAll}</span></li>`;
+            html += `</ul></div>`;
+          }
+        }
+        html += '</div>';
+
+        view.innerHTML = html;
+        // 展开/收起事件绑定
+        setTimeout(() => {
+          document.querySelectorAll('.triangle, .key').forEach(el => {
+            el.onclick = function() {
+              const id = this.getAttribute('data-id');
+              const box = document.getElementById(id);
+              if (!box) return;
+              const tri = document.querySelector(`.triangle[data-id='${id}']`);
+              if (box && box.style.display === 'none') {
+                box.style.display = 'block';
+                if (tri) tri.innerHTML = '&#9660;';
+              } else if (box) {
+                box.style.display = 'none';
+                if (tri) tri.innerHTML = '&#9654;';
+              }
+            };
+          });
+        }, 0);
+    }
+    </script>
+</body>
+</html>
