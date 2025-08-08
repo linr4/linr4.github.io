@@ -6,11 +6,15 @@
     <title>六爻基础练习</title>
     <style>
         @font-face {
-            font-family: 'ChineseFont';
-            src: local('KaiTi'), local('楷体'), local('SimSun'), local('宋体');
+          font-family: 'EIS-IAWriterQuattro';
+          src: url('https://github.com/iaolo/iA-Fonts/blob/master/iA%20Writer%20Quattro/Webfonts/iAWriterQuattroS-Regular.woff2') format('woff2'),
+               url('https://github.com/iaolo/iA-Fonts/blob/master/iA%20Writer%20Quattro/Webfonts/iAWriterQuattroS-Regular.woff') format('woff');
+          font-weight: normal;
+          font-style: normal;
+          font-display: swap; /* 优化加载显示 */
         }
         body {
-            font-family: 'ChineseFont', 'KaiTi', '楷体', 'SimSun', '宋体', serif;
+            font-family: 'EIS-IAWriterQuattro', Arial, Helvetica, sans-serif, 'KaiTi', '楷体', 'SimSun', '宋体', serif;
             background: linear-gradient(135deg, #f9f6f2 0%, #e6f0ea 100%);
             margin: 0;
             padding: 0;
@@ -35,7 +39,7 @@
             color: #2e5c4d;
             margin-bottom: 22px;
             font-size: clamp(1.7rem, 5vw, 2.3rem);
-            font-family: 'ChineseFont', 'KaiTi', '楷体', serif;
+            /* font-family: 'ChineseFont', 'KaiTi', '楷体', serif; */
             letter-spacing: 2px;
             font-weight: 600;
             text-shadow: 0 2px 8px rgba(180, 220, 200, 0.13);
@@ -50,7 +54,7 @@
             text-decoration: none;
             border-radius: 8px;
             font-size: clamp(1.05rem, 3.5vw, 1.18rem);
-            font-family: 'ChineseFont', 'KaiTi', '楷体', 'SimSun', '宋体', serif;
+            /* font-family: 'ChineseFont', 'KaiTi', '楷体', 'SimSun', '宋体', serif; */
             border: 1.5px solid #b7d3c6;
             box-shadow: 0 2px 8px rgba(120, 180, 160, 0.08);
             font-weight: 500;

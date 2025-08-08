@@ -5,9 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>六爻象义</title>
     <style>
+        @font-face {
+          font-family: 'EIS-IAWriterQuattro';
+          src: url('https://github.com/iaolo/iA-Fonts/blob/master/iA%20Writer%20Quattro/Webfonts/iAWriterQuattroS-Regular.woff2') format('woff2'),
+               url('https://github.com/iaolo/iA-Fonts/blob/master/iA%20Writer%20Quattro/Webfonts/iAWriterQuattroS-Regular.woff') format('woff');
+          font-weight: normal;
+          font-style: normal;
+          font-display: swap; /* 优化加载显示 */
+        }
         body {
             background: #f7f5ee;
-            font-family: "STKaiti", "KaiTi", "Microsoft YaHei", serif;
+            /* font-family: "FangSong", "Microsoft YaHei", "STKaiti", "KaiTi", serif; */
+            font-family: 'EIS-IAWriterQuattro',Inter, Helvetica Neue, Helvetica, Arial, sans-serif;
             margin: 0;
             padding: 0;
         }
@@ -81,6 +90,7 @@
         .triangle {
             font-size: 0.85em;
             vertical-align: middle;
+            color: #b8b8b8;
         }
         .triangle:hover {
             cursor: pointer;
@@ -92,8 +102,12 @@
             color: #b85c38;
             font-weight: bold;
         }
-        .value {
+        .key:hover {
+            cursor: pointer;
+        }
+        .value, .all-values {
             color: #3a6c4f;
+            line-height: 2rem;
         }
         @media (max-width: 600px) {
             .container {
@@ -121,16 +135,41 @@
                 font-size: 0.98em;
             }
         }
+        .font-size-bar {
+            position: fixed;
+            top: 49px;
+            right: 18px;
+            z-index: 99;
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            text-align-last: left;
+        }
+        .font-btn {
+            background: #fff;
+            border: 1px dotted #b7d3c6;
+            border-radius: 5px;
+            width: 32px;
+            height: 32px;
+            font-size: 1em;
+            cursor: pointer;
+            box-shadow: 0 2px 8px #e3e3e3;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>六爻诸符号之象义</h1>
+        <h1>六爻符号象义</h1>
         <div class="search-box">
             <input id="searchInput" type="text" placeholder="输入关键字进行查询">
             <button class="clear-btn" id="clearBtn" title="清除搜索" style="display:none;">&#10006;</button>
         </div>
         <div id="dataView"></div>
+    </div>
+    <div class="font-size-bar">
+      <button class="font-btn" data-size="1" title="增大字体">A+</button>
+      <button class="font-btn" data-size="0" title="恢复默认">A </button>
+      <button class="font-btn" data-size="-1" title="减小字体">A-</button>
     </div>
     <script>
     let rawData = null;
@@ -267,6 +306,28 @@
           });
         }, 0);
     }
+
+    // 字体大小调整
+    (function(){
+      let baseSize = 16;
+      let currentStep = 0;
+      const minStep = -2, maxStep = 3;
+      const stepMap = [14, 16, 18, 20, 22, 24]; // index: step+2
+      function setFont(step) {
+        currentStep = step;
+        let size = stepMap[step+2] || 16;
+        document.documentElement.style.fontSize = size + 'px';
+      }
+      document.querySelectorAll('.font-btn').forEach(btn => {
+        btn.onclick = function() {
+          let v = parseInt(this.getAttribute('data-size'));
+          if (v === 0) setFont(0);
+          else if (v === -1 && currentStep > minStep) setFont(currentStep-1);
+          else if (v === 1 && currentStep < maxStep) setFont(currentStep+1);
+        };
+      });
+      setFont(0);
+    })();
     </script>
 </body>
 </html>
