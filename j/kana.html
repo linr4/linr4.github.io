@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日语五十音图学习 - 移动端优化</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Sans GB', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 15px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        
+        header {
+            background: #2c3e50;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+        }
+        
+        .description {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+        
+        .tabs {
+            display: flex;
+            background: #34495e;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 12px 10px;
+            text-align: center;
+            color: #ecf0f1;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .tab.active {
+            background: #1abc9c;
+            color: white;
+        }
+        
+        .content {
+            padding: 15px;
+        }
+        
+        /* 学习模式样式 */
+        .learning-section {
+            display: block;
+        }
+        
+        .filter-controls {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .filter-btn {
+            padding: 6px 12px;
+            background: #ecf0f1;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.8rem;
+        }
+        
+        .filter-btn.active {
+            background: #3498db;
+            color: white;
+        }
+        
+        .kana-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
+        
+        .kana-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+            padding: 10px 5px;
+            text-align: center;
+            transition: transform 0.3s;
+            display: flex;
+            flex-direction: column;
+            min-height: 80px;
+        }
+        
+        .kana-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .kana-row {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        
+        .hiragana {
+            font-size: 1.8rem;
+            color: #e74c3c;
+        }
+        
+        .katakana {
+            font-size: 1.8rem;
+            color: #3498db;
+        }
+        
+        .romaji {
+            font-size: 0.8rem;
+            color: #7f8c8d;
+            margin-top: auto;
+        }
+        
+        /* 测试模式样式 */
+        .testing-section {
+            display: none;
+        }
+        
+        .test-container {
+            text-align: center;
+            padding: 15px;
+        }
+        
+        .question {
+            font-size: 3rem;
+            margin: 20px 0;
+            color: #2c3e50;
+        }
+        
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 25px;
+            justify-content: center;
+        }
+        
+        .option {
+            flex: 1;
+            max-width: 10%;
+            min-width: 9%;
+            padding: 8px;
+            background: #ecf0f1;
+            border: 2px solid #bdc3c7;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+        
+        .option:hover {
+            background: #dfe6e9;
+        }
+        
+        .option.correct {
+            background: #2ecc71;
+            color: white;
+            border-color: #27ae60;
+        }
+        
+        .option.incorrect {
+            background: #e74c3c;
+            color: white;
+            border-color: #c0392b;
+        }
+        
+        .feedback {
+            font-size: 1.2rem;
+            margin: 15px 0;
+            min-height: 35px;
+        }
+        
+        .score {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            color: #7f8c8d;
+        }
+        
+        .next-btn {
+            padding: 10px 25px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+        
+        .next-btn:hover {
+            background: #2980b9;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 480px) {
+            .kana-grid {
+                grid-template-columns: repeat(5, 1fr);
+                gap: 8px;
+            }
+            
+            .kana-card {
+                padding: 8px 3px;
+                min-height: 70px;
+            }
+            
+            .hiragana, .katakana {
+                font-size: 1.5rem;
+            }
+            
+            .romaji {
+                font-size: 0.7rem;
+            }
+            
+            .question {
+                font-size: 2.5rem;
+            }
+            
+            .options {
+                flex-direction: row;
+            }
+            
+            .option {
+                min-width: 20%;
+                font-size: 0.9rem;
+                padding: 10px;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .kana-grid {
+                grid-template-columns: repeat(5, 1fr);
+            }
+            
+            .hiragana, .katakana {
+                font-size: 1.3rem;
+            }
+            
+            .romaji {
+                font-size: 0.65rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>日语五十音图学习</h1>
+            <p class="description">掌握日语假名的基础步骤</p>
+        </header>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="learn">学习模式</div>
+            <div class="tab" data-tab="test">测试模式</div>
+        </div>
+        
+        <div class="content">
+            <!-- 学习模式 -->
+            <div class="learning-section" id="learn-section">
+                <div class="filter-controls">
+                    <button class="filter-btn active" data-filter="all">全部</button>
+                    <button class="filter-btn" data-filter="vowel">あ行</button>
+                    <button class="filter-btn" data-filter="k">か行</button>
+                    <button class="filter-btn" data-filter="s">さ行</button>
+                    <button class="filter-btn" data-filter="t">た行</button>
+                    <button class="filter-btn" data-filter="n">な行</button>
+                    <button class="filter-btn" data-filter="h">は行</button>
+                    <button class="filter-btn" data-filter="m">ま行</button>
+                    <button class="filter-btn" data-filter="y">や行</button>
+                    <button class="filter-btn" data-filter="r">ら行</button>
+                    <button class="filter-btn" data-filter="w">わ行</button>
+                </div>
+                
+                <div class="kana-grid" id="kana-container">
+                    <!-- 假名卡片将通过JS动态生成 -->
+                </div>
+            </div>
+            
+            <!-- 测试模式 -->
+            <div class="testing-section" id="test-section">
+                <div class="test-container">
+                    <div class="score">得分: <span id="score">0</span></div>
+                    <div class="question" id="question"></div>
+                    <div class="options" id="options">
+                        <div class="option" data-value=""></div>
+                        <div class="option" data-value=""></div>
+                        <div class="option" data-value=""></div>
+                        <div class="option" data-value=""></div>
+                    </div>
+                    <div class="feedback" id="feedback"></div>
+                    <button class="next-btn" id="next-btn">下一题</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 五十音图数据
+        const kanaData = [
+            { hiragana: 'あ', katakana: 'ア', romaji: 'a', row: 'vowel' },
+            { hiragana: 'い', katakana: 'イ', romaji: 'i', row: 'vowel' },
+            { hiragana: 'う', katakana: 'ウ', romaji: 'u', row: 'vowel' },
+            { hiragana: 'え', katakana: 'エ', romaji: 'e', row: 'vowel' },
+            { hiragana: 'お', katakana: 'オ', romaji: 'o', row: 'vowel' },
+            
+            { hiragana: 'か', katakana: 'カ', romaji: 'ka', row: 'k' },
+            { hiragana: 'き', katakana: 'キ', romaji: 'ki', row: 'k' },
+            { hiragana: 'く', katakana: 'ク', romaji: 'ku', row: 'k' },
+            { hiragana: 'け', katakana: 'ケ', romaji: 'ke', row: 'k' },
+            { hiragana: 'こ', katakana: 'コ', romaji: 'ko', row: 'k' },
+            
+            { hiragana: 'さ', katakana: 'サ', romaji: 'sa', row: 's' },
+            { hiragana: 'し', katakana: 'シ', romaji: 'shi', row: 's' },
+            { hiragana: 'す', katakana: 'ス', romaji: 'su', row: 's' },
+            { hiragana: 'せ', katakana: 'セ', romaji: 'se', row: 's' },
+            { hiragana: 'そ', katakana: 'ソ', romaji: 'so', row: 's' },
+            
+            { hiragana: 'た', katakana: 'タ', romaji: 'ta', row: 't' },
+            { hiragana: 'ち', katakana: 'チ', romaji: 'chi', row: 't' },
+            { hiragana: 'つ', katakana: 'ツ', romaji: 'tsu', row: 't' },
+            { hiragana: 'て', katakana: 'テ', romaji: 'te', row: 't' },
+            { hiragana: 'と', katakana: 'ト', romaji: 'to', row: 't' },
+            
+            { hiragana: 'な', katakana: 'ナ', romaji: 'na', row: 'n' },
+            { hiragana: 'に', katakana: 'ニ', romaji: 'ni', row: 'n' },
+            { hiragana: 'ぬ', katakana: 'ヌ', romaji: 'nu', row: 'n' },
+            { hiragana: 'ね', katakana: 'ネ', romaji: 'ne', row: 'n' },
+            { hiragana: 'の', katakana: 'ノ', romaji: 'no', row: 'n' },
+            
+            { hiragana: 'は', katakana: 'ハ', romaji: 'ha', row: 'h' },
+            { hiragana: 'ひ', katakana: 'ヒ', romaji: 'hi', row: 'h' },
+            { hiragana: 'ふ', katakana: 'フ', romaji: 'fu', row: 'h' },
+            { hiragana: 'へ', katakana: 'ヘ', romaji: 'he', row: 'h' },
+            { hiragana: 'ほ', katakana: 'ホ', romaji: 'ho', row: 'h' },
+            
+            { hiragana: 'ま', katakana: 'マ', romaji: 'ma', row: 'm' },
+            { hiragana: 'み', katakana: 'ミ', romaji: 'mi', row: 'm' },
+            { hiragana: 'む', katakana: 'ム', romaji: 'mu', row: 'm' },
+            { hiragana: 'め', katakana: 'メ', romaji: 'me', row: 'm' },
+            { hiragana: 'も', katakana: 'モ', romaji: 'mo', row: 'm' },
+            
+            { hiragana: 'や', katakana: 'ヤ', romaji: 'ya', row: 'y' },
+            { hiragana: 'ゆ', katakana: 'ユ', romaji: 'yu', row: 'y' },
+            { hiragana: 'よ', katakana: 'ヨ', romaji: 'yo', row: 'y' },
+            
+            { hiragana: 'ら', katakana: 'ラ', romaji: 'ra', row: 'r' },
+            { hiragana: 'り', katakana: 'リ', romaji: 'ri', row: 'r' },
+            { hiragana: 'る', katakana: 'ル', romaji: 'ru', row: 'r' },
+            { hiragana: 'れ', katakana: 'レ', romaji: 're', row: 'r' },
+            { hiragana: 'ろ', katakana: 'ロ', romaji: 'ro', row: 'r' },
+            
+            { hiragana: 'わ', katakana: 'ワ', romaji: 'wa', row: 'w' },
+            { hiragana: 'を', katakana: 'ヲ', romaji: 'wo', row: 'w' },
+            { hiragana: 'ん', katakana: 'ン', romaji: 'n', row: 'w' }
+        ];
+
+        // DOM元素
+        const learnSection = document.getElementById('learn-section');
+        const testSection = document.getElementById('test-section');
+        const tabs = document.querySelectorAll('.tab');
+        const kanaContainer = document.getElementById('kana-container');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const questionEl = document.getElementById('question');
+        const optionsEl = document.getElementById('options');
+        const feedbackEl = document.getElementById('feedback');
+        const nextBtn = document.getElementById('next-btn');
+        const scoreEl = document.getElementById('score');
+
+        // 当前测试状态
+        let currentQuestion = null;
+        let score = 0;
+        let answered = false;
+
+        // 初始化
+        function init() {
+            renderKana('all');
+            setupEventListeners();
+            generateQuestion();
+        }
+
+        // 渲染假名卡片
+        function renderKana(filter) {
+            kanaContainer.innerHTML = '';
+            
+            const filteredKana = filter === 'all' 
+                ? kanaData 
+                : kanaData.filter(k => k.row === filter);
+            
+            filteredKana.forEach(kana => {
+                const card = document.createElement('div');
+                card.className = 'kana-card';
+                card.innerHTML = `
+                    <div class="kana-row">
+                        <div class="hiragana">${kana.hiragana}</div>
+                        <div class="katakana">${kana.katakana}</div>
+                    </div>
+                    <div class="romaji">${kana.romaji}</div>
+                `;
+                kanaContainer.appendChild(card);
+            });
+        }
+
+        // 设置事件监听器
+        function setupEventListeners() {
+            // 标签切换
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    if (tab.dataset.tab === 'learn') {
+                        learnSection.style.display = 'block';
+                        testSection.style.display = 'none';
+                    } else {
+                        learnSection.style.display = 'none';
+                        testSection.style.display = 'block';
+                    }
+                });
+            });
+            
+            // 过滤按钮
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    renderKana(btn.dataset.filter);
+                });
+            });
+            
+            // 选项点击
+            optionsEl.querySelectorAll('.option').forEach(option => {
+                option.addEventListener('click', () => {
+                    if (answered) return;
+                    
+                    answered = true;
+                    const selected = option.dataset.value;
+                    const correct = selected === currentQuestion.answer;
+                    
+                    if (correct) {
+                        option.classList.add('correct');
+                        feedbackEl.textContent = '正确!';
+                        feedbackEl.style.color = '#2ecc71';
+                        score++;
+                        scoreEl.textContent = score;
+                    } else {
+                        option.classList.add('incorrect');
+                        feedbackEl.textContent = `错误! 正确答案是: ${currentQuestion.answer}`;
+                        feedbackEl.style.color = '#e74c3c';
+                        
+                        // 高亮正确答案
+                        optionsEl.querySelectorAll('.option').forEach(opt => {
+                            if (opt.dataset.value === currentQuestion.answer) {
+                                opt.classList.add('correct');
+                            }
+                        });
+                    }
+                });
+            });
+            
+            // 下一题按钮
+            nextBtn.addEventListener('click', generateQuestion);
+        }
+
+        // 生成测试题目
+        function generateQuestion() {
+            // 重置状态
+            answered = false;
+            feedbackEl.textContent = '';
+            feedbackEl.style.color = '#2c3e50';
+            
+            // 随机选择一个问题类型：平假名或片假名
+            const useHiragana = Math.random() > 0.5;
+            
+            // 随机选择一个假名
+            const randomIndex = Math.floor(Math.random() * kanaData.length);
+            const kana = kanaData[randomIndex];
+            
+            // 设置问题和正确答案
+            currentQuestion = {
+                kana: useHiragana ? kana.hiragana : kana.katakana,
+                answer: kana.romaji
+            };
+            
+            // 显示问题
+            questionEl.textContent = currentQuestion.kana;
+            
+            // 生成选项（1个正确答案和3个错误答案）
+            const options = [currentQuestion.answer];
+            while (options.length < 4) {
+                const randomOption = kanaData[Math.floor(Math.random() * kanaData.length)].romaji;
+                if (!options.includes(randomOption)) {
+                    options.push(randomOption);
+                }
+            }
+            
+            // 打乱选项顺序
+            options.sort(() => Math.random() - 0.5);
+            
+            // 更新选项DOM
+            const optionElements = optionsEl.querySelectorAll('.option');
+            optionElements.forEach((option, index) => {
+                option.textContent = options[index];
+                option.dataset.value = options[index];
+                option.classList.remove('correct', 'incorrect');
+            });
+        }
+
+        // 初始化应用
+        init();
+    </script>
+</body>
+</html>
