@@ -419,8 +419,7 @@
                 : kanaData.filter(k => k.row === filter);
             
             filteredKana.forEach(kana => {
-                const card = document.createElement('div');
-                
+                const card = document.createElement('div');                
                 card.className = 'kana-card';
                 card.innerHTML = `
                     <div class="kana-row">
@@ -445,6 +444,7 @@
         // 创建空白卡片
         function creatEmptyCard () {
             const emptyCard = document.createElement('div');
+            emptyCard.className = 'kana-card';
             emptyCard.innerHTML = `
                 <div class="kana-row">
                     <div class="hiragana"> </div>
