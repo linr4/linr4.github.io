@@ -420,13 +420,7 @@
             
             filteredKana.forEach(kana => {
                 const card = document.createElement('div');
-                const emptyCard = `
-                        <div class="kana-row">
-                            <div class="hiragana"> </div>
-                            <div class="katakana"> </div>
-                        </div>
-                        <div class="romaji"> </div>
-                        `;
+                
                 card.className = 'kana-card';
                 card.innerHTML = `
                     <div class="kana-row">
@@ -435,10 +429,28 @@
                     </div>
                     <div class="romaji">${kana.romaji}</div>
                 `;
-                if (['ya', 'yu'].includes(kana.romanji)) { card.innerHTML += emptyCard; }
-                if (['wa'].includes(kana.romanji)) { card.innerHTML += emptyCard.repeat(3);}
                 kanaContainer.appendChild(card);
+                if (['ya', 'yu'].includes(kana.romanji)) { 
+                    kanaContainer.appendChild(creatEmptyCard());
+                }
+                if (['wa'].includes(kana.romanji)) { 
+                    for (let i = 0; i < 3; i++) {
+                        kanaContainer.appendChild(creatEmptyCard());
+                    }
+                }
             });
+        }
+        
+        // 创建空白卡片
+        function creatEmptyCard () {
+            const emptyCard = document.createElement('div');
+            emptyCard.innerHTML = `
+                <div class="kana-row">
+                    <div class="hiragana"> </div>
+                    <div class="katakana"> </div>
+                </div>
+                <div class="romaji"> </div>`;
+            return emptyCard;
         }
 
         // 设置事件监听器
