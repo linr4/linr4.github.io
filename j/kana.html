@@ -420,6 +420,13 @@
             
             filteredKana.forEach(kana => {
                 const card = document.createElement('div');
+                const emptyCard = `
+                        <div class="kana-row">
+                            <div class="hiragana"> </div>
+                            <div class="katakana"> </div>
+                        </div>
+                        <div class="romaji"> </div>
+                        `;
                 card.className = 'kana-card';
                 card.innerHTML = `
                     <div class="kana-row">
@@ -428,6 +435,8 @@
                     </div>
                     <div class="romaji">${kana.romaji}</div>
                 `;
+                if (['ya', 'yu'].includes(kana.romanji)) { card.innerHTML += emptyCard; }
+                if (['wa'].includes(kana.romanji)) { card.innerHTML += emptyCard.repeat(3);}
                 kanaContainer.appendChild(card);
             });
         }
