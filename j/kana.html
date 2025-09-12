@@ -430,10 +430,11 @@
                     <div class="romaji">${kana.romaji}</div>
                 `;
                 kanaContainer.appendChild(card);
-                if (['ya', 'yu'].includes(kana.romanji)) { 
+
+                if (['ya', 'yu'].includes(kana.romaji)) { 
                     kanaContainer.appendChild(creatEmptyCard());
                 }
-                if (['wa'].includes(kana.romanji)) { 
+                if (['wa'].includes(kana.romaji)) { 
                     for (let i = 0; i < 3; i++) {
                         kanaContainer.appendChild(creatEmptyCard());
                     }
