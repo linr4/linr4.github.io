@@ -80,11 +80,11 @@
             justify-content: center;
             margin-bottom: 15px;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 5px;
         }
         
         .filter-btn {
-            padding: 6px 12px;
+            padding: 6px 9px;
             background: #ecf0f1;
             border: none;
             border-radius: 15px;
@@ -113,7 +113,7 @@
             transition: transform 0.3s;
             display: flex;
             flex-direction: column;
-            min-height: 80px;
+            min-height: 70px;
         }
         
         .kana-card:hover {
@@ -151,7 +151,7 @@
         
         .test-container {
             text-align: center;
-            padding: 15px;
+            /* padding: 15px; */
         }
         
         .question {
@@ -164,7 +164,7 @@
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
-            margin-bottom: 25px;
+            margin: 25px 0;
             justify-content: center;
         }
         
@@ -198,19 +198,20 @@
         }
         
         .feedback {
-            font-size: 1.2rem;
+            font-size: 1rem;
             margin: 15px 0;
             min-height: 35px;
         }
         
         .score {
             font-size: 1rem;
-            margin-bottom: 15px;
+            margin: 50px;
             color: #7f8c8d;
         }
         
         .next-btn {
             padding: 10px 25px;
+            margin-bottom: 25px;
             background: #3498db;
             color: white;
             border: none;
@@ -224,6 +225,22 @@
             background: #2980b9;
         }
         
+        /* 单选按钮样式 */
+        .kana-type-selection {
+            margin: 25px 0;
+            text-align: center;
+        }
+        
+        .radio-label {
+            margin: 0 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        input[type="radio"] {
+            margin-right: 5px;
+        }
+        
         /* 响应式设计 */
         @media (max-width: 480px) {
             .kana-grid {
@@ -233,7 +250,7 @@
             
             .kana-card {
                 padding: 8px 3px;
-                min-height: 70px;
+                min-height: 60px;
             }
             
             .hiragana, .katakana {
@@ -278,7 +295,7 @@
     <div class="container">
         <header>
             <h1>日语五十音图学习</h1>
-            <p class="description">掌握日语假名的基础</p>
+            <p class="description">日语假名学习与测试</p>
         </header>
         
         <div class="tabs">
@@ -311,7 +328,32 @@
             <!-- 测试模式 -->
             <div class="testing-section" id="test-section">
                 <div class="test-container">
+                    <div class="filter-controls" id="test-filter-controls">
+                        <button class="filter-btn active" data-filter="all">全部</button>
+                        <button class="filter-btn" data-filter="vowel">あ行</button>
+                        <button class="filter-btn" data-filter="k">か行</button>
+                        <button class="filter-btn" data-filter="s">さ行</button>
+                        <button class="filter-btn" data-filter="t">た行</button>
+                        <button class="filter-btn" data-filter="n">な行</button>
+                        <button class="filter-btn" data-filter="h">は行</button>
+                        <button class="filter-btn" data-filter="m">ま行</button>
+                        <button class="filter-btn" data-filter="y">や行</button>
+                        <button class="filter-btn" data-filter="r">ら行</button>
+                        <button class="filter-btn" data-filter="w">わ行</button>
+                    </div>
+                    <div class="kana-type-selection">
+                        <label class="radio-label">
+                            <input type="radio" name="kana-type" value="both" checked> 随机
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="kana-type" value="hiragana"> 平假名
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="kana-type" value="katakana"> 片假名
+                        </label>
+                    </div>  
                     <div class="score">得分: <span id="score">0</span></div>
+                    
                     <div class="question" id="question"></div>
                     <div class="options" id="options">
                         <div class="option" data-value=""></div>
@@ -319,8 +361,8 @@
                         <div class="option" data-value=""></div>
                         <div class="option" data-value=""></div>
                     </div>
-                    <div class="feedback" id="feedback"></div>
-                    <button class="next-btn" id="next-btn">下一题</button>
+                    <div class="feedback" id="feedback"></div> 
+                    <button class="next-btn" id="next-btn">下一题</button>                 
                 </div>
             </div>
         </div>
@@ -402,6 +444,9 @@
         let currentQuestion = null;
         let score = 0;
         let answered = false;
+        let kanaType = 'both'; // 默认为随机测试
+        let currentRow = 'all'; // 默认为全部行
+        let autoNextTimer = null; // 自动下一题计时器
 
         // 初始化
         function init() {
@@ -454,11 +499,45 @@
             return emptyCard;
         }
 
+        // 清除自动下一题计时器的函数
+        function clearAutoNextTimer() {
+            if (autoNextTimer) {
+                clearInterval(autoNextTimer);
+                autoNextTimer = null;
+                // 更新反馈文本
+                if (feedbackEl.textContent.includes('秒后下一题')) {
+                    feedbackEl.textContent = '答对了！  ';
+                }
+            }
+        }
+        
         // 设置事件监听器
         function setupEventListeners() {
+            // 假名类型选择
+            const radioButtons = document.querySelectorAll('input[name="kana-type"]');
+            radioButtons.forEach(radio => {
+                radio.addEventListener('change', () => {
+                    clearAutoNextTimer();
+                    kanaType = radio.value;
+                    generateQuestion(); // 切换选项时自动刷新问题
+                });
+            });
+            
+            // 测试模式的过滤按钮
+            const testFilterBtns = document.querySelectorAll('#test-filter-controls .filter-btn');
+            testFilterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    clearAutoNextTimer();
+                    testFilterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentRow = btn.dataset.filter;
+                    generateQuestion(); // 切换行时自动刷新问题
+                });
+            });
             // 标签切换
             tabs.forEach(tab => {
                 tab.addEventListener('click', () => {
+                    clearAutoNextTimer();
                     tabs.forEach(t => t.classList.remove('active'));
                     tab.classList.add('active');
                     
@@ -475,6 +554,7 @@
             // 过滤按钮
             filterBtns.forEach(btn => {
                 btn.addEventListener('click', () => {
+                    clearAutoNextTimer();
                     filterBtns.forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
                     renderKana(btn.dataset.filter);
@@ -492,13 +572,26 @@
                     
                     if (correct) {
                         option.classList.add('correct');
-                        feedbackEl.textContent = '正确!';
+                        feedbackEl.textContent = '答对了！   3秒后下一题';
                         feedbackEl.style.color = '#2ecc71';
                         score++;
                         scoreEl.textContent = score;
+                        
+                        // 设置自动下一题倒计时
+                        let countdown = 3;
+                        autoNextTimer = setInterval(() => {
+                            countdown--;
+                            if (countdown > 0) {
+                                feedbackEl.textContent = `答对了！   ${countdown}秒后下一题`;
+                            } else {
+                                clearInterval(autoNextTimer);
+                                autoNextTimer = null;
+                                generateQuestion();
+                            }
+                        }, 1000);
                     } else {
                         option.classList.add('incorrect');
-                        feedbackEl.textContent = `错误! 正确答案是: ${currentQuestion.answer}`;
+                        feedbackEl.textContent = `不对哦， 正确的是: ${currentQuestion.answer}`;
                         feedbackEl.style.color = '#e74c3c';
                         
                         // 高亮正确答案
@@ -512,22 +605,44 @@
             });
             
             // 下一题按钮
-            nextBtn.addEventListener('click', generateQuestion);
+            nextBtn.addEventListener('click', () => {
+                clearAutoNextTimer();
+                generateQuestion();
+            });
         }
 
         // 生成测试题目
         function generateQuestion() {
+            // 清除可能存在的自动下一题计时器
+            if (autoNextTimer) {
+                clearInterval(autoNextTimer);
+                autoNextTimer = null;
+            }
+            
             // 重置状态
             answered = false;
             feedbackEl.textContent = '';
             feedbackEl.style.color = '#2c3e50';
             
-            // 随机选择一个问题类型：平假名或片假名
-            const useHiragana = Math.random() > 0.5;
+            // 根据用户选择决定测试类型
+            let useHiragana;
+            if (kanaType === 'hiragana') {
+                useHiragana = true;
+            } else if (kanaType === 'katakana') {
+                useHiragana = false;
+            } else {
+                // 随机选择
+                useHiragana = Math.random() > 0.5;
+            }
+            
+            // 根据当前选择的行过滤假名
+            const filteredKana = currentRow === 'all' 
+                ? kanaData 
+                : kanaData.filter(k => k.row === currentRow);
             
             // 随机选择一个假名
-            const randomIndex = Math.floor(Math.random() * kanaData.length);
-            const kana = kanaData[randomIndex];
+            const randomIndex = Math.floor(Math.random() * filteredKana.length);
+            const kana = filteredKana[randomIndex];
             
             // 设置问题和正确答案
             currentQuestion = {
