@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日语动词与形容词て形・た形混合练习(100题)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+        }
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            color: white;
+            border-radius: 12px;
+            padding: 25px 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            margin: 0 0 10px 0;
+            font-size: 1.8em;
+        }
+        .subtitle {
+            text-align: center;
+            opacity: 0.9;
+            font-size: 0.95em;
+        }
+        .progress-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+        .progress-bar {
+            height: 10px;
+            background-color: #ecf0f1;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+            width: 1%;
+            transition: width 0.5s ease;
+        }
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9em;
+            color: #7f8c8d;
+        }
+        .question-type-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .te-badge {
+            background-color: #3498db;
+            color: white;
+        }
+        .ta-badge {
+            background-color: #e74c3c;
+            color: white;
+        }
+        .word-class-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .verb1-badge {
+            background-color: #9b59b6;
+            color: white;
+        }
+        .verb2-badge {
+            background-color: #8e44ad;
+            color: white;
+        }
+        .adj1-badge {
+            background-color: #e67e22;
+            color: white;
+        }
+        .adj2-badge {
+            background-color: #d35400;
+            color: white;
+        }
+        .main-container {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 25px;
+        }
+        @media (max-width: 900px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        .question-panel {
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        .question-number {
+            color: #3498db;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+        .question-text {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin: 20px 0 30px 0;
+            text-align: center;
+            color: #2c3e50;
+        }
+        .word {
+            display: inline-block;
+            background-color: #fff9e6;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-family: 'Hiragino Mincho ProN', 'Yu Mincho', serif;
+            font-weight: bold;
+            font-size: 1.2em;
+            border: 2px solid #ffeaa7;
+        }
+        .furigana {
+            font-size: 0.7em;
+            font-weight: normal;
+            opacity: 0.8;
+        }
+        .accent {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            background-color: #3498db;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 24px;
+            font-size: 0.9em;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+        .options-container {
+            margin: 30px 0;
+        }
+        .option {
+            background-color: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 18px 20px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+        }
+        .option:hover {
+            background-color: #f8f9fa;
+            border-color: #bdc3c7;
+        }
+        .option.selected {
+            background-color: #e3f2fd;
+            border-color: #3498db;
+        }
+        .option.correct {
+            background-color: #e8f5e9;
+            border-color: #4caf50;
+        }
+        .option.incorrect {
+            background-color: #ffebee;
+            border-color: #f44336;
+        }
+        .option.correct-answer {
+            background-color: #e8f5e9;
+            border-color: #4caf50;
+            width: 100%;
+        }
+        .option-label {
+            display: inline-block;
+            width: 36px;
+            height: 36px;
+            background-color: #f0f0f0;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 36px;
+            margin-right: 15px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        .option.selected .option-label {
+            background-color: #3498db;
+            color: white;
+        }
+        .option.correct .option-label {
+            background-color: #4caf50;
+            color: white;
+        }
+        .option.incorrect .option-label {
+            background-color: #f44336;
+            color: white;
+        }
+        .option.correct-answer .option-label {
+            background-color: #4caf50;
+            color: white;
+        }
+        .option-text {
+            font-family: 'Hiragino Mincho ProN', 'Yu Mincho', serif;
+            font-size: 1.2em;
+        }
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        button:hover:not(:disabled) {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+        button:active:not(:disabled) {
+            transform: translateY(0);
+        }
+        button:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        button.secondary {
+            background-color: #7f8c8d;
+        }
+        button.secondary:hover:not(:disabled) {
+            background-color: #636e72;
+        }
+        button.warning {
+            background-color: #e74c3c;
+        }
+        button.warning:hover:not(:disabled) {
+            background-color: #c0392b;
+        }
+        .info-panel {
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            height: fit-content;
+        }
+        .info-title {
+            color: #2c3e50;
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+        }
+        .status-section {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .status-title {
+            color: #2c3e50;
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+        }
+        .status-content {
+            font-size: 0.95em;
+        }
+        .status-item {
+            margin: 8px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+        .status-value {
+            font-weight: bold;
+        }
+        .rules-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .rule-item {
+            margin-bottom: 12px;
+            padding-left: 10px;
+            border-left: 3px solid #3498db;
+            padding-left: 15px;
+        }
+        .rule-title {
+            font-weight: 800;
+            font-size: 20px;
+            
+            color: #3498db;
+            margin: 10px 0;
+            display: inline-block;
+            /* text-decoration: underline; */
+        }
+        .rule-keyword {
+            display: inline-block;
+            background-color: #95b6cb;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            margin-right: 8px;
+        }
+        .results-panel {
+            display: none;
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        .results-panel.show {
+            display: block;
+        }
+        .score-display {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .score-number {
+            font-size: 3.5em;
+            font-weight: bold;
+            color: #3498db;
+            margin: 10px 0;
+        }
+        .score-text {
+            font-size: 1.2em;
+            color: #7f8c8d;
+        }
+        .statistics {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        .stat-box {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+        .stat-verb-te {
+            color: #3498db;
+        }
+        .stat-verb-ta {
+            color: #e74c3c;
+        }
+        .stat-adj-te {
+            color: #e67e22;
+        }
+        .stat-adj-ta {
+            color: #d35400;
+        }
+        .wrong-questions {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+        .wrong-question-item {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #e74c3c;
+        }
+        .wrong-question-text {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .wrong-answer, .correct-answer {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 4px;
+            margin: 5px 0;
+            font-family: 'Hiragino Mincho ProN', 'Yu Mincho', serif;
+        }
+        .wrong-answer {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+        .correct-answer {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+        .hidden {
+            display: none;
+        }
+        .accent-explanation {
+            font-size: 0.85em;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+        .feedback-message {
+            margin-top: 15px;
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+            display: none;
+        }
+        .feedback-correct {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border-left: 4px solid #4caf50;
+        }
+        .feedback-incorrect {
+            background-color: #ffebee;
+            color: #c62828;
+            border-left: 4px solid #f44336;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>日语动词与形容词 て形・た形 练习</h1>
+        <div class="subtitle">100道练习题 | 动词与形容词各50题 | て形与た形各25题 | 标注词类与读音</div>
+    </div>
+    
+    <div class="progress-container">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-info">
+            <span>进度: <span id="currentQuestion">1</span>/100</span>
+            <span>已答题: <span id="answeredCount">0</span>/100</span>
+        </div>
+    </div>
+    
+    <div class="main-container">
+        <div class="question-panel">
+            <div class="question-number">第 <span id="questionNum">1</span> 题 
+                <span id="questionTypeBadge" class="question-type-badge te-badge">て形</span>
+                <span id="wordClassBadge" class="word-class-badge verb1-badge">動1</span>
+            </div>
+            <div class="question-text">
+                <span id="wordClassText">動詞（一类）</span>「<span id="currentWord" class="word">書きます</span>」的<span id="targetForm">て形</span>是：
+            </div>
+            
+            <div class="options-container" id="optionsContainer">
+                <!-- 选项将通过JavaScript动态生成 -->
+            </div>
+            
+            <div class="feedback-message" id="feedbackMessage"></div>
+            
+            <div class="navigation">
+                <button id="prevBtn" disabled>上一题</button>
+                <div>
+                    <button id="submitBtn" class="warning" style="display:none;">提交答案</button>
+                    <button id="nextBtn">下一题</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="info-panel">
+            <div class="status-section">
+                <h3 class="status-title">答题状态</h3>
+                <div class="status-content" id="answerStatus">
+                    <div class="status-item">
+                        <span>已答题:</span>
+                        <span class="status-value" id="statusAnswered">0/100</span>
+                    </div>
+                    <div class="status-item">
+                        <span>正确:</span>
+                        <span class="status-value" id="statusCorrect">0 题</span>
+                    </div>
+                    <div class="status-item">
+                        <span>错误:</span>
+                        <span class="status-value" id="statusWrong">0 题</span>
+                    </div>
+                    <div class="status-item">
+                        <span>未答:</span>
+                        <span class="status-value" id="statusUnanswered">100 题</span>
+                    </div>
+                </div>
+                <button id="finishBtn" class="warning" style="width:100%; margin-top:15px;">结束练习并提交</button>
+            </div>
+            
+            <h3 class="info-title">变化规则</h3>
+            <ul class="rules-list">
+                <li><span class="rule-title">動詞 て形・た形</span></li>
+                <li><span class="rule-keyword">動 1 去掉 ます 后的词尾</span></li>
+                <li style="margin: 20px;">
+                    <p>歌诀《两只老虎》</p>
+                    <p>
+                    いちり・って</br>
+                    いちり・って</br>
+                    きいて・ぎいで</br>
+                    びみに・んで</br>
+                    びみに・んで</br>
+                    しして・しして</p> 
+                </li>
+                <li style="margin: 20px;"> <span class="rule-keyword">例外</span>行きます： 行って</li>
+                <li ><span class="rule-keyword">動 2、動 3 ：</span>去掉 ます 加 て</li>
+                <p></p>
+                <li><span class="rule-title">形容詞 て形・た形</span></li>
+                <li><span class="rule-keyword">形 1</span>い ： くて，かった<br><small>例：高い → 高くて，高かった</small></li>
+                <li><span class="rule-keyword">形 2</span>だ ： で，だった<br><small>例：静かだ → 静かで，静かだった</small></li>
+            </ul>
+            
+            <h3 class="info-title" style="margin-top: 20px;">词类说明</h3>
+            <div style="font-size: 0.9em; color: #555;">
+                <p><span style="color:#9b59b6; font-weight:bold">動1</span>: 一类动词（五段动词）</p>
+                <p><span style="color:#8e44ad; font-weight:bold">動2</span>: 二类动词（一段动词）</p>
+                <p><span style="color:#e67e22; font-weight:bold">形1</span>: 一类形容词（い形容词）</p>
+                <p><span style="color:#d35400; font-weight:bold">形2</span>: 二类形容词（な形容词）</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="results-panel" id="resultsPanel">
+        <div class="score-display">
+            <div class="score-text">您的得分</div>
+            <div class="score-number" id="finalScore">0</div>
+            <div>正确: <span id="correctCount">0</span> 题 | 错误: <span id="wrongCount">0</span> 题 | 未答: <span id="unansweredCount">0</span> 题</div>
+        </div>
+        
+        <div class="statistics">
+            <div class="stat-box">
+                <div>動詞て形</div>
+                <div class="stat-number stat-verb-te" id="verbTeAccuracy">0%</div>
+                <div>正确: <span id="verbTeCorrect">0</span>/<span id="verbTeTotal">0</span></div>
+            </div>
+            <div class="stat-box">
+                <div>動詞た形</div>
+                <div class="stat-number stat-verb-ta" id="verbTaAccuracy">0%</div>
+                <div>正确: <span id="verbTaCorrect">0</span>/<span id="verbTaTotal">0</span></div>
+            </div>
+            <div class="stat-box">
+                <div>形容詞て形</div>
+                <div class="stat-number stat-adj-te" id="adjTeAccuracy">0%</div>
+                <div>正确: <span id="adjTeCorrect">0</span>/<span id="adjTeTotal">0</span></div>
+            </div>
+            <div class="stat-box">
+                <div>形容詞た形</div>
+                <div class="stat-number stat-adj-ta" id="adjTaAccuracy">0%</div>
+                <div>正确: <span id="adjTaCorrect">0</span>/<span id="adjTaTotal">0</span></div>
+            </div>
+        </div>
+        
+        <h3>错题解析</h3>
+        <div class="wrong-questions" id="wrongQuestions">
+            <!-- 错题将通过JavaScript动态生成 -->
+        </div>
+        
+        <div style="text-align: center; margin-top: 20px;">
+            <button id="restartBtn">重新开始练习</button>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>日语动词与形容词て形・た形练习 | 100道精选题目 | 元宝AI © 2026</p>
+    </div>
+
+    <script>
+        // 日语词汇数据库 - 包含动词和形容词
+        const wordDatabase = [
+            // 动词（一类动词 - 動1） - 25个
+            { word: "書きます", kana: "かきます", accent: "➀", class: "動1", type: "動詞", te: "書いて", ta: "書いた" },
+            { word: "買います", kana: "かいます", accent: "⓪", class: "動1", type: "動詞", te: "買って", ta: "買った" },
+            { word: "会います", kana: "あいます", accent: "➀", class: "動1", type: "動詞", te: "会って", ta: "会った" },
+            { word: "歌います", kana: "うたいます", accent: "➁", class: "動1", type: "動詞", te: "歌って", ta: "歌った" },
+            { word: "使います", kana: "つかいます", accent: "➁", class: "動1", type: "動詞", te: "使って", ta: "使った" },
+            { word: "待ちます", kana: "まちます", accent: "➀", class: "動1", type: "動詞", te: "待って", ta: "待った" },
+            { word: "立ちます", kana: "たちます", accent: "➀", class: "動1", type: "動詞", te: "立って", ta: "立った" },
+            { word: "打ちます", kana: "うちます", accent: "➀", class: "動1", type: "動詞", te: "打って", ta: "打った" },
+            { word: "持ちます", kana: "もちます", accent: "➀", class: "動1", type: "動詞", te: "持って", ta: "持った" },
+            { word: "帰ります", kana: "かえります", accent: "➁", class: "動1", type: "動詞", te: "帰って", ta: "帰った" },
+            { word: "入ります", kana: "はいります", accent: "➀", class: "動1", type: "動詞", te: "入って", ta: "入った" },
+            { word: "知ります", kana: "しります", accent: "➀", class: "動1", type: "動詞", te: "知って", ta: "知った" },
+            { word: "走ります", kana: "はしります", accent: "➁", class: "動1", type: "動詞", te: "走って", ta: "走った" },
+            { word: "降ります", kana: "おります", accent: "➀", class: "動1", type: "動詞", te: "降って", ta: "降った" },
+            { word: "切ります", kana: "きります", accent: "➀", class: "動1", type: "動詞", te: "切って", ta: "切った" },
+            { word: "泳ぎます", kana: "およぎます", accent: "➁", class: "動1", type: "動詞", te: "泳いで", ta: "泳いだ" },
+            { word: "急ぎます", kana: "いそぎます", accent: "➁", class: "動1", type: "動詞", te: "急いで", ta: "急いだ" },
+            { word: "脱ぎます", kana: "ぬぎます", accent: "➀", class: "動1", type: "動詞", te: "脱いで", ta: "脱いだ" },
+            { word: "漕ぎます", kana: "こぎます", accent: "➀", class: "動1", type: "動詞", te: "漕いで", ta: "漕いだ" },
+            { word: "騒ぎます", kana: "さわぎます", accent: "➁", class: "動1", type: "動詞", te: "騒いで", ta: "騒いだ" },
+            { word: "死にます", kana: "しにます", accent: "➀", class: "動1", type: "動詞", te: "死んで", ta: "死んだ" },
+            { word: "呼びます", kana: "よびます", accent: "➀", class: "動1", type: "動詞", te: "呼んで", ta: "呼んだ" },
+            { word: "飛びます", kana: "とびます", accent: "➀", class: "動1", type: "動詞", te: "飛んで", ta: "飛んだ" },
+            { word: "遊びます", kana: "あそびます", accent: "➁", class: "動1", type: "動詞", te: "遊んで", ta: "遊んだ" },
+            { word: "学びます", kana: "まなびます", accent: "➁", class: "動1", type: "動詞", te: "学んで", ta: "学んだ" },
+            
+            // 动词（二类动词 - 動2） - 25个
+            { word: "起きます", kana: "おきます", accent: "➀", class: "動2", type: "動詞", te: "起きて", ta: "起きた" },
+            { word: "食べます", kana: "たべます", accent: "➁", class: "動2", type: "動詞", te: "食べて", ta: "食べた" },
+            { word: "寝ます", kana: "ねます", accent: "➀", class: "動2", type: "動詞", te: "寝て", ta: "寝た" },
+            { word: "見ます", kana: "みます", accent: "➀", class: "動2", type: "動詞", te: "見て", ta: "見た" },
+            { word: "着ます", kana: "きます", accent: "➀", class: "動2", type: "動詞", te: "着て", ta: "着た" },
+            { word: "開けます", kana: "あけます", accent: "➀", class: "動2", type: "動詞", te: "開けて", ta: "開けた" },
+            { word: "閉めます", kana: "しめます", accent: "➀", class: "動2", type: "動詞", te: "閉めて", ta: "閉めた" },
+            { word: "入れます", kana: "いれます", accent: "➀", class: "動2", type: "動詞", te: "入れて", ta: "入れた" },
+            { word: "教えます", kana: "おしえます", accent: "➁", class: "動2", type: "動詞", te: "教えて", ta: "教えた" },
+            { word: "覚えます", kana: "おぼえます", accent: "➁", class: "動2", type: "動詞", te: "覚えて", ta: "覚えた" },
+            { word: "忘れます", kana: "わすれます", accent: "➀", class: "動2", type: "動詞", te: "忘れて", ta: "忘れた" },
+            { word: "始めます", kana: "はじめます", accent: "➀", class: "動2", type: "動詞", te: "始めて", ta: "始めた" },
+            { word: "止めます", kana: "とめます", accent: "➀", class: "動2", type: "動詞", te: "止めて", ta: "止めた" },
+            { word: "出かけます", kana: "でかけます", accent: "➀", class: "動2", type: "動詞", te: "出かけて", ta: "出かけた" },
+            { word: "かけます", kana: "かけます", accent: "➀", class: "動2", type: "動詞", te: "かけて", ta: "かけた" },
+            { word: "集めます", kana: "あつめます", accent: "➀", class: "動2", type: "動詞", te: "集めて", ta: "集めた" },
+            { word: "調べます", kana: "しらべます", accent: "➀", class: "動2", type: "動詞", te: "調べて", ta: "調べた" },
+            { word: "上げます", kana: "あげます", accent: "➀", class: "動2", type: "動詞", te: "上げて", ta: "上げた" },
+            { word: "下げます", kana: "さげます", accent: "➀", class: "動2", type: "動詞", te: "下げて", ta: "下げた" },
+            { word: "決めます", kana: "きめます", accent: "➀", class: "動2", type: "動詞", te: "決めて", ta: "決めた" },
+            { word: "求めます", kana: "もとめます", accent: "➀", class: "動2", type: "動詞", te: "求めて", ta: "求めた" },
+            { word: "考えます", kana: "かんがえます", accent: "➀", class: "動2", type: "動詞", te: "考えて", ta: "考えた" },
+            { word: "答えます", kana: "こたえます", accent: "➀", class: "動2", type: "動詞", te: "答えて", ta: "答えた" },
+            { word: "続けます", kana: "つづけます", accent: "➀", class: "動2", type: "動詞", te: "続けて", ta: "続けた" },
+            { word: "変わります", kana: "かわります", accent: "➀", class: "動2", type: "動詞", te: "変わって", ta: "変わった" },
+            
+            // 形容词（一类形容词 - 形1） - 25个
+            { word: "高い", kana: "たかい", accent: "➀", class: "形1", type: "形容詞", te: "高くて", ta: "高かった" },
+            { word: "低い", kana: "ひくい", accent: "➀", class: "形1", type: "形容詞", te: "低くて", ta: "低かった" },
+            { word: "大きい", kana: "おおきい", accent: "➀", class: "形1", type: "形容詞", te: "大きくて", ta: "大きかった" },
+            { word: "小さい", kana: "ちいさい", accent: "➀", class: "形1", type: "形容詞", te: "小さくて", ta: "小さかった" },
+            { word: "長い", kana: "ながい", accent: "➀", class: "形1", type: "形容詞", te: "長くて", ta: "長かった" },
+            { word: "短い", kana: "みじかい", accent: "➀", class: "形1", type: "形容詞", te: "短くて", ta: "短かった" },
+            { word: "暑い", kana: "あつい", accent: "➀", class: "形1", type: "形容詞", te: "暑くて", ta: "暑かった" },
+            { word: "寒い", kana: "さむい", accent: "➀", class: "形1", type: "形容詞", te: "寒くて", ta: "寒かった" },
+            { word: "熱い", kana: "あつい", accent: "➀", class: "形1", type: "形容詞", te: "熱くて", ta: "熱かった" },
+            { word: "冷たい", kana: "つめたい", accent: "➀", class: "形1", type: "形容詞", te: "冷たくて", ta: "冷たかった" },
+            { word: "甘い", kana: "あまい", accent: "➀", class: "形1", type: "形容詞", te: "甘くて", ta: "甘かった" },
+            { word: "辛い", kana: "からい", accent: "➀", class: "形1", type: "形容詞", te: "辛くて", ta: "辛かった" },
+            { word: "美味しい", kana: "おいしい", accent: "➀", class: "形1", type: "形容詞", te: "美味しくて", ta: "美味しかった" },
+            { word: "まずい", kana: "まずい", accent: "➀", class: "形1", type: "形容詞", te: "まずくて", ta: "まずかった" },
+            { word: "うるさい", kana: "うるさい", accent: "➀", class: "形1", type: "形容詞", te: "うるさくて", ta: "うるさかった" },
+            { word: "楽しい", kana: "たのしい", accent: "➀", class: "形1", type: "形容詞", te: "楽しくて", ta: "楽しかった" },
+            { word: "悲しい", kana: "かなしい", accent: "➀", class: "形1", type: "形容詞", te: "悲しくて", ta: "悲しかった" },
+            { word: "寂しい", kana: "さびしい", accent: "➀", class: "形1", type: "形容詞", te: "寂しくて", ta: "寂しかった" },
+            { word: "怖い", kana: "こわい", accent: "➀", class: "形1", type: "形容詞", te: "怖くて", ta: "怖かった" },
+            { word: "難しい", kana: "むずかしい", accent: "➀", class: "形1", type: "形容詞", te: "難しくて", ta: "難しかった" },
+            { word: "易しい", kana: "やさしい", accent: "➀", class: "形1", type: "形容詞", te: "易しくて", ta: "易しかった" },
+            { word: "重い", kana: "おもい", accent: "➀", class: "形1", type: "形容詞", te: "重くて", ta: "重かった" },
+            { word: "軽い", kana: "かるい", accent: "➀", class: "形1", type: "形容詞", te: "軽くて", ta: "軽かった" },
+            { word: "新しい", kana: "あたらしい", accent: "➀", class: "形1", type: "形容詞", te: "新しくて", ta: "新しかった" },
+            { word: "古い", kana: "ふるい", accent: "➀", class: "形1", type: "形容詞", te: "古くて", ta: "古かった" },
+            
+            // 形容词（二类形容词 - 形2） - 25个
+            { word: "静かだ", kana: "しずかだ", accent: "➀", class: "形2", type: "形容詞", te: "静かで", ta: "静かだった" },
+            { word: "元気だ", kana: "げんきだ", accent: "➀", class: "形2", type: "形容詞", te: "元気で", ta: "元気だった" },
+            { word: "便利だ", kana: "べんりだ", accent: "➀", class: "形2", type: "形容詞", te: "便利で", ta: "便利だった" },
+            { word: "不便だ", kana: "ふべんだ", accent: "➀", class: "形2", type: "形容詞", te: "不便で", ta: "不便だった" },
+            { word: "賑やかだ", kana: "にぎやかだ", accent: "➀", class: "形2", type: "形容詞", te: "賑やかで", ta: "賑やかだった" },
+            { word: "親切だ", kana: "しんせつだ", accent: "➀", class: "形2", type: "形容詞", te: "親切で", ta: "親切だった" },
+            { word: "大切だ", kana: "たいせつだ", accent: "➀", class: "形2", type: "形容詞", te: "大切で", ta: "大切だった" },
+            { word: "丁寧だ", kana: "ていねいだ", accent: "➀", class: "形2", type: "形容詞", te: "丁寧で", ta: "丁寧だった" },
+            { word: "簡単だ", kana: "かんだんだ", accent: "➀", class: "形2", type: "形容詞", te: "簡単で", ta: "簡単だった" },
+            { word: "複雑だ", kana: "ふくざつだ", accent: "➀", class: "形2", type: "形容詞", te: "複雑で", ta: "複雑だった" },
+            { word: "綺麗だ", kana: "きれいだ", accent: "➀", class: "形2", type: "形容詞", te: "綺麗で", ta: "綺麗だった" },
+            { word: "丈夫だ", kana: "じょうぶだ", accent: "➀", class: "形2", type: "形容詞", te: "丈夫で", ta: "丈夫だった" },
+            { word: "健康だ", kana: "けんこうだ", accent: "➀", class: "形2", type: "形容詞", te: "健康で", ta: "健康だった" },
+            { word: "安全だ", kana: "あんぜんだ", accent: "➀", class: "形2", type: "形容詞", te: "安全で", ta: "安全だった" },
+            { word: "危険だ", kana: "きけんだ", accent: "➀", class: "形2", type: "形容詞", te: "危険で", ta: "危険だった" },
+            { word: "自由だ", kana: "じゆうだ", accent: "➀", class: "形2", type: "形容詞", te: "自由で", ta: "自由だった" },
+            { word: "特別だ", kana: "とくべつだ", accent: "➀", class: "形2", type: "形容詞", te: "特別で", ta: "特別だった" },
+            { word: "普通だ", kana: "ふつうだ", accent: "➀", class: "形2", type: "形容詞", te: "普通で", ta: "普通だった" },
+            { word: "有名だ", kana: "ゆうめいだ", accent: "➀", class: "形2", type: "形容詞", te: "有名で", ta: "有名だった" },
+            { word: "必要だ", kana: "ひつようだ", accent: "➀", class: "形2", type: "形容詞", te: "必要で", ta: "必要だった" },
+            { word: "重要だ", kana: "じゅうようだ", accent: "➀", class: "形2", type: "形容詞", te: "重要で", ta: "重要だった" },
+            { word: "可能だ", kana: "かのうだ", accent: "➀", class: "形2", type: "形容詞", te: "可能で", ta: "可能だった" },
+            { word: "不可能だ", kana: "ふかのうだ", accent: "➀", class: "形2", type: "形容詞", te: "不可能で", ta: "不可能だった" },
+            { word: "同じだ", kana: "おなじだ", accent: "➀", class: "形2", type: "形容詞", te: "同じで", ta: "同じだった" },
+            { word: "嫌いだ", kana: "きらいだ", accent: "➀", class: "形2", type: "形容詞", te: "嫌いで", ta: "嫌いだった" }
+        ];
+
+        // 从题库中按照要求选择题目
+        function getMixedQuestions() {
+            // 分离动词和形容词
+            const verbs = wordDatabase.filter(item => item.type === "動詞");
+            const adjectives = wordDatabase.filter(item => item.type === "形容詞");
+            
+            // 随机选择25个动词和25个形容词
+            const selectedVerbs = [...verbs].sort(() => Math.random() - 0.5).slice(0, 25);
+            const selectedAdjs = [...adjectives].sort(() => Math.random() - 0.5).slice(0, 25);
+            
+            // 创建题目数组
+            const questions = [];
+            
+            // 处理动词：25个动词，其中て形和た形各一半
+            selectedVerbs.forEach((item, index) => {
+                const questionType = index < 12 ? "te" : "ta"; // 前12个为て形，后13个为た形
+                const correctAnswer = questionType === "te" ? item.te : item.ta;
+                const wrongOptions = generateWrongOptions(item.word, correctAnswer, item.class, item.type, questionType);
+                const allOptions = [correctAnswer, ...wrongOptions];
+                
+                // 随机排序选项
+                const shuffledOptions = [...allOptions].sort(() => Math.random() - 0.5);
+                const correctIndex = shuffledOptions.indexOf(correctAnswer);
+                
+                questions.push({
+                    id: questions.length + 1,
+                    word: item.word,
+                    kana: item.kana,
+                    accent: item.accent,
+                    class: item.class,
+                    type: item.type,
+                    correct: correctAnswer,
+                    options: shuffledOptions,
+                    correctIndex: correctIndex,
+                    form: questionType
+                });
+            });
+            
+            // 处理形容词：25个形容词，其中て形和た形各一半
+            selectedAdjs.forEach((item, index) => {
+                const questionType = index < 12 ? "te" : "ta"; // 前12个为て形，后13个为た形
+                const correctAnswer = questionType === "te" ? item.te : item.ta;
+                const wrongOptions = generateWrongOptions(item.word, correctAnswer, item.class, item.type, questionType);
+                const allOptions = [correctAnswer, ...wrongOptions];
+                
+                // 随机排序选项
+                const shuffledOptions = [...allOptions].sort(() => Math.random() - 0.5);
+                const correctIndex = shuffledOptions.indexOf(correctAnswer);
+                
+                questions.push({
+                    id: questions.length + 1,
+                    word: item.word,
+                    kana: item.kana,
+                    accent: item.accent,
+                    class: item.class,
+                    type: item.type,
+                    correct: correctAnswer,
+                    options: shuffledOptions,
+                    correctIndex: correctIndex,
+                    form: questionType
+                });
+            });
+            
+            // 最后打乱所有题目顺序
+            return questions.sort(() => Math.random() - 0.5);
+        }
+
+        // 为每个题目生成错误选项
+        function generateWrongOptions(word, correct, wordClass, wordType, formType) {
+            const wrongOptions = [];
+            
+            if (wordType === "動詞") {
+                // 动词的错误选项
+                const endings = formType === "te" ? ["て", "で", "って", "んで", "いて", "いで", "して"] : ["た", "だ", "った", "んだ", "いた", "いだ", "した"];
+                
+                // 根据动词类别生成错误选项
+                if (wordClass === "動1") {
+                    // 一类动词错误选项
+                    wrongOptions.push(word.replace(/ます$/, formType === "te" ? "て" : "た"));
+                    wrongOptions.push(word.replace(/ます$/, formType === "te" ? "って" : "った"));
+                    wrongOptions.push(word.replace(/ます$/, formType === "te" ? "んで" : "んだ"));
+                } else if (wordClass === "動2") {
+                    // 二类动词错误选项
+                    wrongOptions.push(word.replace(/ます$/, formType === "te" ? "て" : "た").replace(/て$/, "で"));
+                    wrongOptions.push(word.replace(/ます$/, formType === "te" ? "て" : "た").replace(/て$/, "って"));
+                    wrongOptions.push(word.replace(/ます$/, formType === "te" ? "で" : "だ"));
+                }
+            } else if (wordType === "形容詞") {
+                // 形容词的错误选项
+                if (wordClass === "形1") {
+                    // 一类形容词错误选项
+                    wrongOptions.push(word.replace(/い$/, formType === "te" ? "いて" : "いた"));
+                    wrongOptions.push(word.replace(/い$/, formType === "te" ? "くた" : "かった"));
+                    wrongOptions.push(word.replace(/い$/, formType === "te" ? "かって" : "かた"));
+                } else if (wordClass === "形2") {
+                    // 二类形容词错误选项
+                    const stem = word.replace(/だ$/, "");
+                    wrongOptions.push(stem + (formType === "te" ? "た" : "で"));
+                    wrongOptions.push(stem + (formType === "te" ? "だった" : "でた"));
+                    wrongOptions.push(stem + (formType === "te" ? "で" : "だった").replace(/で$/, "て"));
+                }
+            }
+            
+            // 确保错误选项不重复且不与正确答案重复
+            const uniqueWrongOptions = [];
+            for (const option of wrongOptions) {
+                if (option !== correct && !uniqueWrongOptions.includes(option) && option !== word) {
+                    uniqueWrongOptions.push(option);
+                }
+            }
+            
+            // 如果错误选项不足3个，用通用错误选项补充
+            while (uniqueWrongOptions.length < 3) {
+                let wrongOption;
+                if (wordType === "動詞") {
+                    const endings = formType === "te" ? ["て", "で", "って", "んで", "いて", "いで", "して"] : ["た", "だ", "った", "んだ", "いた", "いだ", "した"];
+                    const randomEnding = endings[Math.floor(Math.random() * endings.length)];
+                    wrongOption = word.replace(/ます$/, randomEnding);
+                } else if (wordType === "形容詞") {
+                    if (wordClass === "形1") {
+                        const endings = formType === "te" ? ["くて", "いて", "かって", "くた"] : ["かった", "いた", "かた", "くた"];
+                        const randomEnding = endings[Math.floor(Math.random() * endings.length)];
+                        wrongOption = word.replace(/い$/, randomEnding);
+                    } else if (wordClass === "形2") {
+                        const stem = word.replace(/だ$/, "");
+                        const endings = formType === "te" ? ["で", "た", "だった", "でた"] : ["だった", "で", "た", "でた"];
+                        const randomEnding = endings[Math.floor(Math.random() * endings.length)];
+                        wrongOption = stem + randomEnding;
+                    }
+                }
+                
+                if (wrongOption && wrongOption !== correct && !uniqueWrongOptions.includes(wrongOption)) {
+                    uniqueWrongOptions.push(wrongOption);
+                }
+            }
+            
+            return uniqueWrongOptions.slice(0, 3);
+        }
+
+        // 初始化100道题目
+        let questions = [];
+        let currentQuestionIndex = 0;
+        let userAnswers = new Array(100).fill(null);
+        let questionStatus = new Array(100).fill(0); // 0:未答, 1:正确, 2:错误
+
+        function initializeQuestions() {
+            questions = getMixedQuestions();
+        }
+
+        // DOM元素
+        const questionNumEl = document.getElementById('questionNum');
+        const currentWordEl = document.getElementById('currentWord');
+        const wordClassTextEl = document.getElementById('wordClassText');
+        const targetFormEl = document.getElementById('targetForm');
+        const questionTypeBadge = document.getElementById('questionTypeBadge');
+        const wordClassBadge = document.getElementById('wordClassBadge');
+        const optionsContainer = document.getElementById('optionsContainer');
+        const feedbackMessage = document.getElementById('feedbackMessage');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const submitBtn = document.getElementById('submitBtn');
+        const finishBtn = document.getElementById('finishBtn');
+        const restartBtn = document.getElementById('restartBtn');
+        const progressFill = document.getElementById('progressFill');
+        const currentQuestionEl = document.getElementById('currentQuestion');
+        const answeredCountEl = document.getElementById('answeredCount');
+        const resultsPanel = document.getElementById('resultsPanel');
+        const finalScoreEl = document.getElementById('finalScore');
+        const correctCountEl = document.getElementById('correctCount');
+        const wrongCountEl = document.getElementById('wrongCount');
+        const unansweredCountEl = document.getElementById('unansweredCount');
+        const wrongQuestionsEl = document.getElementById('wrongQuestions');
+        
+        // 统计元素
+        const verbTeAccuracyEl = document.getElementById('verbTeAccuracy');
+        const verbTaAccuracyEl = document.getElementById('verbTaAccuracy');
+        const adjTeAccuracyEl = document.getElementById('adjTeAccuracy');
+        const adjTaAccuracyEl = document.getElementById('adjTaAccuracy');
+        const verbTeCorrectEl = document.getElementById('verbTeCorrect');
+        const verbTaCorrectEl = document.getElementById('verbTaCorrect');
+        const adjTeCorrectEl = document.getElementById('adjTeCorrect');
+        const adjTaCorrectEl = document.getElementById('adjTaCorrect');
+        const verbTeTotalEl = document.getElementById('verbTeTotal');
+        const verbTaTotalEl = document.getElementById('verbTaTotal');
+        const adjTeTotalEl = document.getElementById('adjTeTotal');
+        const adjTaTotalEl = document.getElementById('adjTaTotal');
+        
+        // 答题状态元素
+        const statusAnsweredEl = document.getElementById('statusAnswered');
+        const statusCorrectEl = document.getElementById('statusCorrect');
+        const statusWrongEl = document.getElementById('statusWrong');
+        const statusUnansweredEl = document.getElementById('statusUnanswered');
+
+        // 显示当前题目
+        function showQuestion(index) {
+            if (index < 0 || index >= questions.length) return;
+            
+            currentQuestionIndex = index;
+            const question = questions[index];
+            
+            // 更新题目信息
+            questionNumEl.textContent = question.id;
+            
+            // 显示单词（带假名和声调）
+            const wordDisplay = `${question.word}<span class="furigana">(${question.kana})</span><span class="accent">${question.accent}</span>`;
+            currentWordEl.innerHTML = wordDisplay;
+            
+            // 更新词类文本
+            let wordClassText = "";
+            let wordClassBadgeText = "";
+            let wordClassBadgeClass = "";
+            
+            switch(question.class) {
+                case "動1":
+                    wordClassText = "動詞（一类）";
+                    wordClassBadgeText = "動1";
+                    wordClassBadgeClass = "word-class-badge verb1-badge";
+                    break;
+                case "動2":
+                    wordClassText = "動詞（二类）";
+                    wordClassBadgeText = "動2";
+                    wordClassBadgeClass = "word-class-badge verb2-badge";
+                    break;
+                case "形1":
+                    wordClassText = "形容詞（一类）";
+                    wordClassBadgeText = "形1";
+                    wordClassBadgeClass = "word-class-badge adj1-badge";
+                    break;
+                case "形2":
+                    wordClassText = "形容詞（二类）";
+                    wordClassBadgeText = "形2";
+                    wordClassBadgeClass = "word-class-badge adj2-badge";
+                    break;
+            }
+            
+            wordClassTextEl.textContent = wordClassText;
+            wordClassBadge.textContent = wordClassBadgeText;
+            wordClassBadge.className = wordClassBadgeClass;
+            
+            // 更新题目类型
+            targetFormEl.textContent = question.form === "te" ? "て形" : "た形";
+            questionTypeBadge.textContent = question.form === "te" ? "て形" : "た形";
+            questionTypeBadge.className = question.form === "te" ? "question-type-badge te-badge" : "question-type-badge ta-badge";
+            
+            currentQuestionEl.textContent = question.id;
+            
+            // 更新进度条
+            progressFill.style.width = `${((index + 1) / questions.length) * 100}%`;
+            
+            // 更新按钮状态
+            prevBtn.disabled = index === 0;
+            nextBtn.disabled = index === questions.length - 1;
+            submitBtn.style.display = index === questions.length - 1 ? 'inline-block' : 'none';
+            
+            // 清空选项容器
+            optionsContainer.innerHTML = '';
+            
+            // 隐藏反馈信息
+            feedbackMessage.style.display = 'none';
+            feedbackMessage.className = 'feedback-message';
+            
+            // 生成选项
+            const optionLabels = ['A', 'B', 'C', 'D'];
+            const userAnswer = userAnswers[index];
+            const isAnswered = questionStatus[index] !== 0;
+            const isCorrect = questionStatus[index] === 1;
+            const isIncorrect = questionStatus[index] === 2;
+            
+            question.options.forEach((option, optionIndex) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option';
+                
+                // 如果用户已经回答了这道题
+                if (isAnswered) {
+                    // 如果这个选项是用户选择的
+                    if (userAnswer === optionIndex) {
+                        if (isCorrect) {
+                            optionDiv.classList.add('correct');
+                        } else {
+                            optionDiv.classList.add('incorrect');
+                        }
+                    }
+                    
+                    // 如果这个选项是正确答案，并且用户答错了，则显示正确答案
+                    if (optionIndex === question.correctIndex && isIncorrect) {
+                        optionDiv.classList.add('correct-answer');
+                    }
+                    
+                    // 已答题的选项不可点击
+                    optionDiv.style.cursor = 'default';
+                } else {
+                    // 未答题的选项可点击
+                    optionDiv.addEventListener('click', () => selectOption(optionIndex));
+                }
+                
+                optionDiv.innerHTML = `
+                    <div class="option-label">${optionLabels[optionIndex]}</div>
+                    <div class="option-text">${option}</div>
+                `;
+                
+                optionsContainer.appendChild(optionDiv);
+            });
+            
+            // 显示反馈信息
+            if (isAnswered) {
+                if (isCorrect) {
+                    feedbackMessage.textContent = '✓ 回答正确！';
+                    feedbackMessage.className = 'feedback-message feedback-correct';
+                } else if (isIncorrect) {
+                    feedbackMessage.textContent = `✗ 回答错误！正确答案是：${question.options[question.correctIndex]}`;
+                    feedbackMessage.className = 'feedback-message feedback-incorrect';
+                }
+                feedbackMessage.style.display = 'block';
+            }
+            
+            // 更新答题状态
+            updateAnswerStatus();
+        }
+
+        // 选择选项
+        function selectOption(optionIndex) {
+            const question = questions[currentQuestionIndex];
+            userAnswers[currentQuestionIndex] = optionIndex;
+            
+            // 更新题目状态
+            if (optionIndex === question.correctIndex) {
+                questionStatus[currentQuestionIndex] = 1; // 正确
+            } else {
+                questionStatus[currentQuestionIndex] = 2; // 错误
+            }
+            
+            // 重新显示题目以更新选中状态和颜色
+            showQuestion(currentQuestionIndex);
+        }
+
+        // 更新答题状态
+        function updateAnswerStatus() {
+            const answered = userAnswers.filter(answer => answer !== null).length;
+            answeredCountEl.textContent = answered;
+            
+            const correct = questionStatus.filter(status => status === 1).length;
+            const wrong = questionStatus.filter(status => status === 2).length;
+            const unanswered = 100 - answered;
+            
+            // 更新右侧边栏的状态显示
+            statusAnsweredEl.textContent = `${answered}/100`;
+            statusCorrectEl.textContent = `${correct} 题`;
+            statusWrongEl.textContent = `${wrong} 题`;
+            statusUnansweredEl.textContent = `${unanswered} 题`;
+        }
+
+        // 提交答案并显示结果
+        function showResults() {
+            let correctCount = 0;
+            let wrongCount = 0;
+            let unansweredCount = 0;
+            
+            // 分类统计
+            let verbTeCorrect = 0, verbTeTotal = 0;
+            let verbTaCorrect = 0, verbTaTotal = 0;
+            let adjTeCorrect = 0, adjTeTotal = 0;
+            let adjTaCorrect = 0, adjTaTotal = 0;
+            
+            const wrongQuestions = [];
+            
+            // 统计结果
+            for (let i = 0; i < questions.length; i++) {
+                const question = questions[i];
+                
+                // 统计题目类型总数
+                if (question.type === "動詞") {
+                    if (question.form === "te") {
+                        verbTeTotal++;
+                    } else {
+                        verbTaTotal++;
+                    }
+                } else if (question.type === "形容詞") {
+                    if (question.form === "te") {
+                        adjTeTotal++;
+                    } else {
+                        adjTaTotal++;
+                    }
+                }
+                
+                if (userAnswers[i] === null) {
+                    unansweredCount++;
+                } else if (userAnswers[i] === question.correctIndex) {
+                    correctCount++;
+                    
+                    // 统计正确题目
+                    if (question.type === "動詞") {
+                        if (question.form === "te") {
+                            verbTeCorrect++;
+                        } else {
+                            verbTaCorrect++;
+                        }
+                    } else if (question.type === "形容詞") {
+                        if (question.form === "te") {
+                            adjTeCorrect++;
+                        } else {
+                            adjTaCorrect++;
+                        }
+                    }
+                } else {
+                    wrongCount++;
+                    wrongQuestions.push({
+                        question: questions[i],
+                        userAnswer: userAnswers[i]
+                    });
+                }
+            }
+            
+            // 计算总分
+            const score = Math.round((correctCount / questions.length) * 100);
+            
+            // 计算各类准确率
+            const verbTeAccuracy = verbTeTotal > 0 ? Math.round((verbTeCorrect / verbTeTotal) * 100) : 0;
+            const verbTaAccuracy = verbTaTotal > 0 ? Math.round((verbTaCorrect / verbTaTotal) * 100) : 0;
+            const adjTeAccuracy = adjTeTotal > 0 ? Math.round((adjTeCorrect / adjTeTotal) * 100) : 0;
+            const adjTaAccuracy = adjTaTotal > 0 ? Math.round((adjTaCorrect / adjTaTotal) * 100) : 0;
+            
+            // 显示结果
+            finalScoreEl.textContent = score;
+            correctCountEl.textContent = correctCount;
+            wrongCountEl.textContent = wrongCount;
+            unansweredCountEl.textContent = unansweredCount;
+            
+            // 显示各类准确率
+            verbTeAccuracyEl.textContent = `${verbTeAccuracy}%`;
+            verbTaAccuracyEl.textContent = `${verbTaAccuracy}%`;
+            adjTeAccuracyEl.textContent = `${adjTeAccuracy}%`;
+            adjTaAccuracyEl.textContent = `${adjTaAccuracy}%`;
+            
+            // 显示各类正确数和总数
+            verbTeCorrectEl.textContent = verbTeCorrect;
+            verbTaCorrectEl.textContent = verbTaCorrect;
+            adjTeCorrectEl.textContent = adjTeCorrect;
+            adjTaCorrectEl.textContent = adjTaCorrect;
+            verbTeTotalEl.textContent = verbTeTotal;
+            verbTaTotalEl.textContent = verbTaTotal;
+            adjTeTotalEl.textContent = adjTeTotal;
+            adjTaTotalEl.textContent = adjTaTotal;
+            
+            // 显示错题
+            wrongQuestionsEl.innerHTML = '';
+            if (wrongQuestions.length === 0) {
+                wrongQuestionsEl.innerHTML = '<p style="text-align:center; color:#7f8c8d;">太棒了！没有错题！</p>';
+            } else {
+                wrongQuestions.forEach((item, index) => {
+                    const wrongDiv = document.createElement('div');
+                    wrongDiv.className = 'wrong-question-item';
+                    
+                    const userAnswerText = item.question.options[item.userAnswer];
+                    const correctAnswerText = item.question.correct;
+                    const formTypeText = item.question.form === "te" ? "て形" : "た形";
+                    let wordClassText = "";
+                    
+                    switch(item.question.class) {
+                        case "動1": wordClassText = "動詞（一类）"; break;
+                        case "動2": wordClassText = "動詞（二类）"; break;
+                        case "形1": wordClassText = "形容詞（一类）"; break;
+                        case "形2": wordClassText = "形容詞（二类）"; break;
+                    }
+                    
+                    wrongDiv.innerHTML = `
+                        <div class="wrong-question-text">第${item.question.id}题: ${wordClassText}「${item.question.word}(${item.question.kana})${item.question.accent}」的${formTypeText}是：</div>
+                        <div>您的答案: <span class="wrong-answer">${userAnswerText}</span></div>
+                        <div>正确答案: <span class="correct-answer">${correctAnswerText}</span></div>
+                        <div><small>词类: ${item.question.class} | 形式: ${formTypeText}</small></div>
+                    `;
+                    
+                    wrongQuestionsEl.appendChild(wrongDiv);
+                });
+            }
+            
+            // 显示结果面板
+            resultsPanel.classList.add('show');
+            
+            // 隐藏主内容
+            document.querySelector('.main-container').classList.add('hidden');
+            document.querySelector('.progress-container').classList.add('hidden');
+        }
+
+        // 重新开始练习
+        function restartPractice() {
+            // 重置数据
+            currentQuestionIndex = 0;
+            userAnswers = new Array(100).fill(null);
+            questionStatus = new Array(100).fill(0);
+            
+            // 重新初始化题目
+            initializeQuestions();
+            
+            // 重置UI
+            resultsPanel.classList.remove('show');
+            document.querySelector('.main-container').classList.remove('hidden');
+            document.querySelector('.progress-container').classList.remove('hidden');
+            
+            // 显示第一题
+            showQuestion(0);
+        }
+
+        // 事件监听
+        prevBtn.addEventListener('click', () => {
+            if (currentQuestionIndex > 0) {
+                showQuestion(currentQuestionIndex - 1);
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentQuestionIndex < questions.length - 1) {
+                showQuestion(currentQuestionIndex + 1);
+            }
+        });
+
+        finishBtn.addEventListener('click', showResults);
+        
+        restartBtn.addEventListener('click', restartPractice);
+
+        // 键盘快捷键支持
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case 'ArrowLeft':
+                    if (currentQuestionIndex > 0) {
+                        showQuestion(currentQuestionIndex - 1);
+                    }
+                    break;
+                case 'ArrowRight':
+                    if (currentQuestionIndex < questions.length - 1) {
+                        showQuestion(currentQuestionIndex + 1);
+                    }
+                    break;
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                    const optionIndex = parseInt(e.key) - 1;
+                    if (optionIndex >= 0 && optionIndex < 4 && questionStatus[currentQuestionIndex] === 0) {
+                        selectOption(optionIndex);
+                    }
+                    break;
+                case 'Enter':
+                    if (currentQuestionIndex === questions.length - 1) {
+                        showResults();
+                    } else {
+                        showQuestion(currentQuestionIndex + 1);
+                    }
+                    break;
+            }
+        });
+
+        // 初始化
+        initializeQuestions();
+        showQuestion(0);
+        
+        // 添加页面卸载前的确认
+        window.addEventListener('beforeunload', (e) => {
+            const answered = userAnswers.filter(answer => answer !== null).length;
+            if (answered > 0 && !resultsPanel.classList.contains('show')) {
+                e.preventDefault();
+                e.returnValue = '您有未提交的答题记录，确定要离开吗？';
+            }
+        });
+    </script>
+</body>
+</html>
