@@ -1,0 +1,625 @@
+	<!DOCTYPE html>
+	<html lang="zh-CN">
+	<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>月相盈亏与先天八卦</title>
+	<link href="https://fonts.googleapis.cn/css2?family=Noto+Serif+SC:wght@200;400;700;900&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+	<style>
+	:root {
+	    --bg-deep: #050510;
+	    --gold: #d4af37;
+	    --gold-light: #f5e6c8;
+	    --gold-dim: #8b7d3c;
+	    --text: #e8e0d0;
+	    --text-dim: #8a8a9a;
+	    --border: rgba(212, 175, 55, 0.2);
+	}
+	* { margin: 0; padding: 0; box-sizing: border-box; }
+	body {
+	    font-family: 'Noto Serif SC', "Microsoft YaHei", serif;
+	    background: radial-gradient(ellipse at 50% 30%, #1a1a3e 0%, var(--bg-deep) 70%);
+	    color: var(--text);
+	    min-height: 100vh;
+	    overflow: hidden;
+	}
+	.stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+	.star {
+	    position: absolute; background: white; border-radius: 50%;
+	    animation: twinkle var(--dur, 3s) infinite ease-in-out;
+	}
+	@keyframes twinkle {
+	    0%, 100% { opacity: 0.15; transform: scale(0.8); }
+	    50% { opacity: 0.9; transform: scale(1); }
+	}
+	.container {
+	    position: relative; z-index: 1;
+	    display: grid;
+	    grid-template-columns: 1fr 340px;
+	    grid-template-rows: auto 1fr auto;
+	    height: 100vh; padding: 16px 28px; gap: 14px;
+	}
+	.header { grid-column: 1 / -1; text-align: center; padding: 6px; }
+	.header h1 {
+	    font-family: 'Ma Shan Zheng', "STKaiti", "KaiTi", cursive;
+	    font-size: 2rem;
+	    background: linear-gradient(135deg, var(--gold), var(--gold-light), var(--gold));
+	    -webkit-background-clip: text;
+	    -webkit-text-fill-color: transparent;
+	    letter-spacing: 0.3em;
+	    text-shadow: 0 0 40px rgba(212, 175, 55, 0.2);
+	}
+	.header .subtitle {
+	    margin-top: 6px; color: var(--text-dim);
+	    font-size: 0.8rem; letter-spacing: 0.35em;
+	}
+	.main-display {
+	    position: relative;
+	    display: flex; align-items: center; justify-content: center;
+	}
+	.moon-stage {
+	    position: relative; width: 500px; height: 500px;
+	    display: flex; align-items: center; justify-content: center;
+	}
+	.moon-stage::before {
+	    content: ''; position: absolute;
+	    width: 320px; height: 320px;
+	    border: 1px solid rgba(212, 175, 55, 0.06);
+	    border-radius: 50%;
+	}
+	#moonCanvas {
+	    position: relative; z-index: 2;
+	    filter: drop-shadow(0 0 50px rgba(245, 234, 208, 0.12));
+	}
+	.bagua-ring { position: absolute; width: 100%; height: 100%; z-index: 1; }
+	.bagua-ring::before {
+	    content: ''; position: absolute;
+	    top: 50%; left: 50%; transform: translate(-50%, -50%);
+	    width: 420px; height: 420px;
+	    border: 1px dashed rgba(212, 175, 55, 0.1);
+	    border-radius: 50%;
+	}
+	.bagua-item {
+	    position: absolute; width: 64px; height: 64px;
+	    display: flex; flex-direction: column;
+	    align-items: center; justify-content: center;
+	    border-radius: 50%;
+	    background: rgba(10, 10, 30, 0.7);
+	    border: 1px solid rgba(212, 175, 55, 0.12);
+	    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+	    cursor: pointer; backdrop-filter: blur(4px);
+	}
+	.bagua-item:hover {
+	    border-color: rgba(212, 175, 55, 0.4);
+	    background: rgba(20, 20, 50, 0.8);
+	}
+	.bagua-item.active {
+	    background: rgba(212, 175, 55, 0.12);
+	    border-color: var(--gold);
+	    box-shadow: 0 0 25px rgba(212, 175, 55, 0.35), inset 0 0 15px rgba(212, 175, 55, 0.08);
+	    transform: scale(1.15);
+	}
+	.bagua-item.active .bagua-svg { color: var(--gold-light); filter: drop-shadow(0 0 6px rgba(212, 175, 55, 0.5)); }
+	.bagua-svg { color: var(--gold-dim); transition: all 0.6s; }
+	.bagua-svg svg { width: 30px; height: 28px; }
+	.bagua-name { font-size: 0.65rem; color: var(--text-dim); margin-top: 1px; transition: color 0.6s; }
+	.bagua-item.active .bagua-name { color: var(--gold-light); }
+	.info-panel {
+	    background: rgba(10, 10, 30, 0.5);
+	    border: 1px solid var(--border);
+	    border-radius: 14px; padding: 24px;
+	    backdrop-filter: blur(10px);
+	    display: flex; flex-direction: column; gap: 16px;
+	    overflow-y: auto;
+	}
+	.info-panel::-webkit-scrollbar { width: 3px; }
+	.info-panel::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 2px; }
+	.panel-section { border-bottom: 1px solid rgba(212, 175, 55, 0.06); padding-bottom: 14px; }
+	.panel-section:last-child { border-bottom: none; padding-bottom: 0; }
+	.section-label {
+	    font-size: 0.65rem; color: var(--text-dim);
+	    letter-spacing: 0.3em; margin-bottom: 8px;
+	}
+	.phase-name {
+	    font-family: 'Ma Shan Zheng', "STKaiti", "KaiTi", cursive;
+	    font-size: 1.8rem; color: var(--gold-light); line-height: 1.2;
+	}
+	.phase-name-en { font-size: 0.75rem; color: var(--text-dim); margin-top: 3px; letter-spacing: 0.08em; }
+	.lunar-date { font-size: 1rem; color: var(--text); }
+	.moon-age { display: flex; align-items: baseline; gap: 6px; }
+	.moon-age-value { font-size: 1.6rem; color: var(--gold-light); font-weight: 700; }
+	.moon-age-unit { font-size: 0.85rem; color: var(--text-dim); }
+	.bagua-display { display: flex; align-items: center; gap: 14px; }
+	.bagua-large { width: 56px; height: 50px; color: var(--gold); flex-shrink: 0; }
+	.bagua-large svg { width: 100%; height: 100%; }
+	.bagua-info-text { flex: 1; }
+	.bagua-name-large { font-family: 'Ma Shan Zheng', "STKaiti", "KaiTi", cursive; font-size: 1.4rem; color: var(--gold-light); }
+	.bagua-desc { font-size: 0.78rem; color: var(--text-dim); margin-top: 3px; line-height: 1.5; }
+	.yin-yang-bar {
+	    height: 22px; border-radius: 11px; overflow: hidden;
+	    display: flex; background: rgba(255,255,255,0.04);
+	    border: 1px solid var(--border); position: relative;
+	}
+	.yang-fill {
+	    background: linear-gradient(90deg, var(--gold-dim), var(--gold), var(--gold-light));
+	    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+	    height: 100%; position: relative;
+	}
+	.yang-fill::after {
+	    content: '阳'; position: absolute; right: 6px; top: 50%;
+	    transform: translateY(-50%); font-size: 0.65rem;
+	    color: rgba(0,0,0,0.5); font-weight: 700;
+	}
+	.yin-fill { background: linear-gradient(90deg, #2a2a4e, #1a1a3e); flex: 1; position: relative; }
+	.yin-fill::after {
+	    content: '阴'; position: absolute; left: 6px; top: 50%;
+	    transform: translateY(-50%); font-size: 0.65rem; color: var(--text-dim);
+	}
+	.yin-yang-labels { display: flex; justify-content: space-between; margin-top: 5px; font-size: 0.7rem; color: var(--text-dim); }
+	.synodic-info { font-size: 0.78rem; color: var(--text-dim); line-height: 1.6; }
+	.synodic-info .highlight { color: var(--gold-light); font-weight: 700; }
+	.controls {
+	    grid-column: 1 / -1;
+	    display: flex; align-items: center; gap: 18px;
+	    padding: 14px 22px;
+	    background: rgba(10, 10, 30, 0.5);
+	    border: 1px solid var(--border);
+	    border-radius: 14px; backdrop-filter: blur(10px);
+	}
+	.btn-play {
+	    width: 44px; height: 44px; border-radius: 50%;
+	    border: 1px solid var(--gold);
+	    background: rgba(212, 175, 55, 0.1);
+	    color: var(--gold); cursor: pointer;
+	    display: flex; align-items: center; justify-content: center;
+	    transition: all 0.3s; flex-shrink: 0;
+	}
+	.btn-play:hover { background: rgba(212, 175, 55, 0.2); box-shadow: 0 0 18px rgba(212, 175, 55, 0.3); }
+	.btn-play svg { width: 18px; height: 18px; }
+	.timeline-container { flex: 1; position: relative; }
+	.timeline-track {
+	    height: 5px; background: rgba(255,255,255,0.06);
+	    border-radius: 3px; position: relative; cursor: pointer;
+	}
+	.timeline-progress {
+	    height: 100%;
+	    background: linear-gradient(90deg, var(--gold-dim), var(--gold));
+	    border-radius: 3px; transition: width 0.1s linear;
+	}
+	.timeline-thumb {
+	    position: absolute; top: 50%;
+	    width: 16px; height: 16px;
+	    background: var(--gold-light); border: 2px solid var(--gold);
+	    border-radius: 50%; transform: translate(-50%, -50%);
+	    cursor: grab; box-shadow: 0 0 12px rgba(212, 175, 55, 0.4);
+	    transition: transform 0.1s;
+	}
+	.timeline-thumb:active { cursor: grabbing; transform: translate(-50%, -50%) scale(1.2); }
+	.timeline-marks { display: flex; justify-content: space-between; margin-top: 10px; padding: 0 8px; }
+	.timeline-mark { font-size: 0.6rem; color: var(--text-dim); text-align: center; transition: color 0.3s; }
+	.timeline-mark.active { color: var(--gold-light); }
+	.speed-control { display: flex; gap: 6px; align-items: center; }
+	.speed-btn {
+	    padding: 5px 11px; border: 1px solid var(--border);
+	    background: transparent; color: var(--text-dim);
+	    border-radius: 7px; cursor: pointer; font-size: 0.7rem;
+	    transition: all 0.3s; font-family: inherit;
+	}
+	.speed-btn:hover { border-color: var(--gold-dim); color: var(--text); }
+	.speed-btn.active { border-color: var(--gold); color: var(--gold-light); background: rgba(212, 175, 55, 0.1); }
+	@media (max-width: 900px) {
+	    .container { grid-template-columns: 1fr; padding: 12px; }
+	    .moon-stage { width: 340px; height: 340px; }
+	    .bagua-item { width: 52px; height: 52px; }
+	    .header h1 { font-size: 1.5rem; }
+	}
+	</style>
+	</head>
+	<body>
+	<div class="stars" id="stars"></div>
+	<div class="container">
+	    <header class="header">
+	        <h1>月相盈亏 · 先天八卦</h1>
+	        <p class="subtitle">月有阴晴圆缺 · 卦有阴阳消长</p>
+	    </header>
+	    <main class="main-display">
+	        <div class="moon-stage" id="moonStage">
+	            <canvas id="moonCanvas" width="280" height="280"></canvas>
+	            <div class="bagua-ring" id="baguaRing"></div>
+	        </div>
+	    </main>
+	    <aside class="info-panel">
+	        <div class="panel-section">
+	            <div class="section-label">当前月相</div>
+	            <div class="phase-name" id="phaseName">新月（朔）</div>
+	            <div class="phase-name-en" id="phaseNameEn">New Moon</div>
+	        </div>
+	        <div class="panel-section">
+	            <div class="section-label">农历日期</div>
+	            <div class="lunar-date" id="lunarDate">农历初一</div>
+	        </div>
+	        <div class="panel-section">
+	            <div class="section-label">月龄</div>
+	            <div class="moon-age">
+	                <span class="moon-age-value" id="moonAge">0.0</span>
+	                <span class="moon-age-unit">日</span>
+	            </div>
+	        </div>
+	        <div class="panel-section">
+	            <div class="section-label">对应八卦</div>
+	            <div class="bagua-display">
+	                <div class="bagua-large" id="baguaLarge"></div>
+	                <div class="bagua-info-text">
+	                    <div class="bagua-name-large" id="baguaName">坤</div>
+	                    <div class="bagua-desc" id="baguaDesc">阳气全尽，阴气正盛。坤为地，厚德载物。</div>
+	                </div>
+	            </div>
+	        </div>
+	        <div class="panel-section">
+	            <div class="section-label">阴阳消长</div>
+	            <div class="yin-yang-bar">
+	                <div class="yang-fill" id="yangFill" style="width: 0%"></div>
+	                <div class="yin-fill"></div>
+	            </div>
+	            <div class="yin-yang-labels">
+	                <span id="yangPercent">0% 阳</span>
+	                <span id="yinPercent">100% 阴</span>
+	            </div>
+	        </div>
+	        <div class="panel-section">
+	            <div class="section-label">朔望月</div>
+	            <div class="synodic-info">
+	                一个完整的月相周期称为朔望月，平均约 <span class="highlight">29.53</span> 天。我国农历月份即据此而定，朔为初一，望为十五。
+	            </div>
+	        </div>
+	    </aside>
+	    <footer class="controls">
+	        <button class="btn-play" id="btnPlay" aria-label="播放/暂停">
+	            <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+	        </button>
+	        <div class="timeline-container">
+	            <div class="timeline-track" id="timelineTrack">
+	                <div class="timeline-progress" id="timelineProgress" style="width: 0%"></div>
+	                <div class="timeline-thumb" id="timelineThumb" style="left: 0%"></div>
+	            </div>
+	            <div class="timeline-marks" id="timelineMarks"></div>
+	        </div>
+	        <div class="speed-control">
+	            <button class="speed-btn" data-speed="0.5">0.5x</button>
+	            <button class="speed-btn active" data-speed="1">1x</button>
+	            <button class="speed-btn" data-speed="2">2x</button>
+	        </div>
+	    </footer>
+	</div>
+	<script>
+	const baguaData = [
+	    { name:'坤', binary:'000', phase:0,     phaseName:'新月（朔）',  phaseNameEn:'New Moon',         lunarDate:'农历初一',       moonAge:0,    desc:'阳气全尽，阴气正盛。坤为地，厚德载物。', yang:0 },
+	    { name:'震', binary:'001', phase:0.125, phaseName:'蛾眉月',     phaseNameEn:'Waxing Crescent',  lunarDate:'农历初三、初四', moonAge:3.5,  desc:'阳气始生，阴气将退。震为雷，一阳初动。', yang:12.5 },
+	    { name:'离', binary:'101', phase:0.25,  phaseName:'上弦月',     phaseNameEn:'First Quarter',    lunarDate:'农历初七、初八', moonAge:7.5,  desc:'阴阳相搏，势均力敌。离为火，外明内虚。', yang:50 },
+	    { name:'兑', binary:'011', phase:0.375, phaseName:'盈凸月',     phaseNameEn:'Waxing Gibbous',   lunarDate:'农历初九至十四', moonAge:11,   desc:'阴气将尽，阳气将盛。兑为泽，上缺下实。', yang:75 },
+	    { name:'乾', binary:'111', phase:0.5,   phaseName:'满月（望）', phaseNameEn:'Full Moon',        lunarDate:'农历十五至十七', moonAge:15,   desc:'阴气全尽，阳气正盛。乾为天，刚健中正。', yang:100 },
+	    { name:'巽', binary:'110', phase:0.625, phaseName:'亏凸月',     phaseNameEn:'Waning Gibbous',   lunarDate:'农历十八至二十一',moonAge:19,   desc:'阴气始凝，阳气始亏。巽为风，初阴在下。', yang:75 },
+	    { name:'坎', binary:'010', phase:0.75,  phaseName:'下弦月',     phaseNameEn:'Last Quarter',     lunarDate:'农历二十二、二十三',moonAge:22.5,desc:'阴阳相搏，阳气犹在。坎为水，中满外虚。', yang:50 },
+	    { name:'艮', binary:'100', phase:0.875, phaseName:'残月',       phaseNameEn:'Waning Crescent',  lunarDate:'农历二十六、二十七',moonAge:26,  desc:'阳气将尽，阴气将盛。艮为山，上实下虚。', yang:12.5 }
+	];
+	function baguaSVG(binary) {
+	    let lines = '';
+	    for (let i = 0; i < 3; i++) {
+	        const y = 4 + i * 13;
+	        if (binary[i] === '1') {
+	            lines += `<rect x="5" y="${y}" width="40" height="6" rx="1" fill="currentColor"/>`;
+	        } else {
+	            lines += `<rect x="5" y="${y}" width="16" height="6" rx="1" fill="currentColor"/>`;
+	            lines += `<rect x="29" y="${y}" width="16" height="6" rx="1" fill="currentColor"/>`;
+	        }
+	    }
+	    return `<svg viewBox="0 0 50 46" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">${lines}</svg>`;
+	}
+	function createStars() {
+	    const container = document.getElementById('stars');
+	    for (let i = 0; i < 150; i++) {
+	        const star = document.createElement('div');
+	        star.className = 'star';
+	        star.style.left = Math.random() * 100 + '%';
+	        star.style.top = Math.random() * 100 + '%';
+	        const size = Math.random() * 2 + 0.5;
+	        star.style.width = size + 'px';
+	        star.style.height = size + 'px';
+	        star.style.setProperty('--dur', (Math.random() * 3 + 2) + 's');
+	        star.style.animationDelay = Math.random() * 3 + 's';
+	        container.appendChild(star);
+	    }
+	}
+	function drawMoonPhase(ctx, cx, cy, r, phase) {
+	    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+	    const glow = ctx.createRadialGradient(cx, cy, r * 0.85, cx, cy, r * 1.9);
+	    glow.addColorStop(0, 'rgba(245, 234, 208, 0.18)');
+	    glow.addColorStop(0.4, 'rgba(245, 234, 208, 0.06)');
+	    glow.addColorStop(1, 'rgba(245, 234, 208, 0)');
+	    ctx.fillStyle = glow;
+	    ctx.beginPath();
+	    ctx.arc(cx, cy, r * 1.9, 0, Math.PI * 2);
+	    ctx.fill();
+	    // 修复：将暗面底色调暗，与背景区分开
+	    ctx.fillStyle = '#0d0d18';
+	    ctx.beginPath();
+	    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+	    ctx.fill();
+	    if (phase <= 0.003 || phase >= 0.997) {
+	        const earthshine = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+	        earthshine.addColorStop(0, 'rgba(50, 50, 90, 0.4)');
+	        earthshine.addColorStop(1, 'rgba(30, 30, 60, 0.1)');
+	        ctx.fillStyle = earthshine;
+	        ctx.beginPath();
+	        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+	        ctx.fill();
+	        return;
+	    }
+	    if (Math.abs(phase - 0.5) < 0.003) {
+	        const fullGrad = ctx.createRadialGradient(cx - r*0.2, cy - r*0.2, r*0.1, cx, cy, r);
+	        fullGrad.addColorStop(0, '#fdf5e0');
+	        fullGrad.addColorStop(0.7, '#f5ead0');
+	        fullGrad.addColorStop(1, '#e0d5b8');
+	        ctx.fillStyle = fullGrad;
+	        ctx.beginPath();
+	        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+	        ctx.fill();
+	        drawMoonSurface(ctx, cx, cy, r);
+	        return;
+	    }
+	    const cosVal = Math.cos(phase * 2 * Math.PI);
+	    const ellipseR = Math.max(0.01, r * Math.abs(cosVal));
+	    const lightGrad = ctx.createRadialGradient(cx - r*0.15, cy - r*0.15, r*0.1, cx, cy, r);
+	    lightGrad.addColorStop(0, '#fdf5e0');
+	    lightGrad.addColorStop(0.7, '#f5ead0');
+	    lightGrad.addColorStop(1, '#e8dcc0');
+	    ctx.fillStyle = lightGrad;
+	    ctx.beginPath();
+	    // 修复：重新梳理月相绘制路径方向
+	    if (phase < 0.5) {
+	        // 盈月：右半圆为亮面边界
+	        ctx.arc(cx, cy, r, -Math.PI / 2, Math.PI / 2, false);
+	        if (cosVal > 0) {
+	            // 蛾眉月：分界线在右半圆内部（凹向左），需逆时针绘制右半椭圆
+	            ctx.ellipse(cx, cy, ellipseR, r, 0, Math.PI / 2, -Math.PI / 2, true);
+	        } else {
+	            // 盈凸月：分界线在左半圆内部（凸向左），需顺时针绘制左半椭圆
+	            ctx.ellipse(cx, cy, ellipseR, r, 0, Math.PI / 2, -Math.PI / 2, false);
+	        }
+	    } else {
+	        // 亏月：左半圆为亮面边界
+	        ctx.arc(cx, cy, r, -Math.PI / 2, Math.PI / 2, true);
+	        if (cosVal < 0) {
+	            // 亏凸月：分界线在右半圆内部（凸向右），需逆时针绘制右半椭圆
+	            ctx.ellipse(cx, cy, ellipseR, r, 0, Math.PI / 2, -Math.PI / 2, true);
+	        } else {
+	            // 残月：分界线在左半圆内部（凹向右），需顺时针绘制左半椭圆
+	            ctx.ellipse(cx, cy, ellipseR, r, 0, Math.PI / 2, -Math.PI / 2, false);
+	        }
+	    }
+	    ctx.fill();
+	    ctx.save();
+	    ctx.beginPath();
+	    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+	    ctx.clip();
+	    drawMoonSurface(ctx, cx, cy, r);
+	    ctx.restore();
+	    ctx.strokeStyle = 'rgba(245, 234, 208, 0.08)';
+	    ctx.lineWidth = 1.5;
+	    ctx.beginPath();
+	    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+	    ctx.stroke();
+	}
+	function drawMoonSurface(ctx, cx, cy, r) {
+	    const maria = [
+	        { x: -0.22, y: -0.28, rx: 0.18, ry: 0.13, op: 0.10 },
+	        { x:  0.12, y: -0.18, rx: 0.13, ry: 0.10, op: 0.09 },
+	        { x: -0.08, y:  0.22, rx: 0.20, ry: 0.15, op: 0.11 },
+	        { x:  0.28, y:  0.28, rx: 0.10, ry: 0.08, op: 0.07 },
+	        { x:  0.02, y:  0.02, rx: 0.07, ry: 0.05, op: 0.05 }
+	    ];
+	    maria.forEach(m => {
+	        ctx.fillStyle = `rgba(70, 60, 50, ${m.op})`;
+	        ctx.beginPath();
+	        ctx.ellipse(cx + m.x * r, cy + m.y * r, m.rx * r, m.ry * r, 0, 0, Math.PI * 2);
+	        ctx.fill();
+	    });
+	    const craters = [
+	        { x: 0.32, y: -0.32, r: 0.035 },
+	        { x: -0.35, y: 0.08, r: 0.028 },
+	        { x: 0.08, y: 0.36, r: 0.022 },
+	        { x: -0.18, y: -0.38, r: 0.018 },
+	        { x: 0.38, y: 0.12, r: 0.015 },
+	        { x: -0.05, y: -0.12, r: 0.02 }
+	    ];
+	    craters.forEach(c => {
+	        ctx.fillStyle = 'rgba(50, 40, 30, 0.12)';
+	        ctx.beginPath();
+	        ctx.arc(cx + c.x * r, cy + c.y * r, c.r * r, 0, Math.PI * 2);
+	        ctx.fill();
+	    });
+	}
+	function createBaguaRing() {
+	    const ring = document.getElementById('baguaRing');
+	    const radius = 210;
+	    const centerX = 250, centerY = 250;
+	    baguaData.forEach((item, i) => {
+	        const angle = Math.PI / 2 + (i * Math.PI / 4);
+	        const x = centerX + Math.cos(angle) * radius;
+	        const y = centerY + Math.sin(angle) * radius;
+	        const div = document.createElement('div');
+	        div.className = 'bagua-item';
+	        div.dataset.index = i;
+	        div.style.left = (x - 32) + 'px';
+	        div.style.top = (y - 32) + 'px';
+	        div.innerHTML = `<div class="bagua-svg">${baguaSVG(item.binary)}</div><div class="bagua-name">${item.name}</div>`;
+	        div.addEventListener('click', () => {
+	            pause();
+	            tweenToPhase(item.phase);
+	        });
+	        ring.appendChild(div);
+	    });
+	}
+	function createTimelineMarks() {
+	    const marks = document.getElementById('timelineMarks');
+	    baguaData.forEach(item => {
+	        const mark = document.createElement('div');
+	        mark.className = 'timeline-mark';
+	        mark.textContent = item.name;
+	        marks.appendChild(mark);
+	    });
+	}
+	let currentPhase = 0;
+	let isPlaying = false;
+	let speed = 1;
+	let animationId = null;
+	let lastTime = 0;
+	let tweenId = null;
+	function getYangPercent(phase) {
+	    return (1 - Math.cos(phase * 2 * Math.PI)) / 2 * 100;
+	}
+	function updateDisplay() {
+	    const canvas = document.getElementById('moonCanvas');
+	    const ctx = canvas.getContext('2d');
+	    drawMoonPhase(ctx, 140, 140, 120, currentPhase);
+	    let nearestIdx = 0, minDist = Infinity;
+	    baguaData.forEach((item, i) => {
+	        let d = Math.abs(item.phase - currentPhase);
+	        if (d > 0.5) d = 1 - d;
+	        if (d < minDist) { minDist = d; nearestIdx = i; }
+	    });
+	    const cur = baguaData[nearestIdx];
+	    document.querySelectorAll('.bagua-item').forEach((el, i) => {
+	        el.classList.toggle('active', i === nearestIdx);
+	    });
+	    document.querySelectorAll('.timeline-mark').forEach((el, i) => {
+	        el.classList.toggle('active', i === nearestIdx);
+	    });
+	    document.getElementById('phaseName').textContent = cur.phaseName;
+	    document.getElementById('phaseNameEn').textContent = cur.phaseNameEn;
+	    document.getElementById('lunarDate').textContent = cur.lunarDate;
+	    document.getElementById('moonAge').textContent = (currentPhase * 29.53).toFixed(1);
+	    document.getElementById('baguaLarge').innerHTML = baguaSVG(cur.binary);
+	    document.getElementById('baguaName').textContent = cur.name;
+	    document.getElementById('baguaDesc').textContent = cur.desc;
+	    const yang = Math.round(getYangPercent(currentPhase));
+	    document.getElementById('yangFill').style.width = yang + '%';
+	    document.getElementById('yangPercent').textContent = yang + '% 阳';
+	    document.getElementById('yinPercent').textContent = (100 - yang) + '% 阴';
+	    const progress = currentPhase * 100;
+	    document.getElementById('timelineProgress').style.width = progress + '%';
+	    document.getElementById('timelineThumb').style.left = progress + '%';
+	}
+	function pause() {
+	    if (isPlaying) {
+	        isPlaying = false;
+	        document.getElementById('playIcon').innerHTML = '<path d="M8 5v14l11-7z"/>';
+	        if (animationId) {
+	            cancelAnimationFrame(animationId);
+	            animationId = null;
+	        }
+	    }
+	}
+	function togglePlay() {
+	    if (tweenId) {
+	        cancelAnimationFrame(tweenId);
+	        tweenId = null;
+	    }
+	    isPlaying = !isPlaying;
+	    const icon = document.getElementById('playIcon');
+	    if (isPlaying) {
+	        icon.innerHTML = '<path d="M6 4h4v16H6zM14 4h4v16h-4z"/>';
+	        lastTime = performance.now();
+	        animationId = requestAnimationFrame(animate);
+	    } else {
+	        icon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+	        if (animationId) {
+	            cancelAnimationFrame(animationId);
+	            animationId = null;
+	        }
+	    }
+	}
+	function animate(time) {
+	    if (!isPlaying) return;
+	    if (!time) time = performance.now();
+	    const delta = (time - lastTime) / 1000;
+	    lastTime = time;
+	    currentPhase += delta * speed / 30;
+	    if (currentPhase >= 1) currentPhase -= 1;
+	    updateDisplay();
+	    animationId = requestAnimationFrame(animate);
+	}
+	function tweenToPhase(target) {
+	    if (tweenId) cancelAnimationFrame(tweenId);
+	    if (animationId) {
+	        cancelAnimationFrame(animationId);
+	        animationId = null;
+	    }
+	    const start = currentPhase;
+	    let diff = target - start;
+	    if (diff > 0.5) diff -= 1;
+	    if (diff < -0.5) diff += 1;
+	    const startTime = performance.now();
+	    const duration = 700;
+	    function step(time) {
+	        const elapsed = time - startTime;
+	        const t = Math.min(elapsed / duration, 1);
+	        const eased = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+	        currentPhase = (start + diff * eased + 1) % 1;
+	        updateDisplay();
+	        if (t < 1) tweenId = requestAnimationFrame(step);
+	        else tweenId = null;
+	    }
+	    tweenId = requestAnimationFrame(step);
+	}
+	function initTimeline() {
+	    const track = document.getElementById('timelineTrack');
+	    let dragging = false;
+	    function updateFromX(clientX) {
+	        const rect = track.getBoundingClientRect();
+	        let p = (clientX - rect.left) / rect.width;
+	        p = Math.max(0, Math.min(1, p));
+	        currentPhase = p;
+	        updateDisplay();
+	    }
+	    track.addEventListener('mousedown', e => {
+	        dragging = true;
+	        pause();
+	        if (tweenId) { cancelAnimationFrame(tweenId); tweenId = null; }
+	        updateFromX(e.clientX);
+	    });
+	    document.addEventListener('mousemove', e => { if (dragging) updateFromX(e.clientX); });
+	    document.addEventListener('mouseup', () => { dragging = false; });
+	    track.addEventListener('touchstart', e => {
+	        dragging = true;
+	        pause();
+	        if (tweenId) { cancelAnimationFrame(tweenId); tweenId = null; }
+	        updateFromX(e.touches[0].clientX);
+	    });
+	    document.addEventListener('touchmove', e => { if (dragging) updateFromX(e.touches[0].clientX); });
+	    document.addEventListener('touchend', () => { dragging = false; });
+	}
+	function init() {
+	    createStars();
+	    createBaguaRing();
+	    createTimelineMarks();
+	    initTimeline();
+	    document.getElementById('btnPlay').addEventListener('click', togglePlay);
+	    document.querySelectorAll('.speed-btn').forEach(btn => {
+	        btn.addEventListener('click', () => {
+	            document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+	            btn.classList.add('active');
+	            speed = parseFloat(btn.dataset.speed);
+	        });
+	    });
+	    document.addEventListener('keydown', e => {
+	        if (e.code === 'Space') { e.preventDefault(); togglePlay(); }
+	        if (e.code === 'ArrowLeft') { pause(); tweenToPhase((currentPhase - 0.125 + 1) % 1); }
+	        if (e.code === 'ArrowRight') { pause(); tweenToPhase((currentPhase + 0.125) % 1); }
+	    });
+	    updateDisplay();
+	}
+	init();
+	</script>
+	</body>
+	</html>
