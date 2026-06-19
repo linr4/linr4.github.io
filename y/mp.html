@@ -61,31 +61,29 @@
 	    position: relative; width: 500px; height: 500px;
 	    display: flex; align-items: center; justify-content: center;
 	}
-	.moon-stage::before {
-	    content: ''; position: absolute;
-	    width: 320px; height: 320px;
-	    border: 1px solid rgba(212, 175, 55, 0.06);
-	    border-radius: 50%;
+	.moon-stage::before, .moon-stage::after {
+	    content: none;
 	}
 	#moonCanvas {
 	    position: relative; z-index: 2;
-	    filter: drop-shadow(0 0 50px rgba(245, 234, 208, 0.12));
+	    display: block;
+	    background: transparent;
+	    border: none;
+	    outline: none;
+	    box-shadow: none;
+	    filter: none;
 	}
 	.bagua-ring { position: absolute; width: 100%; height: 100%; z-index: 1; }
-	.bagua-ring::before {
-	    content: ''; position: absolute;
-	    top: 50%; left: 50%; transform: translate(-50%, -50%);
-	    width: 420px; height: 420px;
-	    border: 1px dashed rgba(212, 175, 55, 0.1);
-	    border-radius: 50%;
+	.bagua-ring::before, .bagua-ring::after {
+	    content: none;
 	}
 	.bagua-item {
 	    position: absolute; width: 64px; height: 64px;
 	    display: flex; flex-direction: column;
 	    align-items: center; justify-content: center;
 	    border-radius: 50%;
-	    background: rgba(10, 10, 30, 0.7);
-	    border: 1px solid rgba(212, 175, 55, 0.12);
+	    /* background: rgba(10, 10, 30, 0.7); */
+	    border: 0px solid rgba(212, 175, 55, 0.12);
 	    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 	    cursor: pointer; backdrop-filter: blur(4px);
 	}
@@ -180,24 +178,50 @@
 	.timeline-track {
 	    height: 5px; background: rgba(255,255,255,0.06);
 	    border-radius: 3px; position: relative; cursor: pointer;
-	}
-	.timeline-progress {
-	    height: 100%;
-	    background: linear-gradient(90deg, var(--gold-dim), var(--gold));
-	    border-radius: 3px; transition: width 0.1s linear;
+	    margin: 24px 16px 0; /* 调整边距给小月亮留出空间 */
 	}
 	.timeline-thumb {
 	    position: absolute; top: 50%;
-	    width: 16px; height: 16px;
-	    background: var(--gold-light); border: 2px solid var(--gold);
-	    border-radius: 50%; transform: translate(-50%, -50%);
-	    cursor: grab; box-shadow: 0 0 12px rgba(212, 175, 55, 0.4);
-	    transition: transform 0.1s;
+	    transform: translate(-50%, -50%);
+	    cursor: grab;
+	    pointer-events: none; /* 允许事件穿透到 track */
+	    /* 移除原有的 transition 和外观样式 */
 	}
-	.timeline-thumb:active { cursor: grabbing; transform: translate(-50%, -50%) scale(1.2); }
-	.timeline-marks { display: flex; justify-content: space-between; margin-top: 10px; padding: 0 8px; }
-	.timeline-mark { font-size: 0.6rem; color: var(--text-dim); text-align: center; transition: color 0.3s; }
+	.timeline-marks { 
+	    display: flex; 
+	    justify-content: space-between; 
+	    margin: 12px 16px 0; /* 与 track 边距对齐 */
+	}
+	.timeline-mark { 
+	    font-size: 0.6rem; 
+	    color: var(--text-dim); 
+	    text-align: center; 
+	    transition: color 0.3s;
+	    position: relative;
+	    display: flex;
+	    flex-direction: column;
+	    align-items: center;
+	    gap: 2px;
+	}
+	.timeline-mark::before {
+	    content: '';
+	    position: absolute;
+	    top: -11px;
+	    left: 50%;
+	    transform: translateX(-50%);
+	    width: 1px;
+	    height: 5px;
+	    background: rgba(212, 175, 55, 0.2);
+	    transition: all 0.3s;
+	}
 	.timeline-mark.active { color: var(--gold-light); }
+	.timeline-mark.active::before {
+	    background: var(--gold);
+	    height: 8px;
+	    top: -14px;
+	}
+	.mark-date { font-size: 0.65rem; opacity: 0.7; }
+	.mark-name { font-size: 0.7rem; }
 	.speed-control { display: flex; gap: 6px; align-items: center; }
 	.speed-btn {
 	    padding: 5px 11px; border: 1px solid var(--border);
@@ -224,7 +248,7 @@
 	    </header>
 	    <main class="main-display">
 	        <div class="moon-stage" id="moonStage">
-	            <canvas id="moonCanvas" width="280" height="280"></canvas>
+	            <canvas id="moonCanvas" width="320" height="320"></canvas>
 	            <div class="bagua-ring" id="baguaRing"></div>
 	        </div>
 	    </main>
@@ -279,8 +303,8 @@
 	        </button>
 	        <div class="timeline-container">
 	            <div class="timeline-track" id="timelineTrack">
-	                <div class="timeline-progress" id="timelineProgress" style="width: 0%"></div>
-	                <div class="timeline-thumb" id="timelineThumb" style="left: 0%"></div>
+	                <!-- 用小月球替代条状指示器 -->
+	                <canvas id="thumbMoon" width="32" height="32" class="timeline-thumb"></canvas>
 	            </div>
 	            <div class="timeline-marks" id="timelineMarks"></div>
 	        </div>
@@ -292,15 +316,16 @@
 	    </footer>
 	</div>
 	<script>
+	// 增加 shortDate 字段用于底部刻度显示
 	const baguaData = [
-	    { name:'坤', binary:'000', phase:0,     phaseName:'新月（朔）',  phaseNameEn:'New Moon',         lunarDate:'农历初一',       moonAge:0,    desc:'阳气全尽，阴气正盛。坤为地，厚德载物。', yang:0 },
-	    { name:'震', binary:'001', phase:0.125, phaseName:'蛾眉月',     phaseNameEn:'Waxing Crescent',  lunarDate:'农历初三、初四', moonAge:3.5,  desc:'阳气始生，阴气将退。震为雷，一阳初动。', yang:12.5 },
-	    { name:'离', binary:'101', phase:0.25,  phaseName:'上弦月',     phaseNameEn:'First Quarter',    lunarDate:'农历初七、初八', moonAge:7.5,  desc:'阴阳相搏，势均力敌。离为火，外明内虚。', yang:50 },
-	    { name:'兑', binary:'011', phase:0.375, phaseName:'盈凸月',     phaseNameEn:'Waxing Gibbous',   lunarDate:'农历初九至十四', moonAge:11,   desc:'阴气将尽，阳气将盛。兑为泽，上缺下实。', yang:75 },
-	    { name:'乾', binary:'111', phase:0.5,   phaseName:'满月（望）', phaseNameEn:'Full Moon',        lunarDate:'农历十五至十七', moonAge:15,   desc:'阴气全尽，阳气正盛。乾为天，刚健中正。', yang:100 },
-	    { name:'巽', binary:'110', phase:0.625, phaseName:'亏凸月',     phaseNameEn:'Waning Gibbous',   lunarDate:'农历十八至二十一',moonAge:19,   desc:'阴气始凝，阳气始亏。巽为风，初阴在下。', yang:75 },
-	    { name:'坎', binary:'010', phase:0.75,  phaseName:'下弦月',     phaseNameEn:'Last Quarter',     lunarDate:'农历二十二、二十三',moonAge:22.5,desc:'阴阳相搏，阳气犹在。坎为水，中满外虚。', yang:50 },
-	    { name:'艮', binary:'100', phase:0.875, phaseName:'残月',       phaseNameEn:'Waning Crescent',  lunarDate:'农历二十六、二十七',moonAge:26,  desc:'阳气将尽，阴气将盛。艮为山，上实下虚。', yang:12.5 }
+	    { name:'坤', binary:'000', phase:0,     phaseName:'新月（朔）',  phaseNameEn:'New Moon',         lunarDate:'农历初一', shortDate:'初一', moonAge:0,    desc:'阳气全尽，阴气正盛。坤为地，厚德载物。', yang:0 },
+	    { name:'震', binary:'001', phase:0.125, phaseName:'蛾眉月',     phaseNameEn:'Waxing Crescent',  lunarDate:'农历初三、初四', shortDate:'初三', moonAge:3.5,  desc:'阳气始生，阴气将退。震为雷，一阳初动。', yang:12.5 },
+	    { name:'离', binary:'101', phase:0.25,  phaseName:'上弦月',     phaseNameEn:'First Quarter',    lunarDate:'农历初七、初八', shortDate:'初七', moonAge:7.5,  desc:'阴阳相搏，势均力敌。离为火，外明内虚。', yang:50 },
+	    { name:'兑', binary:'011', phase:0.375, phaseName:'盈凸月',     phaseNameEn:'Waxing Gibbous',   lunarDate:'农历初九至十四', shortDate:'初九', moonAge:11,   desc:'阴气将尽，阳气将盛。兑为泽，上缺下实。', yang:75 },
+	    { name:'乾', binary:'111', phase:0.5,   phaseName:'满月（望）', phaseNameEn:'Full Moon',        lunarDate:'农历十五至十七', shortDate:'十五', moonAge:15,   desc:'阴气全尽，阳气正盛。乾为天，刚健中正。', yang:100 },
+	    { name:'巽', binary:'110', phase:0.625, phaseName:'亏凸月',     phaseNameEn:'Waning Gibbous',   lunarDate:'农历十八至二十一',shortDate:'十八', moonAge:19,   desc:'阴气始凝，阳气始亏。巽为风，初阴在下。', yang:75 },
+	    { name:'坎', binary:'010', phase:0.75,  phaseName:'下弦月',     phaseNameEn:'Last Quarter',     lunarDate:'农历二十二、二十三',shortDate:'廿二', moonAge:22.5,desc:'阴阳相搏，阳气犹在。坎为水，中满外虚。', yang:50 },
+	    { name:'艮', binary:'100', phase:0.875, phaseName:'残月',       phaseNameEn:'Waning Crescent',  lunarDate:'农历二十六、二十七',shortDate:'廿六', moonAge:26,  desc:'阳气将尽，阴气将盛。艮为山，上实下虚。', yang:12.5 }
 	];
 	function baguaSVG(binary) {
 	    let lines = '';
@@ -330,87 +355,104 @@
 	        container.appendChild(star);
 	    }
 	}
+	// ===== 主月相绘制核心算法 =====
 	function drawMoonPhase(ctx, cx, cy, r, phase) {
 	    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-	    const glow = ctx.createRadialGradient(cx, cy, r * 0.85, cx, cy, r * 1.9);
-	    glow.addColorStop(0, 'rgba(245, 234, 208, 0.18)');
-	    glow.addColorStop(0.4, 'rgba(245, 234, 208, 0.06)');
+	    const tiltAngle = 5 * Math.PI / 180;
+	    const glow = ctx.createRadialGradient(cx, cy, r * 0.85, cx, cy, r * 1.25);
+	    glow.addColorStop(0, 'rgba(245, 234, 208, 0.15)');
+	    glow.addColorStop(0.4, 'rgba(245, 234, 208, 0.05)');
 	    glow.addColorStop(1, 'rgba(245, 234, 208, 0)');
 	    ctx.fillStyle = glow;
 	    ctx.beginPath();
-	    ctx.arc(cx, cy, r * 1.9, 0, Math.PI * 2);
+	    ctx.arc(cx, cy, r * 1.25, 0, Math.PI * 2);
 	    ctx.fill();
-	    // 修复：将暗面底色调暗，与背景区分开
-	    ctx.fillStyle = '#0d0d18';
+	    ctx.save();
+	    ctx.translate(cx, cy);
+	    ctx.rotate(tiltAngle);
+	    ctx.save();
 	    ctx.beginPath();
-	    ctx.arc(cx, cy, r, 0, Math.PI * 2);
-	    ctx.fill();
-	    if (phase <= 0.003 || phase >= 0.997) {
-	        const earthshine = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
-	        earthshine.addColorStop(0, 'rgba(50, 50, 90, 0.4)');
-	        earthshine.addColorStop(1, 'rgba(30, 30, 60, 0.1)');
-	        ctx.fillStyle = earthshine;
-	        ctx.beginPath();
-	        ctx.arc(cx, cy, r, 0, Math.PI * 2);
-	        ctx.fill();
-	        return;
-	    }
-	    if (Math.abs(phase - 0.5) < 0.003) {
-	        const fullGrad = ctx.createRadialGradient(cx - r*0.2, cy - r*0.2, r*0.1, cx, cy, r);
-	        fullGrad.addColorStop(0, '#fdf5e0');
-	        fullGrad.addColorStop(0.7, '#f5ead0');
-	        fullGrad.addColorStop(1, '#e0d5b8');
-	        ctx.fillStyle = fullGrad;
-	        ctx.beginPath();
-	        ctx.arc(cx, cy, r, 0, Math.PI * 2);
-	        ctx.fill();
-	        drawMoonSurface(ctx, cx, cy, r);
-	        return;
-	    }
+	    ctx.arc(0, 0, r, 0, Math.PI * 2);
+	    ctx.clip();
+	    ctx.fillStyle = '#0d0d18';
+	    ctx.fillRect(-r, -r, 2 * r, 2 * r);
+	    drawMoonSurface(ctx, 0, 0, r, 0.2);
 	    const cosVal = Math.cos(phase * 2 * Math.PI);
 	    const ellipseR = Math.max(0.01, r * Math.abs(cosVal));
-	    const lightGrad = ctx.createRadialGradient(cx - r*0.15, cy - r*0.15, r*0.1, cx, cy, r);
+	    const lightGrad = ctx.createRadialGradient(-r*0.15, -r*0.15, r*0.1, 0, 0, r);
 	    lightGrad.addColorStop(0, '#fdf5e0');
 	    lightGrad.addColorStop(0.7, '#f5ead0');
 	    lightGrad.addColorStop(1, '#e8dcc0');
+	    ctx.filter = 'blur(4px)'; 
 	    ctx.fillStyle = lightGrad;
 	    ctx.beginPath();
-	    // 修复：重新梳理月相绘制路径方向
 	    if (phase < 0.5) {
-	        // 盈月：右半圆为亮面边界
-	        ctx.arc(cx, cy, r, -Math.PI / 2, Math.PI / 2, false);
-	        if (cosVal > 0) {
-	            // 蛾眉月：分界线在右半圆内部（凹向左），需逆时针绘制右半椭圆
-	            ctx.ellipse(cx, cy, ellipseR, r, 0, Math.PI / 2, -Math.PI / 2, true);
-	        } else {
-	            // 盈凸月：分界线在左半圆内部（凸向左），需顺时针绘制左半椭圆
-	            ctx.ellipse(cx, cy, ellipseR, r, 0, Math.PI / 2, -Math.PI / 2, false);
-	        }
+	        ctx.arc(0, 0, r, -Math.PI / 2, Math.PI / 2, false);
+	        ctx.ellipse(0, 0, ellipseR, r, 0, Math.PI / 2, -Math.PI / 2, cosVal > 0);
 	    } else {
-	        // 亏月：左半圆为亮面边界
-	        ctx.arc(cx, cy, r, -Math.PI / 2, Math.PI / 2, true);
-	        if (cosVal < 0) {
-	            // 亏凸月：分界线在右半圆内部（凸向右），需逆时针绘制右半椭圆
-	            ctx.ellipse(cx, cy, ellipseR, r, 0, Math.PI / 2, -Math.PI / 2, true);
-	        } else {
-	            // 残月：分界线在左半圆内部（凹向右），需顺时针绘制左半椭圆
-	            ctx.ellipse(cx, cy, ellipseR, r, 0, Math.PI / 2, -Math.PI / 2, false);
-	        }
+	        ctx.arc(0, 0, r, -Math.PI / 2, Math.PI / 2, true);
+	        ctx.ellipse(0, 0, ellipseR, r, 0, Math.PI / 2, -Math.PI / 2, cosVal < 0);
 	    }
 	    ctx.fill();
+	    ctx.filter = 'none';
 	    ctx.save();
 	    ctx.beginPath();
-	    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+	    if (phase < 0.5) {
+	        ctx.arc(0, 0, r, -Math.PI / 2, Math.PI / 2, false);
+	        ctx.ellipse(0, 0, ellipseR, r, 0, Math.PI / 2, -Math.PI / 2, cosVal > 0);
+	    } else {
+	        ctx.arc(0, 0, r, -Math.PI / 2, Math.PI / 2, true);
+	        ctx.ellipse(0, 0, ellipseR, r, 0, Math.PI / 2, -Math.PI / 2, cosVal < 0);
+	    }
 	    ctx.clip();
-	    drawMoonSurface(ctx, cx, cy, r);
+	    drawMoonSurface(ctx, 0, 0, r, 1.0);
 	    ctx.restore();
-	    ctx.strokeStyle = 'rgba(245, 234, 208, 0.08)';
-	    ctx.lineWidth = 1.5;
-	    ctx.beginPath();
-	    ctx.arc(cx, cy, r, 0, Math.PI * 2);
-	    ctx.stroke();
+	    ctx.restore(); 
+	    ctx.restore(); 
 	}
-	function drawMoonSurface(ctx, cx, cy, r) {
+	// ===== 进度条小月亮绘制算法 =====
+	function drawThumbMoon(ctx, cx, cy, r, phase) {
+	    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+	    const glow = ctx.createRadialGradient(cx, cy, r * 0.8, cx, cy, r * 1.5);
+	    glow.addColorStop(0, 'rgba(245, 234, 208, 0.3)');
+	    glow.addColorStop(1, 'rgba(245, 234, 208, 0)');
+	    ctx.fillStyle = glow;
+	    ctx.beginPath();
+	    ctx.arc(cx, cy, r * 1.5, 0, Math.PI * 2);
+	    ctx.fill();
+	    ctx.save();
+	    ctx.translate(cx, cy);
+	    ctx.rotate(5 * Math.PI / 180);
+	    ctx.save();
+	    ctx.beginPath();
+	    ctx.arc(0, 0, r, 0, Math.PI * 2);
+	    ctx.clip();
+	    ctx.fillStyle = '#0d0d18';
+	    ctx.fillRect(-r, -r, 2 * r, 2 * r);
+	    if (phase > 0.003 && phase < 0.997) {
+	        const cosVal = Math.cos(phase * 2 * Math.PI);
+	        const ellipseR = Math.max(0.01, r * Math.abs(cosVal));
+	        const lightGrad = ctx.createRadialGradient(-r*0.15, -r*0.15, r*0.1, 0, 0, r);
+	        lightGrad.addColorStop(0, '#fdf5e0');
+	        lightGrad.addColorStop(0.7, '#f5ead0');
+	        lightGrad.addColorStop(1, '#e8dcc0');
+	        ctx.filter = 'blur(2px)'; // 小月亮模糊半径稍微小一点
+	        ctx.fillStyle = lightGrad;
+	        ctx.beginPath();
+	        if (phase < 0.5) {
+	            ctx.arc(0, 0, r, -Math.PI / 2, Math.PI / 2, false);
+	            ctx.ellipse(0, 0, ellipseR, r, 0, Math.PI / 2, -Math.PI / 2, cosVal > 0);
+	        } else {
+	            ctx.arc(0, 0, r, -Math.PI / 2, Math.PI / 2, true);
+	            ctx.ellipse(0, 0, ellipseR, r, 0, Math.PI / 2, -Math.PI / 2, cosVal < 0);
+	        }
+	        ctx.fill();
+	        ctx.filter = 'none';
+	    }
+	    ctx.restore();
+	    ctx.restore();
+	}
+	function drawMoonSurface(ctx, cx, cy, r, opacity = 1) {
 	    const maria = [
 	        { x: -0.22, y: -0.28, rx: 0.18, ry: 0.13, op: 0.10 },
 	        { x:  0.12, y: -0.18, rx: 0.13, ry: 0.10, op: 0.09 },
@@ -419,7 +461,7 @@
 	        { x:  0.02, y:  0.02, rx: 0.07, ry: 0.05, op: 0.05 }
 	    ];
 	    maria.forEach(m => {
-	        ctx.fillStyle = `rgba(70, 60, 50, ${m.op})`;
+	        ctx.fillStyle = `rgba(70, 60, 50, ${m.op * opacity})`;
 	        ctx.beginPath();
 	        ctx.ellipse(cx + m.x * r, cy + m.y * r, m.rx * r, m.ry * r, 0, 0, Math.PI * 2);
 	        ctx.fill();
@@ -433,7 +475,7 @@
 	        { x: -0.05, y: -0.12, r: 0.02 }
 	    ];
 	    craters.forEach(c => {
-	        ctx.fillStyle = 'rgba(50, 40, 30, 0.12)';
+	        ctx.fillStyle = `rgba(50, 40, 30, ${0.12 * opacity})`;
 	        ctx.beginPath();
 	        ctx.arc(cx + c.x * r, cy + c.y * r, c.r * r, 0, Math.PI * 2);
 	        ctx.fill();
@@ -465,7 +507,7 @@
 	    baguaData.forEach(item => {
 	        const mark = document.createElement('div');
 	        mark.className = 'timeline-mark';
-	        mark.textContent = item.name;
+	        mark.innerHTML = `<span class="mark-date">${item.shortDate}</span><span class="mark-name">${item.name}</span>`;
 	        marks.appendChild(mark);
 	    });
 	}
@@ -481,7 +523,15 @@
 	function updateDisplay() {
 	    const canvas = document.getElementById('moonCanvas');
 	    const ctx = canvas.getContext('2d');
-	    drawMoonPhase(ctx, 140, 140, 120, currentPhase);
+	    drawMoonPhase(ctx, 160, 160, 120, currentPhase);
+	    // 更新小月亮指示器
+	    const thumbMoon = document.getElementById('thumbMoon');
+	    if (thumbMoon) {
+	        const progress = currentPhase * 100;
+	        // 直接更新 left 属性，不使用 CSS transition，月底归零时顺滑无回弹
+	        thumbMoon.style.left = progress + '%';
+	        drawThumbMoon(thumbMoon.getContext('2d'), 16, 16, 11, currentPhase);
+	    }
 	    let nearestIdx = 0, minDist = Infinity;
 	    baguaData.forEach((item, i) => {
 	        let d = Math.abs(item.phase - currentPhase);
@@ -506,9 +556,6 @@
 	    document.getElementById('yangFill').style.width = yang + '%';
 	    document.getElementById('yangPercent').textContent = yang + '% 阳';
 	    document.getElementById('yinPercent').textContent = (100 - yang) + '% 阴';
-	    const progress = currentPhase * 100;
-	    document.getElementById('timelineProgress').style.width = progress + '%';
-	    document.getElementById('timelineThumb').style.left = progress + '%';
 	}
 	function pause() {
 	    if (isPlaying) {
